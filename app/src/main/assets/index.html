@@ -1,1720 +1,1306 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MAESTRO - easy does it</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        :root {
-            --bg-main: #f6f7fb;
-            --card-bg: #ffffff;
-            --text-main: #17172f;
-            --text-muted: #70758a;
-            --primary: #635bff;
-            --primary-dark: #5147e8;
-            --primary-light: #ecebff;
-            --green: #10b981;
-            --red: #ef4444;
-            --orange: #f59e0b;
-            --blue: #3b82f6;
-            --pink: #ec4899;
-            --border: #e8e9f0;
-            --shadow: 0 5px 20px rgba(20, 20, 60, .055);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background: #eef0f7;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        button,
-        input,
-        select,
-        textarea {
-            font-family: inherit;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        .phone-frame {
-            width: 100%;
-            max-width: 430px;
-            height: 100vh;
-            max-height: 900px;
-            background: var(--bg-main);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        @media (min-width: 431px) {
-            .phone-frame {
-                height: 88vh;
-                border-radius: 36px;
-                box-shadow: 0 20px 60px rgba(0,0,0,.12);
-                border: 8px solid #17172f;
-            }
-        }
-
-        /* =========================
-           SCREEN
-        ========================= */
-
-        .screen {
-            display: none;
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            padding-bottom: 105px;
-            scrollbar-width: none;
-        }
-
-        .screen::-webkit-scrollbar {
-            display: none;
-        }
-
-        .screen.active {
-            display: block;
-        }
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        .brand-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .brand-logo h1 {
-            font-size: 20px;
-            line-height: 1;
-            font-weight: 800;
-            letter-spacing: .8px;
-            color: var(--text-main);
-        }
-
-        .brand-logo span {
-            display: block;
-            margin-top: 5px;
-            font-size: 10px;
-            color: var(--text-muted);
-            font-weight: 600;
-            letter-spacing: .7px;
-        }
-
-        .user-badge {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        /* =========================
-           GREETING
-        ========================= */
-
-        .greeting-section {
-            margin-bottom: 20px;
-        }
-
-        .greeting-section h2 {
-            font-size: 23px;
-            line-height: 1.25;
-            font-weight: 800;
-            margin-bottom: 6px;
-        }
-
-        .greeting-section p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* =========================
-           HERO TODAY
-        ========================= */
-
-        .today-hero {
-            background: linear-gradient(135deg, #655cf6, #8179ff);
-            color: white;
-            padding: 20px;
-            border-radius: 22px;
-            margin-bottom: 22px;
-            box-shadow: 0 10px 25px rgba(99,91,255,.22);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .today-hero::after {
-            content: "";
-            position: absolute;
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.08);
-            right: -60px;
-            top: -70px;
-        }
-
-        .hero-label {
-            font-size: 11px;
-            font-weight: 700;
-            opacity: .82;
-            letter-spacing: .8px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
-        .hero-title {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-
-        .hero-subtitle {
-            font-size: 12px;
-            opacity: .9;
-        }
-
-        .hero-progress {
-            margin-top: 17px;
-            height: 7px;
-            background: rgba(255,255,255,.22);
-            border-radius: 20px;
-            overflow: hidden;
-        }
-
-        .hero-progress-fill {
-            height: 100%;
-            width: 0;
-            background: white;
-            border-radius: 20px;
-            transition: width .35s ease;
-        }
-
-        /* =========================
-           SECTION
-        ========================= */
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 20px 0 11px;
-        }
-
-        .section-title {
-            font-size: 13px;
-            font-weight: 800;
-            color: var(--text-main);
-        }
-
-        .section-link {
-            border: 0;
-            background: none;
-            color: var(--primary);
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        /* =========================
-           NEXT ACTIVITY
-        ========================= */
-
-        .next-card {
-            background: white;
-            border-radius: 20px;
-            padding: 16px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 13px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .next-card::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--primary);
-        }
-
-        .next-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 15px;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .next-info {
-            min-width: 0;
-            flex: 1;
-        }
-
-        .next-label {
-            font-size: 10px;
-            color: var(--primary);
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: .7px;
-            margin-bottom: 3px;
-        }
-
-        .next-name {
-            font-size: 15px;
-            font-weight: 800;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .next-time {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .next-time strong {
-            color: var(--text-main);
-        }
-
-        /* =========================
-           ACTIVITY GRID
-        ========================= */
-
-        .activity-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-        }
-
-        .activity-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 14px;
-            min-height: 142px;
-            box-shadow: 0 3px 10px rgba(20,20,60,.035);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .activity-card.completed {
-            opacity: .68;
-        }
-
-        .activity-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 8px;
-        }
-
-        .activity-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 13px;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 21px;
-        }
-
-        .category-pill {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 5px 7px;
-            border-radius: 10px;
-            background: #f4f5f9;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
-
-        .activity-name {
-            font-size: 13px;
-            font-weight: 800;
-            margin-top: 12px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .activity-status {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .activity-bottom {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: 12px;
-        }
-
-        .activity-time {
-            font-size: 14px;
-            font-weight: 800;
-        }
-
-        .done-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: white;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .done-btn.checked {
-            background: var(--green);
-            color: white;
-            border-color: var(--green);
-        }
-
-        /* =========================
-           EMPTY
-        ========================= */
-
-        .empty-card {
-            background: white;
-            border: 1px dashed #d9dce7;
-            border-radius: 18px;
-            padding: 28px 20px;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        .empty-card .empty-icon {
-            font-size: 35px;
-            margin-bottom: 10px;
-        }
-
-        .empty-card h3 {
-            color: var(--text-main);
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .empty-card p {
-            font-size: 11px;
-            line-height: 1.5;
-        }
-
-        /* =========================
-           BOTTOM NAV
-        ========================= */
-
-        .bottom-nav {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 70px;
-            background: rgba(255,255,255,.96);
-            backdrop-filter: blur(12px);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 50;
-        }
-
-        .nav-item {
-            width: 25%;
-            border: 0;
-            background: none;
-            color: #9297aa;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            font-size: 9px;
-            font-weight: 600;
-        }
-
-        .nav-item i {
-            font-size: 18px;
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-            font-weight: 800;
-        }
-
-        /* =========================
-           FAB
-        ========================= */
-
-        .fab-btn {
-            position: absolute;
-            right: 20px;
-            bottom: 82px;
-            width: 52px;
-            height: 52px;
-            border-radius: 18px;
-            border: 0;
-            background: var(--primary);
-            color: white;
-            font-size: 20px;
-            box-shadow: 0 9px 20px rgba(99,91,255,.32);
-            z-index: 55;
-        }
-
-        .fab-btn:active {
-            transform: scale(.94);
-        }
-
-        /* =========================
-           FORM
-        ========================= */
-
-        .form-group {
-            margin-bottom: 17px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 12px;
-            font-weight: 800;
-            margin-bottom: 7px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 13px 14px;
-            border: 1px solid var(--border);
-            background: white;
-            border-radius: 13px;
-            outline: none;
-            color: var(--text-main);
-            font-size: 13px;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99,91,255,.09);
-        }
-
-        textarea.form-control {
-            resize: vertical;
-        }
-
-        .btn-primary {
-            width: 100%;
-            border: 0;
-            background: var(--primary);
-            color: white;
-            padding: 14px;
-            border-radius: 13px;
-            font-size: 13px;
-            font-weight: 800;
-            box-shadow: 0 7px 16px rgba(99,91,255,.22);
-        }
-
-        .btn-secondary {
-            border: 1px solid var(--border);
-            background: white;
-            color: var(--text-main);
-            padding: 12px 14px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* =========================
-           CATEGORY SELECTOR
-        ========================= */
-
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 7px;
-        }
-
-        .category-option {
-            border: 1px solid var(--border);
-            background: white;
-            border-radius: 12px;
-            padding: 9px 4px;
-            text-align: center;
-            font-size: 9px;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        .category-option .cat-icon {
-            display: block;
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-
-        .category-option.active {
-            border-color: var(--primary);
-            background: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        /* =========================
-           SCHEDULE
-        ========================= */
-
-        .schedule-item {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: var(--shadow);
-        }
-
-        .schedule-main {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .schedule-info {
-            min-width: 0;
-            flex: 1;
-        }
-
-        .schedule-info h3 {
-            font-size: 14px;
-            font-weight: 800;
-            margin-bottom: 4px;
-        }
-
-        .schedule-info p {
-            font-size: 10px;
-            color: var(--text-muted);
-        }
-
-        .schedule-time {
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .schedule-actions {
-            display: flex;
-            gap: 7px;
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid #f0f1f5;
-        }
-
-        .schedule-actions button {
-            flex: 1;
-            border: 0;
-            border-radius: 10px;
-            padding: 9px;
-            font-size: 10px;
-            font-weight: 800;
-        }
-
-        .edit-btn {
-            background: var(--primary-light);
-            color: var(--primary-dark);
-        }
-
-        .delete-btn {
-            background: #fff0f0;
-            color: var(--red);
-        }
-
-        /* =========================
-           PERFORMANCE
-        ========================= */
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .stat-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 17px;
-            box-shadow: var(--shadow);
-        }
-
-        .stat-card .stat-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 11px;
-            background: var(--primary-light);
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-        }
-
-        .stat-value {
-            font-size: 25px;
-            font-weight: 800;
-        }
-
-        .stat-label {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-top: 3px;
-        }
-
-        .streak-card {
-            background: linear-gradient(135deg, #17172f, #29294e);
-            color: white;
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 10px;
-        }
-
-        .streak-number {
-            font-size: 38px;
-            font-weight: 800;
-            margin: 5px 0;
-        }
-
-        .streak-card p {
-            font-size: 11px;
-            color: #c7c7df;
-        }
-
-        /* =========================
-           SETTINGS
-        ========================= */
-
-        .settings-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 17px;
-            margin-bottom: 12px;
-        }
-
-        .settings-card h3 {
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .settings-card p {
-            font-size: 11px;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        .permission-row {
-            margin-top: 12px;
-        }
-
-        /* =========================
-           TIME PICKER
-        ========================= */
-
-        .wheel-overlay {
-            position: fixed;
-            inset: 0;
-            display: none;
-            align-items: flex-end;
-            justify-content: center;
-            background: rgba(15,23,42,.55);
-            z-index: 200;
-        }
-
-        .wheel-overlay.active {
-            display: flex;
-        }
-
-        .wheel-sheet {
-            width: 100%;
-            max-width: 430px;
-            background: white;
-            border-radius: 24px 24px 0 0;
-            padding: 20px 18px 30px;
-        }
-
-        .wheel-sheet h3 {
-            text-align: center;
-            font-size: 15px;
-            margin-bottom: 15px;
-        }
-
-        .wheel-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .wheel-column {
-            width: 105px;
-            height: 190px;
-            overflow-y: scroll;
-            scroll-snap-type: y proximity;
-            background: linear-gradient(#f8f9fc, #e9e8ff 45%, #e9e8ff 55%, #f8f9fc);
-            border-radius: 16px;
-            padding: 69px 0;
-            scrollbar-width: none;
-        }
-
-        .wheel-column::-webkit-scrollbar {
-            display: none;
-        }
-
-        .wheel-option {
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            scroll-snap-align: center;
-            color: #9da2b4;
-            font-size: 25px;
-            font-weight: 800;
-        }
-
-        .wheel-option.selected {
-            color: var(--text-main);
-            transform: scale(1.08);
-        }
-
-        .wheel-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 16px;
-        }
-
-        .wheel-actions button {
-            flex: 1;
-            padding: 13px;
-            border: 0;
-            border-radius: 12px;
-            font-weight: 800;
-        }
-
-        .wheel-confirm {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* =========================
-           ALARM
-        ========================= */
-
-        .alarm-screen {
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(circle at 50% 10%, rgba(111,99,255,.45), transparent 35%),
-                linear-gradient(180deg, #15143b, #080a1c);
-            color: white;
-            z-index: 500;
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 42px 23px 28px;
-            text-align: center;
-        }
-
-        .alarm-screen.active {
-            display: flex;
-        }
-
-        .alarm-brand {
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: #c9c6ff;
-        }
-
-        .alarm-tagline {
-            margin-top: 4px;
-            font-size: 9px;
-            color: #8886ae;
-            letter-spacing: 1px;
-        }
-
-        .alarm-period {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 7px 11px;
-            border-radius: 20px;
-            background: rgba(255,255,255,.08);
-            color: #c7c4ff;
-            font-size: 10px;
-            font-weight: 700;
-        }
-
-        .alarm-greeting {
-            font-size: 20px;
-            font-weight: 700;
-            line-height: 1.4;
-            margin: 18px 0 18px;
-        }
-
-        .alarm-time-big {
-            font-size: 68px;
-            line-height: 1;
-            font-weight: 800;
-            letter-spacing: -2px;
-        }
-
-        .alarm-category {
-            font-size: 10px;
-            color: #9794c5;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
-
-        .alarm-act-name {
-            font-size: 27px;
-            font-weight: 800;
-            margin-top: 7px;
-        }
-
-        .alarm-msg {
-            max-width: 330px;
-            margin: 10px auto 0;
-            font-size: 13px;
-            line-height: 1.6;
-            color: #bbb9d9;
-        }
-
-        .alarm-pulse {
-            width: 12px;
-            height: 12px;
-            background: #ff5364;
-            border-radius: 50%;
-            margin: 0 auto;
-            box-shadow: 0 0 0 0 rgba(255,83,100,.7);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            70% {
-                box-shadow: 0 0 0 18px rgba(255,83,100,0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(255,83,100,0);
-            }
-        }
-
-        .alarm-actions {
-            display: grid;
-            grid-template-columns: 1fr 1.3fr;
-            gap: 9px;
-        }
-
-        .alarm-actions button {
-            border: 0;
-            padding: 16px 10px;
-            border-radius: 15px;
-            color: white;
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .btn-snooze-alarm {
-            background: rgba(99,91,255,.35);
-            border: 1px solid rgba(160,155,255,.5) !important;
-        }
-
-        .btn-stop-alarm {
-            background: #ef4444;
-        }
-
-        /* =========================
-           RESPONSIVE
-        ========================= */
-
-        @media(max-width:360px) {
-            .screen {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-
-            .activity-grid {
-                gap: 7px;
-            }
-
-            .category-grid {
-                grid-template-columns: repeat(4, 1fr);
-            }
-
-            .alarm-time-big {
-                font-size: 58px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAESTRO Reminder - easy does it</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+    --bg-main:#f7f8fc;
+    --card-bg:#fff;
+    --text-main:#1e1b4b;
+    --text-muted:#64748b;
+    --primary:#6366f1;
+    --primary-light:#e0e7ff;
+    --green:#10b981;
+    --green-light:#d1fae5;
+    --orange:#f59e0b;
+    --orange-light:#fef3c7;
+    --red:#ef4444;
+    --red-light:#fee2e2;
+    --blue:#3b82f6;
+    --border:#e2e8f0;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:'Plus Jakarta Sans',sans-serif;
+}
+
+body{
+    background:#e5e7eb;
+    color:var(--text-main);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.phone-frame{
+    width:100%;
+    max-width:420px;
+    height:100vh;
+    max-height:892px;
+    background:var(--bg-main);
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+}
+
+@media(min-width:423px){
+    .phone-frame{
+        height:85vh;
+        border-radius:40px;
+        border:10px solid #1e1b4b;
+        box-shadow:0 20px 50px rgba(0,0,0,.15);
+    }
+}
+
+.screen{
+    display:none;
+    flex:1;
+    overflow-y:auto;
+    padding:20px;
+    padding-bottom:100px;
+}
+
+.screen.active{
+    display:block;
+}
+
+/* HEADER */
+
+.brand-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.brand-logo h1{
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:.7px;
+}
+
+.brand-logo span{
+    display:block;
+    font-size:10px;
+    color:var(--text-muted);
+    margin-top:1px;
+}
+
+.user-badge{
+    background:var(--primary-light);
+    color:var(--primary);
+    padding:7px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:700;
+}
+
+/* GREETING */
+
+.greeting-section{
+    margin-bottom:18px;
+}
+
+.greeting-section h2{
+    font-size:21px;
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.greeting-section p{
+    font-size:12px;
+    color:var(--text-muted);
+}
+
+/* TODAY HERO */
+
+.today-hero{
+    background:linear-gradient(135deg,#6366f1,#4f46e5);
+    color:#fff;
+    border-radius:22px;
+    padding:18px;
+    margin-bottom:18px;
+    box-shadow:0 8px 20px rgba(99,102,241,.22);
+}
+
+.today-hero-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.today-hero small{
+    opacity:.8;
+    font-size:11px;
+}
+
+.today-hero h3{
+    font-size:25px;
+    margin-top:3px;
+}
+
+.hero-percent{
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:15px;
+    font-weight:800;
+}
+
+/* SECTION */
+
+.section-title{
+    font-size:12px;
+    font-weight:800;
+    color:var(--text-muted);
+    margin:20px 0 10px;
+    text-transform:uppercase;
+    letter-spacing:.6px;
+}
+
+/* NEXT CARD */
+
+.next-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-left:4px solid var(--primary);
+    border-radius:18px;
+    padding:15px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,.03);
+}
+
+.next-icon{
+    width:48px;
+    height:48px;
+    border-radius:15px;
+    background:var(--primary-light);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:23px;
+}
+
+.next-info{
+    flex:1;
+    min-width:0;
+}
+
+.next-info small{
+    color:var(--primary);
+    font-size:10px;
+    font-weight:800;
+}
+
+.next-info h3{
+    font-size:15px;
+    margin:2px 0;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.next-info p{
+    color:var(--text-muted);
+    font-size:11px;
+}
+
+.next-time{
+    font-size:17px;
+    font-weight:800;
+}
+
+/* ACTIVITY GRID */
+
+.activity-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.activity-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:13px;
+    min-height:130px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    box-shadow:0 2px 6px rgba(0,0,0,.025);
+}
+
+.activity-top{
+    display:flex;
+    justify-content:space-between;
+}
+
+.activity-icon{
+    width:40px;
+    height:40px;
+    background:var(--primary-light);
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.delete-btn{
+    border:0;
+    background:none;
+    color:#cbd5e1;
+    cursor:pointer;
+    font-size:13px;
+}
+
+.delete-btn:hover{
+    color:var(--red);
+}
+
+.activity-name{
+    font-size:13px;
+    font-weight:700;
+    margin-top:9px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.activity-category{
+    font-size:10px;
+    color:var(--text-muted);
+    margin-top:2px;
+}
+
+.activity-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:9px;
+}
+
+.activity-time{
+    font-size:14px;
+    font-weight:800;
+}
+
+.status-dot{
+    font-size:10px;
+    font-weight:700;
+}
+
+.status-done{
+    color:var(--green);
+}
+
+.status-pending{
+    color:var(--orange);
+}
+
+/* PROGRESS */
+
+.progress-card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:15px;
+    margin-bottom:12px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.progress-bg{
+    height:8px;
+    background:#f1f5f9;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:linear-gradient(90deg,#6366f1,#818cf8);
+    border-radius:20px;
+    transition:.3s;
+}
+
+/* CATEGORY */
+
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+
+.category-option{
+    border:1px solid var(--border);
+    background:#fff;
+    border-radius:14px;
+    padding:10px 5px;
+    text-align:center;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.category-option span{
+    display:block;
+    font-size:20px;
+    margin-bottom:4px;
+}
+
+.category-option small{
+    font-size:9px;
+    font-weight:700;
+    color:var(--text-muted);
+}
+
+.category-option.selected{
+    border:2px solid var(--primary);
+    background:var(--primary-light);
+}
+
+/* FORM */
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.form-control{
+    width:100%;
+    padding:12px 13px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    outline:none;
+    background:#fff;
+    font-size:13px;
+}
+
+textarea.form-control{
+    resize:none;
+}
+
+.btn-primary{
+    width:100%;
+    padding:14px;
+    border:0;
+    border-radius:13px;
+    background:var(--primary);
+    color:#fff;
+    font-size:14px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 5px 14px rgba(99,102,241,.25);
+}
+
+/* REPEAT */
+
+.repeat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.repeat-option{
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:#fff;
+    padding:10px;
+    font-size:11px;
+    font-weight:700;
+    text-align:center;
+    cursor:pointer;
+}
+
+.repeat-option.selected{
+    background:var(--primary-light);
+    border-color:var(--primary);
+    color:var(--primary);
+}
+
+.days-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+    margin-top:9px;
+}
+
+.day-option{
+    text-align:center;
+    padding:8px 2px;
+    border-radius:9px;
+    background:#f1f5f9;
+    font-size:9px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.day-option.selected{
+    background:var(--primary);
+    color:#fff;
+}
+
+/* STATS */
+
+.stat-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:8px;
+}
+
+.stat-box{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:13px 5px;
+    text-align:center;
+}
+
+.stat-box strong{
+    display:block;
+    font-size:21px;
+    font-weight:800;
+}
+
+.stat-box span{
+    font-size:9px;
+    color:var(--text-muted);
+    font-weight:600;
+}
+
+.history-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 0;
+    border-bottom:1px solid #f1f5f9;
+}
+
+.history-day{
+    width:42px;
+    text-align:center;
+    font-size:10px;
+    font-weight:800;
+}
+
+.history-bar{
+    flex:1;
+    height:8px;
+    background:#f1f5f9;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.history-fill{
+    height:100%;
+    background:var(--green);
+}
+
+.history-percent{
+    width:35px;
+    text-align:right;
+    font-size:10px;
+    font-weight:700;
+}
+
+/* SLEEP */
+
+.sleep-card{
+    background:linear-gradient(135deg,#eef2ff,#fff);
+    border:1px solid #c7d2fe;
+}
+
+/* NAV */
+
+.bottom-nav{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:#fff;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-around;
+    padding:10px 0 9px;
+    z-index:20;
+}
+
+.nav-item{
+    border:0;
+    background:none;
+    color:var(--text-muted);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+    font-size:9px;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.nav-item i{
+    font-size:17px;
+}
+
+.nav-item.active{
+    color:var(--primary);
+}
+
+/* FAB */
+
+.fab-btn{
+    position:absolute;
+    right:18px;
+    bottom:72px;
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    border:0;
+    background:var(--primary);
+    color:#fff;
+    font-size:20px;
+    box-shadow:0 7px 18px rgba(99,102,241,.4);
+    z-index:21;
+}
+
+/* ALARM */
+
+.alarm-screen{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 50% 10%,#37306d,#0b1028 68%);
+    color:#fff;
+    z-index:100;
+    display:none;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:42px 22px 28px;
+    text-align:center;
+}
+
+.alarm-screen.active{
+    display:flex;
+}
+
+.alarm-pulse{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:#ef4444;
+    margin:0 auto 18px;
+    animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    70%{
+        box-shadow:0 0 0 17px rgba(239,68,68,0);
+    }
+}
+
+.alarm-content h3{
+    font-size:13px;
+    letter-spacing:3px;
+    color:#a5b4fc;
+    margin-bottom:18px;
+}
+
+.alarm-greeting{
+    font-size:17px;
+    color:#e0e7ff;
+    margin-bottom:13px;
+}
+
+.alarm-time-big{
+    font-size:65px;
+    font-weight:800;
+    line-height:1;
+    margin-bottom:16px;
+}
+
+.alarm-act-name{
+    font-size:26px;
+    font-weight:800;
+    margin-bottom:9px;
+}
+
+.alarm-msg{
+    font-size:14px;
+    line-height:1.5;
+    color:#c7d2fe;
+}
+
+.alarm-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.alarm-actions button{
+    border:0;
+    border-radius:14px;
+    color:#fff;
+    padding:14px 6px;
+    font-weight:800;
+    font-size:12px;
+    cursor:pointer;
+}
+
+.snooze-btn{
+    background:rgba(99,102,241,.55);
+}
+
+.stop-btn{
+    background:#ef4444;
+}
+
+.done-btn{
+    grid-column:1/-1;
+    background:#10b981;
+}
+
+/* SNOOZE */
+
+.snooze-sheet{
+    position:absolute;
+    inset:0;
+    background:rgba(15,23,42,.55);
+    z-index:130;
+    display:none;
+    align-items:flex-end;
+}
+
+.snooze-sheet.active{
+    display:flex;
+}
+
+.snooze-box{
+    width:100%;
+    background:#fff;
+    border-radius:22px 22px 0 0;
+    padding:20px;
+}
+
+.snooze-box h3{
+    font-size:16px;
+    text-align:center;
+    margin-bottom:14px;
+}
+
+.snooze-options{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+}
+
+.snooze-option{
+    border:1px solid var(--border);
+    background:#f8fafc;
+    border-radius:12px;
+    padding:13px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+/* TIME WHEEL */
+
+.wheel-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.55);
+    z-index:120;
+    display:none;
+    align-items:flex-end;
+    justify-content:center;
+}
+
+.wheel-overlay.active{
+    display:flex;
+}
+
+.wheel-sheet{
+    width:100%;
+    max-width:420px;
+    background:#fff;
+    border-radius:22px 22px 0 0;
+    padding:18px 18px 28px;
+}
+
+.wheel-row{
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin:12px 0 18px;
+}
+
+.wheel-column{
+    height:190px;
+    width:100px;
+    overflow-y:scroll;
+    scroll-snap-type:y proximity;
+    padding:69px 0;
+    background:linear-gradient(#f8fafc,#e0e7ff 46%,#e0e7ff 54%,#f8fafc);
+    border-radius:14px;
+    scrollbar-width:none;
+}
+
+.wheel-column::-webkit-scrollbar{
+    display:none;
+}
+
+.wheel-option{
+    height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+    font-weight:800;
+    color:#94a3b8;
+    scroll-snap-align:center;
+}
+
+.wheel-option.selected{
+    color:#1e1b4b;
+    transform:scale(1.08);
+}
+
+.wheel-actions{
+    display:flex;
+    gap:8px;
+}
+
+.wheel-actions button{
+    flex:1;
+    padding:13px;
+    border:0;
+    border-radius:12px;
+    font-weight:800;
+}
+
+.wheel-confirm{
+    background:var(--primary);
+    color:#fff;
+}
+</style>
 </head>
 
 <body>
 
 <div class="phone-frame">
 
-    <!-- =========================
-         HOME / HARI INI
-    ========================= -->
+<!-- HOME -->
 
-    <div id="screen-home" class="screen active">
+<div id="screen-home" class="screen active">
 
-        <div class="brand-header">
-            <div class="brand-logo">
-                <h1>MAESTRO</h1>
-                <span>easy does it</span>
-            </div>
-
-            <div class="user-badge" id="display-username">Anto</div>
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
         </div>
-
-        <div class="greeting-section">
-            <h2 id="home-greeting">Selamat datang 👋</h2>
-            <p id="current-date-text"></p>
-        </div>
-
-        <div class="today-hero">
-
-            <div class="hero-label">MAESTRO • HARI INI</div>
-
-            <div class="hero-title" id="hero-title">
-                Siap menjalani hari?
-            </div>
-
-            <div class="hero-subtitle" id="hero-subtitle">
-                Selesaikan satu per satu. Easy does it.
-            </div>
-
-            <div class="hero-progress">
-                <div class="hero-progress-fill" id="hero-progress"></div>
-            </div>
-
-        </div>
-
-        <div class="section-header">
-            <div class="section-title">Berikutnya</div>
-            <button class="section-link" onclick="switchScreen('schedule')">
-                Lihat jadwal
-            </button>
-        </div>
-
-        <div id="next-activity-container"></div>
-
-        <div class="section-header">
-            <div class="section-title">Aktivitas Hari Ini</div>
-        </div>
-
-        <div id="activity-list-container" class="activity-grid"></div>
-
+        <div class="user-badge" id="display-username">Anto</div>
     </div>
 
-
-    <!-- =========================
-         JADWAL
-    ========================= -->
-
-    <div id="screen-schedule" class="screen">
-
-        <div class="brand-header">
-
-            <div class="brand-logo">
-                <h1>MAESTRO</h1>
-                <span>easy does it</span>
-            </div>
-
-            <div class="user-badge">Jadwal</div>
-
-        </div>
-
-        <div class="greeting-section">
-            <h2>Jadwal Pengingat</h2>
-            <p>Atur, edit, atau hapus pengingatmu di sini.</p>
-        </div>
-
-        <div class="section-header">
-            <div class="section-title">Semua Jadwal</div>
-            <span id="schedule-count" style="font-size:10px;color:var(--text-muted);"></span>
-        </div>
-
-        <div id="schedule-list-container"></div>
-
+    <div class="greeting-section">
+        <h2 id="greeting-title">Selamat datang 👋</h2>
+        <p id="current-date-text"></p>
     </div>
 
-
-    <!-- =========================
-         PERFORMANCE
-    ========================= -->
-
-    <div id="screen-stats" class="screen">
-
-        <div class="brand-header">
-
-            <div class="brand-logo">
-                <h1>MAESTRO</h1>
-                <span>easy does it</span>
+    <div class="today-hero">
+        <div class="today-hero-top">
+            <div>
+                <small>PROGRESS HARI INI</small>
+                <h3 id="hero-progress">0%</h3>
             </div>
+            <div class="hero-percent" id="hero-percent">0%</div>
+        </div>
+    </div>
 
-            <div class="user-badge">Performa</div>
+    <div class="section-title">Berikutnya</div>
+    <div id="next-activity-container"></div>
 
+    <div class="section-title">Aktivitas Hari Ini</div>
+    <div id="activity-list-container" class="activity-grid"></div>
+
+</div>
+
+
+<!-- JADWAL -->
+
+<div id="screen-schedule" class="screen">
+
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
+        </div>
+        <div class="user-badge">Jadwal</div>
+    </div>
+
+    <div class="greeting-section">
+        <h2>Semua Pengingat</h2>
+        <p>Atur jadwal yang ingin MAESTRO ingatkan.</p>
+    </div>
+
+    <div id="schedule-list-container" class="activity-grid"></div>
+
+</div>
+
+
+<!-- STATISTIK -->
+
+<div id="screen-stats" class="screen">
+
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
+        </div>
+        <div class="user-badge">Statistik</div>
+    </div>
+
+    <div class="greeting-section">
+        <h2>Perkembanganmu</h2>
+        <p>Bukan soal sempurna, tapi soal konsisten.</p>
+    </div>
+
+    <div class="stat-grid">
+
+        <div class="stat-box">
+            <strong id="stat-completed">0</strong>
+            <span>Selesai</span>
         </div>
 
-        <div class="greeting-section">
-            <h2>Performa Kamu</h2>
-            <p>Lihat seberapa konsisten kamu menjalani pengingat.</p>
+        <div class="stat-box">
+            <strong id="stat-missed">0</strong>
+            <span>Terlewat</span>
         </div>
 
-        <div class="stats-grid">
-
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-check"></i>
-                </div>
-
-                <div class="stat-value" id="stat-completed">0</div>
-                <div class="stat-label">Selesai hari ini</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-list-check"></i>
-                </div>
-
-                <div class="stat-value" id="stat-total">0</div>
-                <div class="stat-label">Total pengingat</div>
-            </div>
-
-        </div>
-
-        <div class="stats-grid">
-
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-percent"></i>
-                </div>
-
-                <div class="stat-value" id="stat-percent">0%</div>
-                <div class="stat-label">Pencapaian hari ini</div>
-            </div>
-
-            <div class="stat-card">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-fire"></i>
-                </div>
-
-                <div class="stat-value" id="stat-streak">0</div>
-                <div class="stat-label">Hari konsisten</div>
-            </div>
-
-        </div>
-
-        <div class="streak-card">
-
-            <div style="font-size:11px;font-weight:800;color:#aaa8d2;">
-                🔥 STREAK
-            </div>
-
-            <div class="streak-number">
-                <span id="streak-big">0</span> hari
-            </div>
-
-            <p id="streak-message">
-                Mulai selesaikan aktivitas hari ini untuk membangun konsistensi.
-            </p>
-
+        <div class="stat-box">
+            <strong id="stat-snoozed">0</strong>
+            <span>Ditunda</span>
         </div>
 
     </div>
 
+    <div class="section-title">Konsistensi 7 Hari</div>
 
-    <!-- =========================
-         SETTINGS
-    ========================= -->
+    <div class="progress-card" id="seven-day-history"></div>
 
-    <div id="screen-settings" class="screen">
+    <div class="progress-card">
+        <h3 style="font-size:15px;margin-bottom:5px;">
+            🔥 Konsistensi
+        </h3>
 
-        <div class="brand-header">
-
-            <div class="brand-logo">
-                <h1>MAESTRO</h1>
-                <span>easy does it</span>
-            </div>
-
-            <div class="user-badge">Pengaturan</div>
-
-        </div>
-
-        <div class="settings-card">
-
-            <h3>Nama Panggilan</h3>
-
-            <p style="margin-bottom:12px;">
-                Nama ini digunakan Maestro ketika menyapamu.
-            </p>
-
-            <input
-                type="text"
-                id="input-name"
-                class="form-control"
-                value="Anto"
-                oninput="saveSettings(this.value)"
-            >
-
-        </div>
-
-
-        <div class="settings-card" id="permission-panel">
-
-            <h3>Izin Alarm</h3>
-
-            <p id="permission-summary">
-                Memeriksa izin perangkat...
-            </p>
-
-            <div id="permission-notification-row" class="permission-row">
-                <button
-                    class="btn-primary"
-                    onclick="openPermission('notification')"
-                >
-                    Izinkan Notifikasi
-                </button>
-            </div>
-
-            <div id="permission-alarm-row" class="permission-row">
-                <button
-                    class="btn-primary"
-                    onclick="openPermission('alarm')"
-                >
-                    Izinkan Alarm Tepat Waktu
-                </button>
-            </div>
-
-            <div id="permission-fullscreen-row" class="permission-row">
-                <button
-                    class="btn-primary"
-                    style="background:#303449;"
-                    onclick="openPermission('fullscreen')"
-                >
-                    Izinkan Layar Alarm Penuh
-                </button>
-            </div>
-
-        </div>
-
-
-        <div class="settings-card">
-
-            <h3>MAESTRO</h3>
-
-            <p>
-                Pengingat sederhana untuk membantu kamu melakukan hal-hal
-                penting tepat waktu. Tidak perlu terburu-buru.
-                <strong>easy does it.</strong>
-            </p>
-
-        </div>
-
+        <p id="consistency-text"
+           style="font-size:12px;color:var(--text-muted);line-height:1.5;">
+            Belum cukup data.
+        </p>
     </div>
 
+</div>
 
-    <!-- =========================
-         ADD ACTIVITY
-    ========================= -->
 
-    <div id="screen-add" class="screen">
+<!-- SETTINGS -->
 
-        <div class="brand-header">
+<div id="screen-settings" class="screen">
 
-            <div class="brand-logo">
-                <h1>MAESTRO</h1>
-                <span>easy does it</span>
-            </div>
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
+        </div>
+        <div class="user-badge">Pengaturan</div>
+    </div>
 
+    <div class="form-group">
+        <label>Nama Panggilan</label>
+        <input
+            type="text"
+            id="input-name"
+            class="form-control"
+            value="Anto"
+            oninput="saveSettings(this.value)"
+        >
+    </div>
+
+    <div
+        class="progress-card"
+        id="permission-panel"
+    >
+        <h3 style="font-size:15px;margin-bottom:5px;">
+            🔔 Izin Alarm
+        </h3>
+
+        <p
+            id="permission-summary"
+            style="font-size:11px;color:var(--text-muted);margin-bottom:10px;"
+        >
+            Memeriksa izin perangkat...
+        </p>
+
+        <div id="permission-notification-row">
             <button
-                onclick="cancelAdd()"
-                style="border:0;background:none;font-size:20px;color:var(--text-main);"
+                class="btn-primary"
+                onclick="openPermission('notification')"
+                style="margin-bottom:7px;"
             >
-                <i class="fa-solid fa-xmark"></i>
+                Izinkan Notifikasi
             </button>
-
         </div>
 
-        <div class="greeting-section">
-            <h2 id="add-screen-title">Tambah Pengingat</h2>
-            <p>Buat pengingat yang benar-benar berguna.</p>
-        </div>
-
-
-        <!-- NAME -->
-
-        <div class="form-group">
-
-            <label>Nama Aktivitas</label>
-
-            <input
-                type="text"
-                id="add-name"
-                class="form-control"
-                placeholder="Contoh: Minum air putih"
-            >
-
-        </div>
-
-
-        <!-- TIME -->
-
-        <div class="form-group">
-
-            <label>Jam Pengingat</label>
-
+        <div id="permission-alarm-row">
             <button
-                type="button"
-                id="add-time-button"
-                class="form-control"
-                style="text-align:left;"
-                onclick="openTimePicker()"
+                class="btn-primary"
+                onclick="openPermission('alarm')"
+                style="margin-bottom:7px;"
             >
-                08:00
+                Izinkan Alarm Tepat Waktu
             </button>
-
-            <input
-                type="hidden"
-                id="add-time"
-                value="08:00"
-            >
-
         </div>
 
+        <div id="permission-fullscreen-row">
+            <button
+                class="btn-primary"
+                onclick="openPermission('fullscreen')"
+                style="background:#334155;"
+            >
+                Izinkan Layar Alarm Penuh
+            </button>
+        </div>
 
-        <!-- CATEGORY -->
+    </div>
 
-        <div class="form-group">
+</div>
 
-            <label>Kategori</label>
 
-            <div class="category-grid">
+<!-- ADD -->
 
-                <button
-                    type="button"
-                    class="category-option active"
-                    data-category="HEALTH"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">💧</span>
-                    Kesehatan
-                </button>
+<div id="screen-add" class="screen">
 
-                <button
-                    type="button"
-                    class="category-option"
-                    data-category="SPORT"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">🏃</span>
-                    Olahraga
-                </button>
+    <div class="brand-header">
 
-                <button
-                    type="button"
-                    class="category-option"
-                    data-category="MEDICINE"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">💊</span>
-                    Obat
-                </button>
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>Pengingat baru</span>
+        </div>
 
-                <button
-                    type="button"
-                    class="category-option"
-                    data-category="WORK"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">💼</span>
-                    Kerja
-                </button>
+        <button
+            onclick="switchScreen('home')"
+            style="background:none;border:0;font-size:18px;"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
 
-                <button
-                    type="button"
-                    class="category-option"
-                    data-category="STUDY"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">📚</span>
-                    Belajar
-                </button>
+    </div>
 
-                <button
-                    type="button"
-                    class="category-option"
-                    data-category="WORSHIP"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">🤲</span>
-                    Ibadah
-                </button>
 
-                <button
-                    type="button"
-                    class="category-option"
-                    data-category="SLEEP"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">🌙</span>
-                    Tidur
-                </button>
+    <div class="form-group">
 
-                <button
-                    type="button"
-                    class="category-option"
-                    data-category="OTHER"
-                    onclick="selectCategory(this)"
-                >
-                    <span class="cat-icon">📌</span>
-                    Lainnya
-                </button>
+        <label>Apa yang ingin diingatkan?</label>
 
+        <input
+            type="text"
+            id="add-name"
+            class="form-control"
+            placeholder="Contoh: Minum air"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>Kategori</label>
+
+        <div class="category-grid">
+
+            <div
+                class="category-option selected"
+                data-category="HEALTH"
+                onclick="selectCategory(this)"
+            >
+                <span>💧</span>
+                <small>Kesehatan</small>
             </div>
 
-            <input
-                type="hidden"
-                id="add-category"
-                value="HEALTH"
+            <div
+                class="category-option"
+                data-category="SPORT"
+                onclick="selectCategory(this)"
             >
+                <span>🏃</span>
+                <small>Olahraga</small>
+            </div>
+
+            <div
+                class="category-option"
+                data-category="WORK"
+                onclick="selectCategory(this)"
+            >
+                <span>💼</span>
+                <small>Kerja</small>
+            </div>
+
+            <div
+                class="category-option"
+                data-category="MEDICINE"
+                onclick="selectCategory(this)"
+            >
+                <span>💊</span>
+                <small>Obat</small>
+            </div>
+
+            <div
+                class="category-option"
+                data-category="SLEEP"
+                onclick="selectCategory(this)"
+            >
+                <span>😴</span>
+                <small>Tidur</small>
+            </div>
+
+            <div
+                class="category-option"
+                data-category="GENERAL"
+                onclick="selectCategory(this)"
+            >
+                <span>📌</span>
+                <small>Umum</small>
+            </div>
 
         </div>
 
+        <input type="hidden" id="add-category" value="HEALTH">
 
-        <!-- ICON -->
+    </div>
 
-        <div class="form-group">
 
-            <label>Ikon</label>
+    <div class="form-group">
 
-            <input
-                type="text"
-                id="add-icon"
-                class="form-control"
-                value="⏰"
-                maxlength="4"
+        <label>Jam alarm</label>
+
+        <button
+            type="button"
+            id="add-time-button"
+            class="form-control"
+            onclick="openTimePicker()"
+            style="text-align:left;"
+        >
+            08:00
+        </button>
+
+        <input
+            type="hidden"
+            id="add-time"
+            value="08:00"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>Ikon</label>
+
+        <input
+            type="text"
+            id="add-icon"
+            class="form-control"
+            value="💧"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>Pengulangan</label>
+
+        <div class="repeat-grid">
+
+            <div
+                class="repeat-option selected"
+                data-repeat="DAILY"
+                onclick="selectRepeat(this)"
             >
+                Setiap hari
+            </div>
+
+            <div
+                class="repeat-option"
+                data-repeat="WEEKDAYS"
+                onclick="selectRepeat(this)"
+            >
+                Senin–Jumat
+            </div>
+
+            <div
+                class="repeat-option"
+                data-repeat="CUSTOM"
+                onclick="selectRepeat(this)"
+            >
+                Hari tertentu
+            </div>
+
+            <div
+                class="repeat-option"
+                data-repeat="ONCE"
+                onclick="selectRepeat(this)"
+            >
+                Sekali saja
+            </div>
 
         </div>
 
-
-        <!-- SLEEP OPTIONS -->
+        <input
+            type="hidden"
+            id="add-repeat"
+            value="DAILY"
+        >
 
         <div
-            id="sleep-options"
-            class="settings-card"
+            id="custom-days"
             style="display:none;"
         >
 
-            <h3>Pengaturan Tidur</h3>
+            <div class="days-grid">
 
-            <p style="margin-bottom:12px;">
-                Pilih hari jika alarm tidur ingin berulang.
-            </p>
-
-            <div
-                id="sleep-days"
-                style="
-                    display:grid;
-                    grid-template-columns:repeat(4,1fr);
-                    gap:7px;
-                    font-size:10px;
-                    font-weight:700;
-                "
-            >
-
-                <label>
-                    <input type="checkbox" value="2">
-                    Sen
-                </label>
-
-                <label>
-                    <input type="checkbox" value="3">
-                    Sel
-                </label>
-
-                <label>
-                    <input type="checkbox" value="4">
-                    Rab
-                </label>
-
-                <label>
-                    <input type="checkbox" value="5">
-                    Kam
-                </label>
-
-                <label>
-                    <input type="checkbox" value="6">
-                    Jum
-                </label>
-
-                <label>
-                    <input type="checkbox" value="7">
-                    Sab
-                </label>
-
-                <label>
-                    <input type="checkbox" value="1">
-                    Min
-                </label>
+                <div class="day-option" data-day="1">Min</div>
+                <div class="day-option" data-day="2">Sen</div>
+                <div class="day-option" data-day="3">Sel</div>
+                <div class="day-option" data-day="4">Rab</div>
+                <div class="day-option" data-day="5">Kam</div>
+                <div class="day-option" data-day="6">Jum</div>
+                <div class="day-option" data-day="7">Sab</div>
 
             </div>
 
         </div>
 
-
-        <button
-            class="btn-primary"
-            id="save-activity-button"
-            onclick="addNewActivity()"
-        >
-            Simpan Pengingat
-        </button>
-
     </div>
 
 
-    <!-- =========================
-         TIME PICKER
-    ========================= -->
+    <div class="form-group">
+
+        <label>Pesan pengingat</label>
+
+        <select
+            id="message-mode"
+            class="form-control"
+            onchange="toggleCustomMessage()"
+        >
+
+            <option value="AUTO">
+                ✨ Otomatis sesuai kategori
+            </option>
+
+            <option value="CUSTOM">
+                ✏️ Tulis pesan sendiri
+            </option>
+
+        </select>
+
+    </div>
+
 
     <div
-        id="time-wheel"
-        class="wheel-overlay"
-        onclick="if(event.target===this) closeTimePicker()"
+        id="custom-message-box"
+        class="form-group"
+        style="display:none;"
     >
 
-        <div class="wheel-sheet">
-
-            <h3>Pilih jam pengingat</h3>
-
-            <div class="wheel-row">
-
-                <div
-                    id="hour-wheel"
-                    class="wheel-column"
-                ></div>
-
-                <div
-                    style="
-                        font-size:28px;
-                        font-weight:800;
-                    "
-                >
-                    :
-                </div>
-
-                <div
-                    id="minute-wheel"
-                    class="wheel-column"
-                ></div>
-
-            </div>
-
-            <div class="wheel-actions">
-
-                <button
-                    onclick="closeTimePicker()"
-                >
-                    Batal
-                </button>
-
-                <button
-                    class="wheel-confirm"
-                    onclick="confirmTimePicker()"
-                >
-                    Pilih Waktu
-                </button>
-
-            </div>
-
-        </div>
+        <textarea
+            id="add-message"
+            class="form-control"
+            rows="3"
+            placeholder="Contoh: Anto, jangan lupa minum air dulu 💧"
+        ></textarea>
 
     </div>
 
-
-    <!-- =========================
-         FAB
-    ========================= -->
 
     <button
-        class="fab-btn"
-        onclick="openAddScreen()"
+        class="btn-primary"
+        onclick="addNewActivity()"
     >
-        <i class="fa-solid fa-plus"></i>
+        <i class="fa-solid fa-check"></i>
+        Simpan Pengingat
     </button>
 
-
-    <!-- =========================
-         NAV
-    ========================= -->
-
-    <nav class="bottom-nav">
-
-        <button
-            class="nav-item active"
-            onclick="switchScreen('home',this)"
-        >
-            <i class="fa-solid fa-house"></i>
-            <span>Hari Ini</span>
-        </button>
-
-        <button
-            class="nav-item"
-            onclick="switchScreen('schedule',this)"
-        >
-            <i class="fa-solid fa-calendar-days"></i>
-            <span>Jadwal</span>
-        </button>
-
-        <button
-            class="nav-item"
-            onclick="switchScreen('stats',this)"
-        >
-            <i class="fa-solid fa-chart-line"></i>
-            <span>Performa</span>
-        </button>
-
-        <button
-            class="nav-item"
-            onclick="switchScreen('settings',this)"
-        >
-            <i class="fa-solid fa-gear"></i>
-            <span>Pengaturan</span>
-        </button>
-
-    </nav>
+</div>
 
 
-    <!-- =========================
-         ALARM SCREEN
-    ========================= -->
+<!-- TIME PICKER -->
 
-    <div
-        id="alarm-screen"
-        class="alarm-screen"
-    >
+<div
+    id="time-wheel"
+    class="wheel-overlay"
+    onclick="if(event.target===this)closeTimePicker()"
+>
 
-        <div>
+    <div class="wheel-sheet">
 
-            <div class="alarm-brand">
-                MAESTRO
-            </div>
+        <h3 style="text-align:center;font-size:16px;">
+            Pilih jam alarm
+        </h3>
 
-            <div class="alarm-tagline">
-                easy does it
-            </div>
-
-            <div class="alarm-pulse"></div>
+        <div class="wheel-row">
 
             <div
-                class="alarm-period"
-                id="alarm-period"
-            >
-                PAGI
+                id="hour-wheel"
+                class="wheel-column"
+            ></div>
+
+            <div style="font-size:28px;font-weight:800;align-self:center;">
+                :
             </div>
 
             <div
-                class="alarm-greeting"
-                id="alarm-greeting"
-            >
-                Anto, waktunya melakukan aktivitas.
-            </div>
-
-            <div
-                class="alarm-time-big"
-                id="alarm-time-display"
-            >
-                08:00
-            </div>
-
-            <div
-                class="alarm-category"
-                id="alarm-category"
-            >
-                PENGINGAT
-            </div>
-
-            <div
-                class="alarm-act-name"
-                id="alarm-act-title"
-            >
-                💧 MINUM AIR
-            </div>
-
-            <div
-                class="alarm-msg"
-                id="alarm-msg-text"
-            >
-                Jangan lupa melakukan aktivitasmu.
-            </div>
+                id="minute-wheel"
+                class="wheel-column"
+            ></div>
 
         </div>
 
+        <div class="wheel-actions">
 
-        <div class="alarm-actions">
-
-            <button
-                class="btn-snooze-alarm"
-                onclick="snoozeAlarm()"
-            >
-                TUNDA 5 MENIT
+            <button onclick="closeTimePicker()">
+                Batal
             </button>
 
             <button
-                class="btn-stop-alarm"
-                onclick="stopAlarm()"
+                class="wheel-confirm"
+                onclick="confirmTimePicker()"
             >
-                SELESAI ✓
+                Pilih Waktu
             </button>
 
         </div>
@@ -1724,267 +1310,306 @@
 </div>
 
 
+<!-- SNOOZE -->
+
+<div
+    id="snooze-sheet"
+    class="snooze-sheet"
+    onclick="if(event.target===this)closeSnooze()"
+>
+
+    <div class="snooze-box">
+
+        <h3>⏰ Tunda pengingat</h3>
+
+        <div class="snooze-options">
+
+            <button
+                class="snooze-option"
+                onclick="applySnooze(5)"
+            >
+                5 menit
+            </button>
+
+            <button
+                class="snooze-option"
+                onclick="applySnooze(10)"
+            >
+                10 menit
+            </button>
+
+            <button
+                class="snooze-option"
+                onclick="applySnooze(15)"
+            >
+                15 menit
+            </button>
+
+            <button
+                class="snooze-option"
+                onclick="applySnooze(30)"
+            >
+                30 menit
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- FAB -->
+
+<button
+    class="fab-btn"
+    onclick="openAddScreen()"
+>
+    <i class="fa-solid fa-plus"></i>
+</button>
+
+
+<!-- NAV -->
+
+<nav class="bottom-nav">
+
+    <button
+        class="nav-item active"
+        onclick="switchScreen('home',this)"
+    >
+        <i class="fa-solid fa-house"></i>
+        <span>Hari Ini</span>
+    </button>
+
+    <button
+        class="nav-item"
+        onclick="switchScreen('schedule',this)"
+    >
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Jadwal</span>
+    </button>
+
+    <button
+        class="nav-item"
+        onclick="switchScreen('stats',this)"
+    >
+        <i class="fa-solid fa-chart-simple"></i>
+        <span>Progress</span>
+    </button>
+
+    <button
+        class="nav-item"
+        onclick="switchScreen('settings',this)"
+    >
+        <i class="fa-solid fa-gear"></i>
+        <span>Pengaturan</span>
+    </button>
+
+</nav>
+
+
+<!-- ALARM -->
+
+<div
+    id="alarm-screen"
+    class="alarm-screen"
+>
+
+    <div class="alarm-content">
+
+        <div class="alarm-pulse"></div>
+
+        <h3>MAESTRO REMINDER</h3>
+
+        <div
+            class="alarm-greeting"
+            id="alarm-greeting"
+        >
+            Anto, waktunya melakukan aktivitas.
+        </div>
+
+        <div
+            class="alarm-time-big"
+            id="alarm-time-display"
+        >
+            16:00
+        </div>
+
+        <div
+            class="alarm-act-name"
+            id="alarm-act-title"
+        >
+            💧 MINUM AIR
+        </div>
+
+        <div
+            class="alarm-msg"
+            id="alarm-msg-text"
+        >
+            Jangan lupa menyelesaikan aktivitasmu.
+        </div>
+
+    </div>
+
+
+    <div class="alarm-actions">
+
+        <button
+            class="snooze-btn"
+            onclick="openSnooze()"
+        >
+            ⏰ TUNDA
+        </button>
+
+        <button
+            class="stop-btn"
+            onclick="stopAlarm()"
+        >
+            MATIKAN
+        </button>
+
+        <button
+            class="done-btn"
+            onclick="completeAlarm()"
+        >
+            ✓ SUDAH SELESAI
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+
 <script>
 
-/* ============================================================
-   DATA DASAR
-============================================================ */
+/* =========================================================
+   DATA
+========================================================= */
 
-const defaultActivities = [
+let defaultActivities=[
     {
-        id: 1,
-        name: "Bangun",
-        time: "06:00",
-        icon: "🌅",
-        category: "SLEEP",
-        kind: "SLEEP",
-        days: [],
-        done: false
+        id:1,
+        name:"Bangun",
+        time:"06:00",
+        icon:"🌅",
+        kind:"SLEEP",
+        category:"SLEEP",
+        repeat:"DAILY",
+        days:[],
+        message:"",
+        done:false
     },
     {
-        id: 2,
-        name: "Olahraga",
-        time: "07:00",
-        icon: "🏃",
-        category: "SPORT",
-        kind: "ACTIVITY",
-        days: [],
-        done: false
+        id:2,
+        name:"Olahraga",
+        time:"07:00",
+        icon:"🏃",
+        kind:"ACTIVITY",
+        category:"SPORT",
+        repeat:"DAILY",
+        days:[],
+        message:"",
+        done:false
     }
 ];
 
+let activities=
+    JSON.parse(localStorage.getItem("maestro_activities"))
+    || defaultActivities;
 
-let activities =
-    JSON.parse(localStorage.getItem("maestro_activities")) ||
-    defaultActivities;
+let userName=
+    localStorage.getItem("maestro_username")
+    || "Anto";
 
-let userName =
-    localStorage.getItem("maestro_username") ||
-    "Anto";
+let triggeredAlarms={};
 
-let triggeredAlarms = {};
+let selectedTime=deviceTime();
 
-let selectedTime = deviceTime();
+let currentAlarmId=null;
 
-let selectedCategory = "HEALTH";
+let selectedCategory="HEALTH";
 
-let editingId = 0;
+let selectedRepeat="DAILY";
+
+let WHEEL_ROW=52;
 
 
-/* ============================================================
-   CATEGORY DATA
-============================================================ */
+/* =========================================================
+   MESSAGE SYSTEM
+========================================================= */
 
-const CATEGORY_DATA = {
+const categoryMessages={
 
-    HEALTH: {
-        label: "Kesehatan",
-        icon: "💧",
-        messages: [
-            "Yuk jaga kondisi tubuhmu hari ini.",
-            "Sedikit perhatian untuk kesehatanmu, ya.",
-            "Jangan lupa, tubuhmu juga perlu diperhatikan.",
-            "Waktunya melakukan sesuatu yang baik untuk tubuhmu."
-        ]
-    },
+    HEALTH:[
+        "{name}, waktunya jaga kesehatan 💧",
+        "Jangan lupa luangkan waktu untuk tubuhmu.",
+        "Yuk lakukan kebiasaan sehatmu sekarang."
+    ],
 
-    SPORT: {
-        label: "Olahraga",
-        icon: "🏃",
-        messages: [
-            "Yuk bergerak sebentar. Tubuhmu akan berterima kasih.",
-            "Saatnya olahraga. Tidak perlu sempurna, yang penting mulai.",
-            "Ayo gerak sedikit hari ini.",
-            "Waktunya menjaga tubuh tetap aktif."
-        ]
-    },
+    SPORT:[
+        "{name}, waktunya bergerak! 🏃",
+        "Ayo olahraga sebentar. Tubuhmu butuh bergerak.",
+        "Saatnya bikin tubuh lebih aktif!"
+    ],
 
-    MEDICINE: {
-        label: "Obat",
-        icon: "💊",
-        messages: [
-            "Jangan lupa waktu obatmu.",
-            "Saatnya mengingat obat yang sudah dijadwalkan.",
-            "Pengingat kecil untuk menjaga rutinitas obatmu.",
-            "Waktunya obat. Jangan sampai terlewat."
-        ]
-    },
+    WORK:[
+        "{name}, waktunya fokus 💼",
+        "Satu tugas dulu. Pelan-pelan yang penting selesai.",
+        "Saatnya kembali ke pekerjaanmu."
+    ],
 
-    WORK: {
-        label: "Kerja",
-        icon: "💼",
-        messages: [
-            "Waktunya fokus sebentar pada pekerjaanmu.",
-            "Ada satu hal yang perlu kamu kerjakan.",
-            "Yuk lanjutkan pekerjaanmu.",
-            "Saatnya kembali ke tugas yang sudah kamu jadwalkan."
-        ]
-    },
+    MEDICINE:[
+        "{name}, jangan lupa obatmu 💊",
+        "Waktunya minum obat sesuai jadwal.",
+        "Jangan sampai jadwal obatmu terlewat."
+    ],
 
-    STUDY: {
-        label: "Belajar",
-        icon: "📚",
-        messages: [
-            "Yuk belajar sebentar. Sedikit demi sedikit.",
-            "Saatnya menambah satu hal baru hari ini.",
-            "Waktunya fokus belajar.",
-            "Ayo lanjutkan belajarnya. Easy does it."
-        ]
-    },
+    SLEEP:[
+        "{name}, waktunya istirahat 😴",
+        "Sudah waktunya tidur. Besok kita lanjut lagi.",
+        "Istirahat yang cukup supaya besok lebih siap."
+    ],
 
-    WORSHIP: {
-        label: "Ibadah",
-        icon: "🤲",
-        messages: [
-            "Waktunya mengambil jeda untuk ibadah.",
-            "Jangan lupa meluangkan waktu untuk ibadah.",
-            "Saatnya menenangkan diri dan beribadah.",
-            "Pengingat kecil untuk waktu ibadahmu."
-        ]
-    },
-
-    SLEEP: {
-        label: "Tidur",
-        icon: "🌙",
-        messages: [
-            "Waktunya beristirahat. Besok masih ada hari baru.",
-            "Sudah waktunya tidur. Istirahat yang cukup, ya.",
-            "Saatnya meletakkan aktivitas dan beristirahat.",
-            "Hari ini cukup. Sekarang waktunya istirahat."
-        ]
-    },
-
-    OTHER: {
-        label: "Lainnya",
-        icon: "📌",
-        messages: [
-            "Ada sesuatu yang sudah kamu jadwalkan.",
-            "Jangan lupa dengan pengingatmu.",
-            "Waktunya melakukan aktivitas yang kamu rencanakan.",
-            "Satu pengingat kecil untuk harimu."
-        ]
-    }
+    GENERAL:[
+        "{name}, waktunya melakukan sesuatu 📌",
+        "Pengingat untukmu. Jangan sampai terlewat.",
+        "Yuk selesaikan yang sudah kamu jadwalkan."
+    ]
 
 };
 
+function generateMessage(act){
 
-/* ============================================================
-   WAKTU
-============================================================ */
+    if(act.message && act.message.trim()){
+        return act.message;
+    }
 
-function deviceTime() {
+    let list=categoryMessages[act.category] || categoryMessages.GENERAL;
 
-    const now = new Date();
+    let message=list[Math.floor(Math.random()*list.length)];
 
-    return (
-        String(now.getHours()).padStart(2,"0") +
-        ":" +
-        String(now.getMinutes()).padStart(2,"0")
+    return message.replace(
+        "{name}",
+        userName
     );
-
 }
 
 
-function getPeriod(hour) {
-
-    if (hour >= 4 && hour < 11) {
-        return "PAGI";
-    }
-
-    if (hour >= 11 && hour < 15) {
-        return "SIANG";
-    }
-
-    if (hour >= 15 && hour < 18) {
-        return "SORE";
-    }
-
-    return "MALAM";
-
-}
-
-
-function getPeriodGreeting(hour) {
-
-    if (hour >= 4 && hour < 11) {
-        return "Selamat pagi";
-    }
-
-    if (hour >= 11 && hour < 15) {
-        return "Selamat siang";
-    }
-
-    if (hour >= 15 && hour < 18) {
-        return "Selamat sore";
-    }
-
-    return "Selamat malam";
-
-}
-
-
-/* ============================================================
-   PESAN ALARM OTOMATIS
-============================================================ */
-
-function getAlarmMessage(activity) {
-
-    const category =
-        activity.category ||
-        activity.kind ||
-        "OTHER";
-
-    const data =
-        CATEGORY_DATA[category] ||
-        CATEGORY_DATA.OTHER;
-
-    const messages = data.messages;
-
-    const index =
-        Math.floor(Date.now() / 1000) %
-        messages.length;
-
-    return messages[index];
-
-}
-
-
-function getAlarmGreeting(activity) {
-
-    const hour =
-        Number(activity.time.split(":")[0]);
-
-    const period =
-        getPeriodGreeting(hour);
-
-    if (
-        activity.category === "SLEEP" ||
-        activity.kind === "SLEEP"
-    ) {
-
-        return `${userName}, ${period.toLowerCase()}. Waktunya istirahat.`;
-
-    }
-
-    return `${userName}, ${period.toLowerCase()}. Waktunya ${activity.name.toLowerCase()}.`;
-
-}
-
-
-/* ============================================================
+/* =========================================================
    INIT
-============================================================ */
+========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",()=>{
 
-    document.getElementById("input-name").value =
-        userName;
+    document.getElementById("input-name").value=userName;
 
-    document.getElementById("add-time").value =
-        selectedTime;
+    selectedTime=deviceTime();
 
-    document.getElementById("add-time-button").innerText =
-        selectedTime;
+    document.getElementById("add-time").value=selectedTime;
+
+    document.getElementById("add-time-button").innerText=selectedTime;
 
     updateDate();
 
@@ -1992,25 +1617,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     refreshPermissionPanel();
 
-    if (window.AndroidBridge) {
+    if(window.AndroidBridge){
 
-        try {
+        AndroidBridge.setUserName(userName);
 
-            AndroidBridge.setUserName(userName);
-
-            AndroidBridge.syncActivities(
-                JSON.stringify(activities)
-            );
-
-        } catch(e) {
-
-            console.log("AndroidBridge sync:", e);
-
-        }
+        AndroidBridge.syncActivities(
+            JSON.stringify(activities)
+        );
 
     }
 
-    if (!window.AndroidBridge) {
+    if(!window.AndroidBridge){
 
         setInterval(checkAlarms,10000);
 
@@ -2019,84 +1636,35 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* ============================================================
-   DATE
-============================================================ */
-
-function updateDate() {
-
-    const now = new Date();
-
-    const days = [
-        "Minggu",
-        "Senin",
-        "Selasa",
-        "Rabu",
-        "Kamis",
-        "Jumat",
-        "Sabtu"
-    ];
-
-    const months = [
-        "Januari",
-        "Februari",
-        "Maret",
-        "April",
-        "Mei",
-        "Juni",
-        "Juli",
-        "Agustus",
-        "September",
-        "Oktober",
-        "November",
-        "Desember"
-    ];
-
-    document.getElementById("current-date-text").innerText =
-        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-
-}
-
-
-/* ============================================================
+/* =========================================================
    NAVIGATION
-============================================================ */
+========================================================= */
 
-function switchScreen(screenId, btnElement) {
+function switchScreen(screenId,btnElement){
 
     document
         .querySelectorAll(".screen")
-        .forEach(screen =>
-            screen.classList.remove("active")
-        );
+        .forEach(s=>s.classList.remove("active"));
 
-    const screen =
-        document.getElementById("screen-" + screenId);
+    document
+        .getElementById("screen-"+screenId)
+        .classList.add("active");
 
-    if (screen) {
-        screen.classList.add("active");
-    }
-
-    if (btnElement) {
+    if(btnElement){
 
         document
             .querySelectorAll(".nav-item")
-            .forEach(item =>
-                item.classList.remove("active")
-            );
+            .forEach(n=>n.classList.remove("active"));
 
         btnElement.classList.add("active");
 
     }
 
-    if (screenId !== "add") {
-        updateUI();
-    }
-
+    updateUI();
 }
 
 
-function openAddScreen() {
+function openAddScreen(){
 
     resetAddForm();
 
@@ -2105,24 +1673,59 @@ function openAddScreen() {
 }
 
 
-function cancelAdd() {
+/* =========================================================
+   DATE / GREETING
+========================================================= */
 
-    resetAddForm();
+function updateDate(){
 
-    switchScreen("home");
+    const now=new Date();
+
+    const date=now.toLocaleDateString(
+        "id-ID",
+        {
+            weekday:"long",
+            day:"numeric",
+            month:"long",
+            year:"numeric"
+        }
+    );
+
+    document.getElementById(
+        "current-date-text"
+    ).innerText=date;
+
+    let hour=now.getHours();
+
+    let greeting="Selamat datang 👋";
+
+    if(hour>=4 && hour<11)
+        greeting="Selamat pagi ☀️";
+
+    else if(hour>=11 && hour<15)
+        greeting="Selamat siang 🌤️";
+
+    else if(hour>=15 && hour<18)
+        greeting="Selamat sore 🌇";
+
+    else
+        greeting="Selamat malam 🌙";
+
+    document.getElementById(
+        "greeting-title"
+    ).innerText=
+        greeting+", "+userName;
 
 }
 
 
-/* ============================================================
+/* =========================================================
    SETTINGS
-============================================================ */
+========================================================= */
 
-function saveSettings(value) {
+function saveSettings(val){
 
-    userName =
-        value.trim() ||
-        "Maestro";
+    userName=val.trim() || "Maestro";
 
     localStorage.setItem(
         "maestro_username",
@@ -2131,234 +1734,211 @@ function saveSettings(value) {
 
     document.getElementById(
         "display-username"
-    ).innerText = userName;
+    ).innerText=userName;
 
-    if (window.AndroidBridge) {
+    if(window.AndroidBridge)
+        AndroidBridge.setUserName(userName);
 
-        try {
-            AndroidBridge.setUserName(userName);
-        } catch(e) {}
-
-    }
+    updateDate();
 
 }
 
 
-/* ============================================================
-   CATEGORY SELECTOR
-============================================================ */
+/* =========================================================
+   CATEGORY
+========================================================= */
 
-function selectCategory(button) {
+function selectCategory(el){
 
     document
         .querySelectorAll(".category-option")
-        .forEach(item =>
-            item.classList.remove("active")
-        );
+        .forEach(x=>x.classList.remove("selected"));
 
-    button.classList.add("active");
+    el.classList.add("selected");
 
-    selectedCategory =
-        button.dataset.category;
+    selectedCategory=
+        el.dataset.category;
 
     document.getElementById(
         "add-category"
-    ).value = selectedCategory;
+    ).value=selectedCategory;
 
-    toggleSleepOptions();
-
-    autoIconFromCategory();
-
-}
-
-
-function autoIconFromCategory() {
-
-    const iconInput =
-        document.getElementById("add-icon");
-
-    const data =
-        CATEGORY_DATA[selectedCategory];
-
-    if (!data) return;
-
-    if (
-        !iconInput.value ||
-        iconInput.value === "⏰" ||
-        Object.values(CATEGORY_DATA)
-            .some(x => x.icon === iconInput.value)
-    ) {
-
-        iconInput.value =
-            data.icon;
-
-    }
-
-}
-
-
-/* ============================================================
-   SLEEP
-============================================================ */
-
-function toggleSleepOptions() {
-
-    const box =
-        document.getElementById("sleep-options");
-
-    if (selectedCategory === "SLEEP") {
-
-        box.style.display = "block";
-
-    } else {
-
-        box.style.display = "none";
-
-    }
-
-}
-
-
-function scheduleLabel(activity) {
-
-    if (
-        !activity.days ||
-        !activity.days.length
-    ) {
-
-        return "Satu kali";
-
-    }
-
-    const labels = {
-        1:"Min",
-        2:"Sen",
-        3:"Sel",
-        4:"Rab",
-        5:"Kam",
-        6:"Jum",
-        7:"Sab"
+    const icons={
+        HEALTH:"💧",
+        SPORT:"🏃",
+        WORK:"💼",
+        MEDICINE:"💊",
+        SLEEP:"😴",
+        GENERAL:"📌"
     };
 
-    return (
-        "Setiap " +
-        activity.days
-            .map(day => labels[day])
-            .join(", ")
-    );
+    document.getElementById(
+        "add-icon"
+    ).value=icons[selectedCategory];
 
 }
 
 
-/* ============================================================
-   ADD / EDIT
-============================================================ */
+/* =========================================================
+   REPEAT
+========================================================= */
 
-function addNewActivity() {
+function selectRepeat(el){
 
-    const name =
+    document
+        .querySelectorAll(".repeat-option")
+        .forEach(x=>x.classList.remove("selected"));
+
+    el.classList.add("selected");
+
+    selectedRepeat=
+        el.dataset.repeat;
+
+    document.getElementById(
+        "add-repeat"
+    ).value=selectedRepeat;
+
+    document.getElementById(
+        "custom-days"
+    ).style.display=
+        selectedRepeat==="CUSTOM"
+        ?"block"
+        :"none";
+
+}
+
+
+/* =========================================================
+   CUSTOM MESSAGE
+========================================================= */
+
+function toggleCustomMessage(){
+
+    document.getElementById(
+        "custom-message-box"
+    ).style.display=
+        document.getElementById("message-mode").value==="CUSTOM"
+        ?"block"
+        :"none";
+
+}
+
+
+/* =========================================================
+   ADD ACTIVITY
+========================================================= */
+
+function addNewActivity(){
+
+    const name=
         document.getElementById("add-name")
-            .value.trim();
+        .value.trim();
 
-    const time =
+    const time=
         document.getElementById("add-time")
-            .value;
+        .value;
 
-    const icon =
+    const icon=
         document.getElementById("add-icon")
-            .value.trim() ||
-        CATEGORY_DATA[selectedCategory].icon;
+        .value || "📌";
 
-    const category =
-        selectedCategory;
+    const category=
+        document.getElementById("add-category")
+        .value;
 
-    const days =
-        category === "SLEEP"
-            ? Array.from(
-                document.querySelectorAll(
-                    "#sleep-days input:checked"
-                )
-            ).map(x => Number(x.value))
-            : [];
+    const repeat=
+        document.getElementById("add-repeat")
+        .value;
 
-    if (!name) {
+    const messageMode=
+        document.getElementById("message-mode")
+        .value;
 
-        alert("Nama aktivitas belum diisi.");
+    const message=
+        messageMode==="CUSTOM"
+        ?document.getElementById("add-message").value.trim()
+        :"";
+
+    const days=
+        Array.from(
+            document.querySelectorAll(".day-option.selected")
+        ).map(x=>Number(x.dataset.day));
+
+
+    if(!name){
+
+        alert("Nama pengingat harus diisi.");
 
         return;
 
     }
 
-    if (!time) {
+    if(!time){
 
-        alert("Jam pengingat belum dipilih.");
+        alert("Jam alarm harus dipilih.");
 
         return;
 
     }
 
-    const existingId =
-        Number(editingId || 0);
 
-    const newActivity = {
+    const editId=
+        Number(
+            document.getElementById("add-name")
+            .dataset.editId || 0
+        );
 
-        id:
-            existingId ||
-            Date.now(),
 
-        name,
+    const newAct={
 
-        time,
+        id:editId || Date.now(),
 
-        icon,
+        name:name,
 
-        category,
+        time:time,
+
+        icon:icon,
 
         kind:
-            category === "SLEEP"
-                ? "SLEEP"
-                : "ACTIVITY",
+            category==="SLEEP"
+            ?"SLEEP"
+            :"ACTIVITY",
 
-        days,
+        category:category,
 
-        done:false
+        repeat:repeat,
+
+        days:days,
+
+        message:message,
+
+        done:false,
+
+        snoozed:0
 
     };
 
 
-    if (existingId) {
+    if(editId){
 
-        const old =
-            activities.find(
-                x => Number(x.id) === existingId
-            );
-
-        activities =
+        activities=
             activities.map(
-                x =>
-                    Number(x.id) === existingId
-                        ? newActivity
-                        : x
+                a=>a.id===editId
+                ?newAct
+                :a
             );
 
-        if (
-            window.AndroidBridge &&
-            old
-        ) {
+        if(window.AndroidBridge){
 
-            try {
-                AndroidBridge.deleteActivity(
-                    existingId
-                );
-            } catch(e) {}
+            AndroidBridge.deleteActivity(
+                editId
+            );
 
         }
 
-    } else {
+    }else{
 
-        activities.push(
-            newActivity
-        );
+        activities.push(newAct);
 
     }
 
@@ -2369,51 +1949,22 @@ function addNewActivity() {
     );
 
 
-    if (
-        window.AndroidBridge &&
-        typeof AndroidBridge.scheduleActivity === "function"
-    ) {
+    /*
+      Tetap menggunakan AndroidBridge lama.
+      Tidak membongkar sistem alarm native yang sudah berjalan.
+    */
 
-        try {
+    if(window.AndroidBridge){
 
-            AndroidBridge.scheduleActivity(
-                newActivity.id,
-                newActivity.name,
-                newActivity.time,
-                newActivity.icon,
-                newActivity.kind,
-                newActivity.days.join(","),
-                getAlarmMessage(newActivity),
-                newActivity.category
-            );
-
-        } catch(e) {
-
-            /*
-             * Kompatibilitas dengan AndroidBridge
-             * versi lama yang mungkin hanya menerima
-             * 7 parameter.
-             */
-
-            try {
-
-                AndroidBridge.scheduleActivity(
-                    newActivity.id,
-                    newActivity.name,
-                    newActivity.time,
-                    newActivity.icon,
-                    newActivity.kind,
-                    newActivity.days.join(","),
-                    ""
-                );
-
-            } catch(error) {
-
-                console.log(error);
-
-            }
-
-        }
+        AndroidBridge.scheduleActivity(
+            newAct.id,
+            newAct.name,
+            newAct.time,
+            newAct.icon,
+            newAct.kind,
+            newAct.days.join(","),
+            newAct.message || ""
+        );
 
     }
 
@@ -2427,321 +1978,416 @@ function addNewActivity() {
 }
 
 
-/* ============================================================
-   EDIT
-============================================================ */
+/* =========================================================
+   RESET FORM
+========================================================= */
 
-function editActivity(id) {
+function resetAddForm(){
 
-    const activity =
-        activities.find(
-            x => Number(x.id) === Number(id)
-        );
+    document.getElementById("add-name").value="";
 
-    if (!activity) return;
+    document.getElementById("add-name")
+        .dataset.editId="";
 
-    editingId =
-        Number(activity.id);
+    selectedTime=deviceTime();
 
-    document.getElementById(
-        "add-screen-title"
-    ).innerText =
-        "Edit Pengingat";
+    document.getElementById("add-time").value=
+        selectedTime;
 
-    document.getElementById(
-        "save-activity-button"
-    ).innerText =
-        "Simpan Perubahan";
+    document.getElementById("add-time-button")
+        .innerText=selectedTime;
 
+    selectedCategory="HEALTH";
 
-    document.getElementById(
-        "add-name"
-    ).value =
-        activity.name;
+    document.getElementById("add-category")
+        .value="HEALTH";
 
-    document.getElementById(
-        "add-time"
-    ).value =
-        activity.time;
+    document.getElementById("add-icon")
+        .value="💧";
 
-    document.getElementById(
-        "add-time-button"
-    ).innerText =
-        activity.time;
+    selectedRepeat="DAILY";
 
-    document.getElementById(
-        "add-icon"
-    ).value =
-        activity.icon || "⏰";
+    document.getElementById("add-repeat")
+        .value="DAILY";
 
+    document.querySelectorAll(".category-option")
+        .forEach(x=>x.classList.remove("selected"));
 
-    selectedCategory =
-        activity.category ||
-        activity.kind ||
-        "OTHER";
+    document.querySelector(
+        '.category-option[data-category="HEALTH"]'
+    ).classList.add("selected");
 
-    document.getElementById(
-        "add-category"
-    ).value =
-        selectedCategory;
+    document.querySelectorAll(".repeat-option")
+        .forEach(x=>x.classList.remove("selected"));
 
+    document.querySelector(
+        '.repeat-option[data-repeat="DAILY"]'
+    ).classList.add("selected");
 
-    document
-        .querySelectorAll(".category-option")
-        .forEach(button => {
+    document.querySelectorAll(".day-option")
+        .forEach(x=>x.classList.remove("selected"));
 
-            button.classList.toggle(
-                "active",
-                button.dataset.category ===
-                selectedCategory
-            );
+    document.getElementById("custom-days")
+        .style.display="none";
 
-        });
+    document.getElementById("message-mode")
+        .value="AUTO";
 
+    document.getElementById("custom-message-box")
+        .style.display="none";
 
-    document
-        .querySelectorAll("#sleep-days input")
-        .forEach(input => {
-
-            input.checked =
-                (activity.days || [])
-                    .map(Number)
-                    .includes(
-                        Number(input.value)
-                    );
-
-        });
-
-
-    toggleSleepOptions();
-
-    switchScreen("add");
+    document.getElementById("add-message")
+        .value="";
 
 }
 
 
-/* ============================================================
+/* =========================================================
    DELETE
-============================================================ */
+========================================================= */
 
-function deleteActivity(id) {
+function deleteActivity(id,event){
 
-    const activity =
-        activities.find(
-            x => Number(x.id) === Number(id)
-        );
+    if(event){
 
-    if (!activity) return;
+        event.preventDefault();
+        event.stopPropagation();
 
-    const confirmed =
-        confirm(
-            `Hapus pengingat "${activity.name}"?`
-        );
+    }
 
-    if (!confirmed) return;
+    id=Number(id);
 
-
-    activities =
+    activities=
         activities.filter(
-            x =>
-                Number(x.id) !==
-                Number(id)
+            a=>Number(a.id)!==id
         );
-
 
     localStorage.setItem(
         "maestro_activities",
         JSON.stringify(activities)
     );
 
+    if(window.AndroidBridge &&
+       typeof AndroidBridge.deleteActivity==="function"){
 
-    if (
-        window.AndroidBridge &&
-        typeof AndroidBridge.deleteActivity === "function"
-    ) {
-
-        try {
-
-            AndroidBridge.deleteActivity(
-                String(id)
-            );
-
-        } catch(e) {}
+        AndroidBridge.deleteActivity(
+            String(id)
+        );
 
     }
 
-
     updateUI();
+
+    return false;
 
 }
 
 
-/* ============================================================
+/* =========================================================
    DONE
-============================================================ */
+========================================================= */
 
-function toggleDone(id) {
+function toggleDone(id){
 
-    activities =
-        activities.map(activity => {
+    id=Number(id);
 
-            if (
-                Number(activity.id) ===
-                Number(id)
-            ) {
+    activities=
+        activities.map(a=>{
 
-                activity.done =
-                    !activity.done;
+            if(Number(a.id)===id){
+
+                a.done=!a.done;
 
             }
 
-            return activity;
+            return a;
 
         });
 
 
-    localStorage.setItem(
-        "maestro_activities",
-        JSON.stringify(activities)
-    );
-
-
-    const changed =
-        activities.find(
-            x =>
-                Number(x.id) ===
-                Number(id)
-        );
-
-
-    if (
-        window.AndroidBridge &&
-        changed &&
-        typeof AndroidBridge.setActivityEnabled === "function"
-    ) {
-
-        try {
-
-            AndroidBridge.setActivityEnabled(
-                changed.id,
-                !changed.done
-            );
-
-        } catch(e) {}
-
-    }
-
+    saveActivities();
 
     updateUI();
 
 }
 
 
-/* ============================================================
-   RESET FORM
-============================================================ */
+function completeAlarm(){
 
-function resetAddForm() {
+    if(currentAlarmId){
 
-    editingId = 0;
-
-    document.getElementById(
-        "add-screen-title"
-    ).innerText =
-        "Tambah Pengingat";
-
-    document.getElementById(
-        "save-activity-button"
-    ).innerText =
-        "Simpan Pengingat";
-
-
-    document.getElementById(
-        "add-name"
-    ).value = "";
-
-    selectedTime =
-        deviceTime();
-
-    document.getElementById(
-        "add-time"
-    ).value =
-        selectedTime;
-
-    document.getElementById(
-        "add-time-button"
-    ).innerText =
-        selectedTime;
-
-    selectedCategory =
-        "HEALTH";
-
-    document.getElementById(
-        "add-category"
-    ).value =
-        "HEALTH";
-
-    document.getElementById(
-        "add-icon"
-    ).value =
-        "💧";
-
-
-    document
-        .querySelectorAll(".category-option")
-        .forEach(button => {
-
-            button.classList.toggle(
-                "active",
-                button.dataset.category ===
-                "HEALTH"
+        const act=
+            activities.find(
+                a=>Number(a.id)===Number(currentAlarmId)
             );
 
-        });
+        if(act){
 
+            act.done=true;
 
-    document
-        .querySelectorAll("#sleep-days input")
-        .forEach(input =>
-            input.checked = false
-        );
+            recordActivityEvent(
+                act.id,
+                "done"
+            );
 
+        }
 
-    toggleSleepOptions();
+    }
+
+    stopAlarm();
+
+    updateUI();
 
 }
 
 
-/* ============================================================
+/* =========================================================
+   EVENT HISTORY
+========================================================= */
+
+function todayKey(){
+
+    const d=new Date();
+
+    return d.toISOString().slice(0,10);
+
+}
+
+
+function getHistory(){
+
+    return JSON.parse(
+        localStorage.getItem(
+            "maestro_history"
+        ) || "{}"
+    );
+
+}
+
+
+function saveHistory(history){
+
+    localStorage.setItem(
+        "maestro_history",
+        JSON.stringify(history)
+    );
+
+}
+
+
+function recordActivityEvent(id,type){
+
+    const history=getHistory();
+
+    const key=todayKey();
+
+    if(!history[key])
+        history[key]={};
+
+    if(!history[key][id])
+        history[key][id]={
+            done:0,
+            snoozed:0,
+            missed:0
+        };
+
+    if(type==="done")
+        history[key][id].done++;
+
+    if(type==="snoozed")
+        history[key][id].snoozed++;
+
+    if(type==="missed")
+        history[key][id].missed++;
+
+    saveHistory(history);
+
+}
+
+
+/* =========================================================
+   SNOOZE
+========================================================= */
+
+function openSnooze(){
+
+    document.getElementById(
+        "snooze-sheet"
+    ).classList.add("active");
+
+}
+
+
+function closeSnooze(){
+
+    document.getElementById(
+        "snooze-sheet"
+    ).classList.remove("active");
+
+}
+
+
+function applySnooze(minutes){
+
+    closeSnooze();
+
+    if(currentAlarmId){
+
+        recordActivityEvent(
+            currentAlarmId,
+            "snoozed"
+        );
+
+    }
+
+    if(window.AndroidBridge){
+
+        AndroidBridge.snoozeAlarm(
+            minutes
+        );
+
+    }
+
+    document.getElementById(
+        "alarm-screen"
+    ).classList.remove("active");
+
+}
+
+
+/* =========================================================
+   ALARM
+========================================================= */
+
+function checkAlarms(){
+
+    const now=new Date();
+
+    const currentTime=
+        String(now.getHours()).padStart(2,"0")
+        +":"
+        +String(now.getMinutes()).padStart(2,"0");
+
+
+    activities.forEach(act=>{
+
+        if(
+            act.time===currentTime &&
+            !act.done &&
+            !triggeredAlarms[act.id]
+        ){
+
+            triggeredAlarms[act.id]=true;
+
+            triggerRealAlarm(act);
+
+        }
+
+    });
+
+}
+
+
+function triggerRealAlarm(act){
+
+    currentAlarmId=act.id;
+
+    document.getElementById(
+        "alarm-time-display"
+    ).innerText=act.time;
+
+    document.getElementById(
+        "alarm-act-title"
+    ).innerText=
+        `${act.icon} ${act.name.toUpperCase()}`;
+
+    document.getElementById(
+        "alarm-greeting"
+    ).innerText=
+        generateGreeting(act);
+
+    document.getElementById(
+        "alarm-msg-text"
+    ).innerText=
+        generateMessage(act);
+
+
+    document.getElementById(
+        "alarm-screen"
+    ).classList.add("active");
+
+
+    if(navigator.vibrate){
+
+        navigator.vibrate(
+            [500,300,500,300]
+        );
+
+    }
+
+}
+
+
+function generateGreeting(act){
+
+    if(act.category==="SLEEP"){
+
+        return `${userName}, bangun yuk. Waktunya memulai hari.`;
+
+    }
+
+    return `${userName}, waktunya ${act.name.toLowerCase()}.`;
+
+}
+
+
+function stopAlarm(){
+
+    document.getElementById(
+        "alarm-screen"
+    ).classList.remove("active");
+
+    if(window.AndroidBridge){
+
+        AndroidBridge.stopAlarm();
+
+    }
+
+    currentAlarmId=null;
+
+}
+
+
+/* =========================================================
    TIME PICKER
-============================================================ */
+========================================================= */
 
-const WHEEL_ROW = 52;
+function deviceTime(){
+
+    const now=new Date();
+
+    return String(now.getHours()).padStart(2,"0")
+        +":"
+        +String(now.getMinutes()).padStart(2,"0");
+
+}
 
 
-function buildWheel(column,count,value) {
+function buildWheel(column,count,value){
 
-    column.innerHTML = "";
+    column.innerHTML="";
 
-    const cycles = 5;
+    const cycles=5;
 
-    for (
-        let cycle = 0;
-        cycle < cycles;
-        cycle++
-    ) {
+    for(let cycle=0;cycle<cycles;cycle++){
 
-        for (
-            let i = 0;
-            i < count;
-            i++
-        ) {
+        for(let i=0;i<count;i++){
 
-            column.innerHTML += `
+            column.innerHTML+=`
                 <div
                     class="wheel-option"
                     data-value="${String(i).padStart(2,"0")}"
-                    data-index="${cycle * count + i}"
+                    data-index="${cycle*count+i}"
                 >
                     ${String(i).padStart(2,"0")}
                 </div>
@@ -2751,15 +2397,13 @@ function buildWheel(column,count,value) {
 
     }
 
+    const center=
+        2*count+value;
 
-    const center =
-        2 * count + value;
+    requestAnimationFrame(()=>{
 
-
-    requestAnimationFrame(() => {
-
-        column.scrollTop =
-            center * WHEEL_ROW;
+        column.scrollTop=
+            center*WHEEL_ROW;
 
         selectWheelValue(
             column,
@@ -2771,184 +2415,114 @@ function buildWheel(column,count,value) {
 }
 
 
-function openTimePicker() {
+function openTimePicker(){
 
-    const current =
-        document.getElementById(
-            "add-time"
-        ).value ||
-        deviceTime();
+    const current=
+        document.getElementById("add-time").value
+        ||deviceTime();
 
-    const parts =
-        current.split(":");
-
+    const parts=current.split(":");
 
     buildWheel(
-        document.getElementById(
-            "hour-wheel"
-        ),
+        document.getElementById("hour-wheel"),
         24,
-        Number(parts[0]) || 0
+        Number(parts[0])||0
     );
-
 
     buildWheel(
-        document.getElementById(
-            "minute-wheel"
-        ),
+        document.getElementById("minute-wheel"),
         60,
-        Number(parts[1]) || 0
+        Number(parts[1])||0
     );
 
-
-    document
-        .getElementById("time-wheel")
-        .classList.add("active");
+    document.getElementById(
+        "time-wheel"
+    ).classList.add("active");
 
 }
 
 
-function normalizeWheel(column,count) {
+function selectWheelValue(column,count){
 
-    const cycle =
-        count * WHEEL_ROW;
-
-    const min =
-        cycle;
-
-    const max =
-        cycle * 3;
-
-
-    if (column.scrollTop < min) {
-
-        column.scrollTop +=
-            cycle * 2;
-
-    }
-
-    else if (
-        column.scrollTop > max
-    ) {
-
-        column.scrollTop -=
-            cycle * 2;
-
-    }
-
-}
-
-
-function selectWheelValue(
-    column,
-    count
-) {
-
-    normalizeWheel(
-        column,
-        count
-    );
-
-
-    const index =
+    const index=
         Math.round(
-            column.scrollTop /
-            WHEEL_ROW
+            column.scrollTop/WHEEL_ROW
         );
 
-
-    const value =
-        (
-            (index % count) +
-            count
-        ) % count;
-
+    const value=
+        ((index%count)+count)%count;
 
     column
         .querySelectorAll(".wheel-option")
-        .forEach(x =>
-            x.classList.remove("selected")
-        );
+        .forEach(x=>x.classList.remove("selected"));
 
-
-    const selected =
+    const selected=
         column.querySelector(
             `[data-index="${index}"]`
-        ) ||
-        column.children[
-            2 * count + value
-        ];
-
-
-    if (selected) {
-
-        selected.classList.add(
-            "selected"
         );
 
-    }
+    if(selected)
+        selected.classList.add("selected");
 
 }
 
 
-function confirmTimePicker() {
+function confirmTimePicker(){
 
-    const hour =
+    const h=
         document.querySelector(
-            "#hour-wheel .wheel-option.selected"
+            "#hour-wheel .selected"
         );
 
-    const minute =
+    const m=
         document.querySelector(
-            "#minute-wheel .wheel-option.selected"
+            "#minute-wheel .selected"
         );
 
+    if(!h || !m)
+        return;
 
-    if (!hour || !minute) return;
-
-
-    selectedTime =
-        `${hour.dataset.value}:${minute.dataset.value}`;
-
+    selectedTime=
+        `${h.dataset.value}:${m.dataset.value}`;
 
     document.getElementById(
         "add-time"
-    ).value =
-        selectedTime;
+    ).value=selectedTime;
 
     document.getElementById(
         "add-time-button"
-    ).innerText =
-        selectedTime;
-
+    ).innerText=selectedTime;
 
     closeTimePicker();
 
 }
 
 
-function closeTimePicker() {
+function closeTimePicker(){
 
-    document
-        .getElementById("time-wheel")
-        .classList.remove("active");
+    document.getElementById(
+        "time-wheel"
+    ).classList.remove("active");
 
 }
 
 
 document.addEventListener(
     "scroll",
-    event => {
+    event=>{
 
-        if (
+        if(
             event.target.classList &&
             event.target.classList.contains(
                 "wheel-column"
             )
-        ) {
+        ){
 
             selectWheelValue(
-                event.target
+                event.target,
+                event.target.id==="hour-wheel"
+                ?24
+                :60
             );
 
         }
@@ -2960,25 +2534,39 @@ document.addEventListener(
 
 document.addEventListener(
     "click",
-    event => {
+    event=>{
 
-        if (
+        if(
             event.target.classList.contains(
                 "wheel-option"
             )
-        ) {
+        ){
 
-            const column =
+            const col=
                 event.target.parentElement;
 
-            column.scrollTo({
+            col.scrollTo({
+
                 top:
                     Number(
                         event.target.dataset.index
-                    ) *
-                    WHEEL_ROW,
+                    )*WHEEL_ROW,
+
                 behavior:"smooth"
+
             });
+
+        }
+
+        if(
+            event.target.classList.contains(
+                "day-option"
+            )
+        ){
+
+            event.target.classList.toggle(
+                "selected"
+            );
 
         }
 
@@ -2986,393 +2574,118 @@ document.addEventListener(
 );
 
 
-/* ============================================================
-   ALARM CHECK WEB
-============================================================ */
+/* =========================================================
+   UPDATE UI
+========================================================= */
 
-function checkAlarms() {
+function saveActivities(){
 
-    const now =
-        new Date();
-
-    const currentTime =
-        String(
-            now.getHours()
-        ).padStart(2,"0") +
-        ":" +
-        String(
-            now.getMinutes()
-        ).padStart(2,"0");
-
-
-    activities.forEach(activity => {
-
-        if (
-            activity.time === currentTime &&
-            !activity.done &&
-            !triggeredAlarms[activity.id]
-        ) {
-
-            triggeredAlarms[
-                activity.id
-            ] = true;
-
-            triggerRealAlarm(
-                activity
-            );
-
-        }
-
-    });
+    localStorage.setItem(
+        "maestro_activities",
+        JSON.stringify(activities)
+    );
 
 }
 
 
-/* ============================================================
-   TRIGGER ALARM
-============================================================ */
-
-function triggerRealAlarm(activity) {
-
-    const time =
-        activity.time;
-
-    const hour =
-        Number(
-            time.split(":")[0]
-        );
-
-
-    const category =
-        activity.category ||
-        activity.kind ||
-        "OTHER";
-
-
-    const categoryData =
-        CATEGORY_DATA[category] ||
-        CATEGORY_DATA.OTHER;
-
+function updateUI(){
 
     document.getElementById(
-        "alarm-time-display"
-    ).innerText =
-        time;
-
-
-    document.getElementById(
-        "alarm-period"
-    ).innerText =
-        getPeriod(hour);
-
-
-    document.getElementById(
-        "alarm-category"
-    ).innerText =
-        categoryData.label;
-
-
-    document.getElementById(
-        "alarm-act-title"
-    ).innerText =
-        `${activity.icon || categoryData.icon} ${activity.name.toUpperCase()}`;
-
-
-    document.getElementById(
-        "alarm-greeting"
-    ).innerText =
-        getAlarmGreeting(activity);
-
-
-    document.getElementById(
-        "alarm-msg-text"
-    ).innerText =
-        getAlarmMessage(activity);
-
-
-    document
-        .getElementById("alarm-screen")
-        .classList.add("active");
-
-
-    if (
-        navigator.vibrate
-    ) {
-
-        navigator.vibrate([
-            500,
-            300,
-            500,
-            300
-        ]);
-
-    }
-
-}
-
-
-/* ============================================================
-   STOP / SNOOZE
-============================================================ */
-
-function stopAlarm() {
-
-    document
-        .getElementById("alarm-screen")
-        .classList.remove("active");
-
-
-    if (
-        window.AndroidBridge &&
-        typeof AndroidBridge.stopAlarm === "function"
-    ) {
-
-        try {
-
-            AndroidBridge.stopAlarm();
-
-        } catch(e) {}
-
-    }
-
-}
-
-
-function snoozeAlarm() {
-
-    if (
-        window.AndroidBridge &&
-        typeof AndroidBridge.snoozeAlarm === "function"
-    ) {
-
-        try {
-
-            AndroidBridge.snoozeAlarm(5);
-
-        } catch(e) {}
-
-    }
-
-
-    document
-        .getElementById("alarm-screen")
-        .classList.remove("active");
-
-}
-
-
-/* ============================================================
-   UI
-============================================================ */
-
-function updateUI() {
+        "display-username"
+    ).innerText=userName;
 
     updateDate();
 
 
-    document.getElementById(
-        "display-username"
-    ).innerText =
-        userName;
-
-
-    const total =
-        activities.length;
-
-
-    const completed =
-        activities.filter(
-            x => x.done
-        ).length;
-
-
-    const percent =
-        total > 0
-            ? Math.round(
-                completed /
-                total *
-                100
-            )
-            : 0;
-
-
-    document.getElementById(
-        "stat-completed"
-    ).innerText =
-        completed;
-
-
-    document.getElementById(
-        "stat-total"
-    ).innerText =
-        total;
-
-
-    document.getElementById(
-        "stat-percent"
-    ).innerText =
-        percent + "%";
-
-
-    const streak =
-        calculateStreak();
-
-
-    document.getElementById(
-        "stat-streak"
-    ).innerText =
-        streak;
-
-
-    document.getElementById(
-        "streak-big"
-    ).innerText =
-        streak;
-
-
-    updateHero(
-        completed,
-        total,
-        percent
+    activities.sort(
+        (a,b)=>
+            a.time.localeCompare(b.time)
     );
 
 
-    renderHome();
+    const total=
+        activities.length;
 
+    const completed=
+        activities.filter(
+            a=>a.done
+        ).length;
+
+    const percent=
+        total
+        ?Math.round(
+            completed/total*100
+        )
+        :0;
+
+
+    document.getElementById(
+        "hero-progress"
+    ).innerText=
+        percent+"%";
+
+    document.getElementById(
+        "hero-percent"
+    ).innerText=
+        percent+"%";
+
+
+    renderNextActivity();
+
+    renderHomeActivities();
 
     renderSchedule();
 
-}
-
-
-/* ============================================================
-   HERO
-============================================================ */
-
-function updateHero(
-    completed,
-    total,
-    percent
-) {
-
-    const heroProgress =
-        document.getElementById(
-            "hero-progress"
-        );
-
-    heroProgress.style.width =
-        percent + "%";
-
-
-    if (total === 0) {
-
-        document.getElementById(
-            "hero-title"
-        ).innerText =
-            "Belum ada pengingat";
-
-        document.getElementById(
-            "hero-subtitle"
-        ).innerText =
-            "Tambahkan satu aktivitas untuk memulai.";
-
-        return;
-
-    }
-
-
-    if (completed === total) {
-
-        document.getElementById(
-            "hero-title"
-        ).innerText =
-            "Semua selesai 🎉";
-
-        document.getElementById(
-            "hero-subtitle"
-        ).innerText =
-            "Hebat. Hari ini kamu sudah menyelesaikan semuanya.";
-
-        return;
-
-    }
-
-
-    document.getElementById(
-        "hero-title"
-    ).innerText =
-        `${completed} dari ${total} selesai`;
-
-    document.getElementById(
-        "hero-subtitle"
-    ).innerText =
-        "Pelan-pelan saja. Easy does it.";
+    renderStats();
 
 }
 
 
-/* ============================================================
-   HOME
-============================================================ */
+/* =========================================================
+   NEXT
+========================================================= */
 
-function renderHome() {
+function renderNextActivity(){
 
-    const nextContainer =
+    const container=
         document.getElementById(
             "next-activity-container"
         );
 
-    const listContainer =
-        document.getElementById(
-            "activity-list-container"
+    container.innerHTML="";
+
+
+    const next=
+        activities.find(
+            a=>!a.done
         );
 
 
-    nextContainer.innerHTML = "";
+    if(!next){
 
-    listContainer.innerHTML = "";
+        if(activities.length){
 
-
-    const sorted =
-        [...activities].sort(
-            (a,b) =>
-                a.time.localeCompare(
-                    b.time
-                )
-        );
-
-
-    const next =
-        sorted.find(
-            x => !x.done
-        );
-
-
-    if (!next) {
-
-        if (activities.length === 0) {
-
-            nextContainer.innerHTML = `
-                <div class="empty-card">
-                    <div class="empty-icon">⏰</div>
-                    <h3>Belum ada pengingat</h3>
-                    <p>
-                        Tambahkan pengingat pertama
-                        dengan tombol +.
-                    </p>
+            container.innerHTML=`
+                <div class="next-card">
+                    <div class="next-icon">🎉</div>
+                    <div class="next-info">
+                        <small>HARI INI</small>
+                        <h3>Semua selesai!</h3>
+                        <p>Keren. Semua pengingat sudah kamu selesaikan.</p>
+                    </div>
                 </div>
             `;
 
-        } else {
+        }else{
 
-            nextContainer.innerHTML = `
-                <div class="empty-card">
-                    <div class="empty-icon">🎉</div>
-                    <h3>Semua selesai!</h3>
-                    <p>
-                        Semua pengingat hari ini
-                        sudah kamu selesaikan.
-                    </p>
+            container.innerHTML=`
+                <div class="next-card">
+                    <div class="next-icon">✨</div>
+                    <div class="next-info">
+                        <small>MAESTRO</small>
+                        <h3>Belum ada pengingat</h3>
+                        <p>Tekan tombol + untuk membuat pengingat.</p>
+                    </div>
                 </div>
             `;
 
@@ -3383,132 +2696,58 @@ function renderHome() {
     }
 
 
-    const nextCategory =
-        CATEGORY_DATA[
-            next.category ||
-            "OTHER"
-        ] ||
-        CATEGORY_DATA.OTHER;
-
-
-    nextContainer.innerHTML = `
-
+    container.innerHTML=`
         <div class="next-card"
              onclick="toggleDone(${next.id})">
 
             <div class="next-icon">
-                ${next.icon || nextCategory.icon}
+                ${next.icon}
             </div>
 
             <div class="next-info">
 
-                <div class="next-label">
-                    Berikutnya • ${nextCategory.label}
-                </div>
+                <small>BERIKUTNYA</small>
 
-                <div class="next-name">
+                <h3>
                     ${escapeHTML(next.name)}
-                </div>
+                </h3>
 
-                <div class="next-time">
-                    Alarm <strong>${next.time}</strong>
-                </div>
+                <p>
+                    ${categoryName(next.category)}
+                    • ${repeatLabel(next)}
+                </p>
 
             </div>
 
-            <i
-                class="fa-solid fa-chevron-right"
-                style="color:#a4a7b7;font-size:12px;"
-            ></i>
+            <div class="next-time">
+                ${next.time}
+            </div>
 
         </div>
-
     `;
 
-
-    sorted.forEach(activity => {
-
-        const category =
-            CATEGORY_DATA[
-                activity.category ||
-                "OTHER"
-            ] ||
-            CATEGORY_DATA.OTHER;
+}
 
 
-        const card =
-            document.createElement(
-                "div"
-            );
+/* =========================================================
+   HOME ACTIVITIES
+========================================================= */
+
+function renderHomeActivities(){
+
+    const container=
+        document.getElementById(
+            "activity-list-container"
+        );
+
+    container.innerHTML="";
 
 
-        card.className =
-            "activity-card" +
-            (
-                activity.done
-                    ? " completed"
-                    : ""
-            );
+    activities.forEach(act=>{
 
-
-        card.innerHTML = `
-
-            <div class="activity-top">
-
-                <div class="activity-icon">
-                    ${activity.icon || category.icon}
-                </div>
-
-                <div class="category-pill">
-                    ${category.label}
-                </div>
-
-            </div>
-
-            <div>
-
-                <div class="activity-name">
-                    ${escapeHTML(activity.name)}
-                </div>
-
-                <div class="activity-status">
-                    ${
-                        activity.done
-                            ? "Selesai ✓"
-                            : "Belum selesai"
-                    }
-                </div>
-
-            </div>
-
-            <div class="activity-bottom">
-
-                <div class="activity-time">
-                    ${activity.time}
-                </div>
-
-                <button
-                    class="done-btn ${
-                        activity.done
-                            ? "checked"
-                            : ""
-                    }"
-                    onclick="toggleDone(${activity.id})"
-                >
-                    <i class="fa-solid ${
-                        activity.done
-                            ? "fa-check"
-                            : "fa-circle"
-                    }"></i>
-                </button>
-
-            </div>
-
-        `;
-
-
-        listContainer.appendChild(
-            card
+        container.innerHTML+=activityCard(
+            act,
+            true
         );
 
     });
@@ -3516,37 +2755,26 @@ function renderHome() {
 }
 
 
-/* ============================================================
+/* =========================================================
    SCHEDULE
-============================================================ */
+========================================================= */
 
-function renderSchedule() {
+function renderSchedule(){
 
-    const container =
+    const container=
         document.getElementById(
             "schedule-list-container"
         );
 
-
-    container.innerHTML = "";
-
-
-    document.getElementById(
-        "schedule-count"
-    ).innerText =
-        `${activities.length} pengingat`;
+    container.innerHTML="";
 
 
-    if (activities.length === 0) {
+    if(!activities.length){
 
-        container.innerHTML = `
-            <div class="empty-card">
-                <div class="empty-icon">📅</div>
-                <h3>Belum ada jadwal</h3>
-                <p>
-                    Tambahkan pengingat baru
-                    untuk mengatur harimu.
-                </p>
+        container.innerHTML=`
+            <div class="progress-card"
+                 style="grid-column:1/-1;text-align:center;">
+                Belum ada jadwal.
             </div>
         `;
 
@@ -3555,95 +2783,11 @@ function renderSchedule() {
     }
 
 
-    const sorted =
-        [...activities].sort(
-            (a,b) =>
-                a.time.localeCompare(
-                    b.time
-                )
-        );
+    activities.forEach(act=>{
 
-
-    sorted.forEach(activity => {
-
-        const category =
-            CATEGORY_DATA[
-                activity.category ||
-                "OTHER"
-            ] ||
-            CATEGORY_DATA.OTHER;
-
-
-        const item =
-            document.createElement(
-                "div"
-            );
-
-
-        item.className =
-            "schedule-item";
-
-
-        item.innerHTML = `
-
-            <div class="schedule-main">
-
-                <div
-                    class="activity-icon"
-                    style="flex-shrink:0;"
-                >
-                    ${activity.icon || category.icon}
-                </div>
-
-                <div class="schedule-info">
-
-                    <h3>
-                        ${escapeHTML(activity.name)}
-                    </h3>
-
-                    <p>
-                        ${category.label}
-                        ${
-                            activity.category === "SLEEP"
-                                ? " • " + scheduleLabel(activity)
-                                : " • Setiap hari"
-                        }
-                    </p>
-
-                </div>
-
-                <div class="schedule-time">
-                    ${activity.time}
-                </div>
-
-            </div>
-
-
-            <div class="schedule-actions">
-
-                <button
-                    class="edit-btn"
-                    onclick="editActivity(${activity.id})"
-                >
-                    <i class="fa-solid fa-pen"></i>
-                    Edit
-                </button>
-
-                <button
-                    class="delete-btn"
-                    onclick="deleteActivity(${activity.id})"
-                >
-                    <i class="fa-solid fa-trash"></i>
-                    Hapus
-                </button>
-
-            </div>
-
-        `;
-
-
-        container.appendChild(
-            item
+        container.innerHTML+=activityCard(
+            act,
+            false
         );
 
     });
@@ -3651,182 +2795,404 @@ function renderSchedule() {
 }
 
 
-/* ============================================================
-   STREAK
-============================================================ */
+function activityCard(act,home){
 
-function calculateStreak() {
+    return `
+        <div class="activity-card">
 
-    const stored =
-        Number(
-            localStorage.getItem(
-                "maestro_streak"
-            ) || 0
-        );
+            <div class="activity-top">
 
+                <div
+                    class="activity-icon"
+                    onclick="toggleDone(${act.id})"
+                    style="cursor:pointer;"
+                >
+                    ${act.icon}
+                </div>
 
-    const today =
-        new Date()
-            .toISOString()
-            .slice(0,10);
+                <button
+                    class="delete-btn"
+                    onclick="return deleteActivity(${act.id},event)"
+                >
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
 
+            </div>
 
-    const lastDate =
-        localStorage.getItem(
-            "maestro_last_completed_date"
-        );
+            <div
+                class="activity-name"
+                onclick="toggleDone(${act.id})"
+                style="cursor:pointer;
+                ${act.done?'text-decoration:line-through;color:#94a3b8;':''}"
+            >
+                ${escapeHTML(act.name)}
+            </div>
 
+            <div class="activity-category">
+                ${categoryName(act.category)}
+            </div>
 
-    const total =
-        activities.length;
+            <div class="activity-bottom">
 
+                <span class="activity-time">
+                    ${act.time}
+                </span>
 
-    const completed =
-        activities.filter(
-            x => x.done
-        ).length;
+                <span class="status-dot ${
+                    act.done
+                    ?"status-done"
+                    :"status-pending"
+                }">
 
+                    ${
+                        act.done
+                        ?"✓ Selesai"
+                        :"Belum"
+                    }
 
-    if (
-        total > 0 &&
-        completed === total
-    ) {
+                </span>
 
-        if (
-            lastDate !== today
-        ) {
+            </div>
 
-            const yesterday =
-                new Date();
-
-            yesterday.setDate(
-                yesterday.getDate() - 1
-            );
-
-
-            const yesterdayString =
-                yesterday
-                    .toISOString()
-                    .slice(0,10);
-
-
-            let newStreak =
-                lastDate === yesterdayString
-                    ? stored + 1
-                    : 1;
-
-
-            localStorage.setItem(
-                "maestro_streak",
-                String(newStreak)
-            );
-
-
-            localStorage.setItem(
-                "maestro_last_completed_date",
-                today
-            );
-
-
-            document.getElementById(
-                "streak-message"
-            ).innerText =
-                newStreak >= 3
-                    ? "Konsistensimu mulai terbentuk. Pertahankan!"
-                    : "Bagus! Teruskan lagi besok.";
-
-            return newStreak;
-
-        }
-
-    }
-
-
-    const current =
-        Number(
-            localStorage.getItem(
-                "maestro_streak"
-            ) || 0
-        );
-
-
-    document.getElementById(
-        "streak-message"
-    ).innerText =
-        current > 0
-            ? "Satu hari lagi. Tetap konsisten."
-            : "Mulai selesaikan aktivitas hari ini untuk membangun konsistensi.";
-
-
-    return current;
+        </div>
+    `;
 
 }
 
 
-/* ============================================================
-   PERMISSION
-============================================================ */
+/* =========================================================
+   STATS
+========================================================= */
 
-function refreshPermissionPanel() {
+function renderStats(){
 
-    if (
-        !window.AndroidBridge ||
-        !AndroidBridge.getPermissionStatus
-    ) {
+    const history=
+        getHistory();
 
+    const today=
+        history[todayKey()] || {};
+
+
+    let completed=0;
+    let snoozed=0;
+    let missed=0;
+
+
+    Object.values(today).forEach(item=>{
+
+        completed+=item.done||0;
+
+        snoozed+=item.snoozed||0;
+
+        missed+=item.missed||0;
+
+    });
+
+
+    /*
+      Aktivitas yang sudah ditandai selesai
+      tetap dihitung walaupun belum ada event
+      dari alarm.
+    */
+
+    const manuallyDone=
+        activities.filter(
+            a=>a.done
+        ).length;
+
+
+    completed=
+        Math.max(
+            completed,
+            manuallyDone
+        );
+
+
+    document.getElementById(
+        "stat-completed"
+    ).innerText=completed;
+
+    document.getElementById(
+        "stat-snoozed"
+    ).innerText=snoozed;
+
+    document.getElementById(
+        "stat-missed"
+    ).innerText=missed;
+
+
+    renderSevenDays();
+
+}
+
+
+/* =========================================================
+   7 DAYS
+========================================================= */
+
+function renderSevenDays(){
+
+    const container=
         document.getElementById(
-            "permission-summary"
-        ).innerText =
-            "Izin perangkat tersedia saat Maestro dijalankan sebagai aplikasi Android.";
+            "seven-day-history"
+        );
 
-        return;
+    const history=
+        getHistory();
+
+    let html="";
+
+    let totalPercent=0;
+
+    let countedDays=0;
+
+
+    for(let i=6;i>=0;i--){
+
+        const date=
+            new Date();
+
+        date.setDate(
+            date.getDate()-i
+        );
+
+
+        const key=
+            date.toISOString().slice(0,10);
+
+        const day=
+            history[key] || {};
+
+
+        let done=0;
+        let total=0;
+
+
+        Object.values(day).forEach(item=>{
+
+            done+=item.done||0;
+
+            total+=
+                (item.done||0)
+                +(item.missed||0);
+
+        });
+
+
+        let percent=
+            total
+            ?Math.round(done/total*100)
+            :0;
+
+
+        if(key===todayKey()){
+
+            const todayDone=
+                activities.filter(
+                    a=>a.done
+                ).length;
+
+            if(activities.length){
+
+                percent=
+                    Math.round(
+                        todayDone/
+                        activities.length*
+                        100
+                    );
+
+            }
+
+        }
+
+
+        if(total || key===todayKey()){
+
+            totalPercent+=percent;
+
+            countedDays++;
+
+        }
+
+
+        const dayName=
+            date.toLocaleDateString(
+                "id-ID",
+                {
+                    weekday:"short"
+                }
+            );
+
+
+        html+=`
+            <div class="history-row">
+
+                <div class="history-day">
+                    ${dayName}
+                </div>
+
+                <div class="history-bar">
+                    <div
+                        class="history-fill"
+                        style="width:${percent}%"
+                    ></div>
+                </div>
+
+                <div class="history-percent">
+                    ${percent}%
+                </div>
+
+            </div>
+        `;
 
     }
 
 
-    try {
+    container.innerHTML=html;
 
-        const status =
+
+    const average=
+        countedDays
+        ?Math.round(
+            totalPercent/
+            countedDays
+        )
+        :0;
+
+
+    document.getElementById(
+        "consistency-text"
+    ).innerText=
+        average
+        ?`Konsistensimu rata-rata ${average}% dalam 7 hari terakhir. Tidak harus sempurna — yang penting terus berjalan.`
+        :"Mulai selesaikan pengingatmu hari ini untuk melihat perkembangan.";
+
+}
+
+
+/* =========================================================
+   CATEGORY LABEL
+========================================================= */
+
+function categoryName(category){
+
+    const names={
+
+        HEALTH:"💧 Kesehatan",
+
+        SPORT:"🏃 Olahraga",
+
+        WORK:"💼 Kerja",
+
+        MEDICINE:"💊 Obat",
+
+        SLEEP:"😴 Tidur",
+
+        GENERAL:"📌 Umum"
+
+    };
+
+    return names[category] || "📌 Umum";
+
+}
+
+
+/* =========================================================
+   REPEAT LABEL
+========================================================= */
+
+function repeatLabel(act){
+
+    if(act.repeat==="DAILY")
+        return "Setiap hari";
+
+    if(act.repeat==="WEEKDAYS")
+        return "Senin–Jumat";
+
+    if(act.repeat==="ONCE")
+        return "Sekali";
+
+    if(
+        act.repeat==="CUSTOM" &&
+        act.days &&
+        act.days.length
+    ){
+
+        const names={
+            1:"Min",
+            2:"Sen",
+            3:"Sel",
+            4:"Rab",
+            5:"Kam",
+            6:"Jum",
+            7:"Sab"
+        };
+
+        return act.days
+            .map(x=>names[x])
+            .join(", ");
+
+    }
+
+    return "Setiap hari";
+
+}
+
+
+/* =========================================================
+   PERMISSION
+========================================================= */
+
+function refreshPermissionPanel(){
+
+    if(
+        !window.AndroidBridge ||
+        !AndroidBridge.getPermissionStatus
+    )
+        return;
+
+
+    try{
+
+        const status=
             JSON.parse(
                 AndroidBridge.getPermissionStatus()
             );
 
 
-        const notificationRow =
+        const notification=
             document.getElementById(
                 "permission-notification-row"
             );
 
-        const alarmRow =
+        const alarm=
             document.getElementById(
                 "permission-alarm-row"
             );
 
-        const fullscreenRow =
+        const fullscreen=
             document.getElementById(
                 "permission-fullscreen-row"
             );
 
 
-        notificationRow.style.display =
+        notification.style.display=
             status.notification
-                ? "none"
-                : "block";
+            ?"none"
+            :"block";
 
-
-        alarmRow.style.display =
+        alarm.style.display=
             status.exactAlarm
-                ? "none"
-                : "block";
+            ?"none"
+            :"block";
 
-
-        fullscreenRow.style.display =
+        fullscreen.style.display=
             status.fullScreen
-                ? "none"
-                : "block";
+            ?"none"
+            :"block";
 
 
-        const pending = [
+        const pending=[
             !status.notification,
             !status.exactAlarm,
             !status.fullScreen
@@ -3835,39 +3201,39 @@ function refreshPermissionPanel() {
 
         document.getElementById(
             "permission-summary"
-        ).innerText =
+        ).innerText=
+
             pending
-                ? `${pending} izin perlu diaktifkan agar alarm bekerja maksimal.`
-                : "Semua izin alarm sudah aktif ✓";
+            ?`${pending} izin perlu diaktifkan.`
+            :"Semua izin alarm sudah aktif ✓";
 
 
         document.getElementById(
             "permission-panel"
-        ).style.display =
+        ).style.display=
             pending
-                ? "block"
-                : "block";
+            ?"block"
+            :"none";
 
-    }
 
-    catch(e) {
+    }catch(e){
 
         document.getElementById(
             "permission-summary"
-        ).innerText =
-            "Buka pengaturan izin perangkat jika alarm belum berbunyi.";
+        ).innerText=
+            "Periksa izin perangkat jika alarm belum berbunyi.";
 
     }
 
 }
 
 
-function openPermission(type) {
+function openPermission(type){
 
-    if (!window.AndroidBridge) {
+    if(!window.AndroidBridge){
 
         alert(
-            "Pengaturan izin ini tersedia di aplikasi Android Maestro."
+            "Pengaturan izin hanya tersedia di aplikasi Android."
         );
 
         return;
@@ -3875,46 +3241,23 @@ function openPermission(type) {
     }
 
 
-    try {
+    if(type==="notification")
+        AndroidBridge.openNotificationSettings();
 
-        if (
-            type === "notification"
-        ) {
+    else if(type==="alarm")
+        AndroidBridge.openAlarmSettings();
 
-            AndroidBridge.openNotificationSettings();
-
-        }
-
-        else if (
-            type === "alarm"
-        ) {
-
-            AndroidBridge.openAlarmSettings();
-
-        }
-
-        else {
-
-            AndroidBridge.openFullScreenSettings();
-
-        }
-
-    }
-
-    catch(e) {
-
-        console.log(e);
-
-    }
+    else
+        AndroidBridge.openFullScreenSettings();
 
 }
 
 
-/* ============================================================
-   ESCAPE HTML
-============================================================ */
+/* =========================================================
+   ESCAPE
+========================================================= */
 
-function escapeHTML(value) {
+function escapeHTML(value){
 
     return String(value)
         .replace(/&/g,"&amp;")
