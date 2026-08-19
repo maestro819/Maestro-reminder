@@ -2,32 +2,35 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<title>MAESTRO - easy does it</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maestro Reminder - easy does it</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-
 :root{
-    --bg:#f5f7fb;
-    --card:#ffffff;
-    --primary:#635bff;
+    --bg-main:#f7f8fc;
+    --card-bg:#ffffff;
+    --text-main:#181735;
+    --text-muted:#64748b;
+    --primary:#6366f1;
     --primary-dark:#4f46e5;
-    --primary-soft:#eeecff;
-    --text:#17172c;
-    --muted:#73758a;
-    --border:#e8e9f0;
+    --primary-light:#e0e7ff;
     --green:#10b981;
-    --green-soft:#e7faf3;
+    --green-light:#d1fae5;
     --orange:#f59e0b;
-    --orange-soft:#fff7e6;
+    --orange-light:#fef3c7;
     --red:#ef4444;
-    --red-soft:#fff0f0;
+    --red-light:#fee2e2;
     --blue:#3b82f6;
-    --shadow:0 8px 28px rgba(30,27,75,.06);
+    --blue-light:#dbeafe;
+    --pink:#ec4899;
+    --pink-light:#fce7f3;
+    --purple:#8b5cf6;
+    --purple-light:#ede9fe;
+    --border:#e2e8f0;
+    --shadow:0 6px 20px rgba(15,23,42,.05);
 }
 
 *{
@@ -35,63 +38,44 @@
     margin:0;
     padding:0;
     font-family:'Plus Jakarta Sans',sans-serif;
-    -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-    width:100%;
-    min-height:100%;
 }
 
 body{
-    background:#e9ebf5;
-    color:var(--text);
+    background:#eef0f7;
+    color:var(--text-main);
     display:flex;
     justify-content:center;
     align-items:center;
-}
-
-button,
-input,
-textarea,
-select{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
+    min-height:100vh;
 }
 
 .phone-frame{
     width:100%;
-    max-width:430px;
+    max-width:420px;
     height:100vh;
-    max-height:920px;
-    background:var(--bg);
-    position:relative;
-    overflow:hidden;
+    max-height:900px;
+    background:var(--bg-main);
     display:flex;
     flex-direction:column;
+    position:relative;
+    overflow:hidden;
 }
 
-@media(min-width:450px){
+@media(min-width:423px){
     .phone-frame{
-        height:92vh;
+        height:88vh;
         border-radius:38px;
-        box-shadow:0 20px 70px rgba(15,23,42,.18);
-        border:8px solid #191927;
+        border:9px solid #17162f;
+        box-shadow:0 20px 50px rgba(0,0,0,.18);
     }
 }
-
-/* =========================
-   SCREENS
-========================= */
 
 .screen{
     display:none;
     flex:1;
     overflow-y:auto;
-    padding:22px 18px 110px;
+    padding:20px;
+    padding-bottom:105px;
     scrollbar-width:none;
 }
 
@@ -103,124 +87,76 @@ button{
     display:block;
 }
 
-/* =========================
-   HEADER
-========================= */
-
-.top-header{
+.brand-header{
     display:flex;
-    align-items:center;
     justify-content:space-between;
-    margin-bottom:22px;
-}
-
-.brand{
-    display:flex;
     align-items:center;
-    gap:10px;
-}
-
-.brand-logo{
-    width:38px;
-    height:38px;
-    border-radius:13px;
-    background:linear-gradient(135deg,#766cff,#5147e8);
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:800;
-    box-shadow:0 7px 18px rgba(99,91,255,.25);
-}
-
-.brand-name{
-    font-size:15px;
-    font-weight:800;
-    letter-spacing:.4px;
-}
-
-.brand-sub{
-    display:block;
-    font-size:9px;
-    color:var(--muted);
-    margin-top:1px;
-}
-
-.profile-button{
-    width:39px;
-    height:39px;
-    border:0;
-    border-radius:50%;
-    background:var(--primary-soft);
-    color:var(--primary-dark);
-    font-size:14px;
-    font-weight:800;
-}
-
-/* =========================
-   GREETING
-========================= */
-
-.greeting{
     margin-bottom:20px;
 }
 
-.greeting small{
-    color:var(--muted);
+.brand-logo h1{
+    font-size:18px;
+    font-weight:800;
+    letter-spacing:.8px;
+}
+
+.brand-logo span{
+    font-size:10px;
+    color:var(--text-muted);
+}
+
+.user-badge{
     font-size:12px;
+    font-weight:700;
+    color:var(--primary);
+    background:var(--primary-light);
+    padding:7px 12px;
+    border-radius:20px;
+    max-width:130px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
 }
 
-.greeting h1{
-    font-size:26px;
-    line-height:1.25;
-    margin-top:5px;
-    letter-spacing:-.6px;
+.greeting-section{
+    margin-bottom:18px;
 }
 
-.greeting p{
-    color:var(--muted);
+.greeting-section h2{
+    font-size:21px;
+    font-weight:800;
+    margin-bottom:4px;
+}
+
+.greeting-section p{
     font-size:12px;
-    margin-top:6px;
+    color:var(--text-muted);
 }
 
-/* =========================
-   TODAY HERO
-========================= */
-
-.today-card{
-    background:linear-gradient(135deg,#655cf6,#5147e8);
-    color:white;
-    border-radius:25px;
-    padding:20px;
+/* HERO */
+.hero-card{
     position:relative;
     overflow:hidden;
-    margin-bottom:20px;
-    box-shadow:0 14px 30px rgba(99,91,255,.24);
+    background:linear-gradient(135deg,#6366f1,#7c3aed);
+    color:white;
+    padding:20px;
+    border-radius:22px;
+    margin-bottom:18px;
+    box-shadow:0 10px 25px rgba(99,102,241,.22);
 }
 
-.today-card:before{
-    content:"";
-    position:absolute;
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    background:rgba(255,255,255,.08);
-    right:-70px;
-    top:-80px;
-}
-
-.today-card:after{
+.hero-card:after{
     content:"";
     position:absolute;
     width:120px;
     height:120px;
     border-radius:50%;
-    background:rgba(255,255,255,.06);
-    left:-70px;
-    bottom:-70px;
+    background:rgba(255,255,255,.09);
+    right:-35px;
+    top:-45px;
 }
 
-.today-top{
+.hero-top{
     position:relative;
     z-index:1;
     display:flex;
@@ -228,421 +164,639 @@ button{
     align-items:flex-start;
 }
 
-.today-label{
-    font-size:11px;
-    opacity:.78;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    font-weight:700;
-}
-
-.today-card h2{
-    font-size:20px;
-    margin-top:4px;
-}
-
-.progress-circle{
-    width:58px;
-    height:58px;
-    border-radius:50%;
-    border:5px solid rgba(255,255,255,.22);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-}
-
-.progress-circle span{
+.hero-title{
     font-size:13px;
+    opacity:.82;
+    margin-bottom:5px;
+}
+
+.hero-number{
+    font-size:30px;
     font-weight:800;
 }
 
-.today-bottom{
-    margin-top:22px;
+.hero-sub{
+    font-size:11px;
+    opacity:.8;
+}
+
+.hero-icon{
+    width:44px;
+    height:44px;
     display:flex;
-    gap:10px;
+    align-items:center;
+    justify-content:center;
+    background:rgba(255,255,255,.14);
+    border-radius:14px;
+    font-size:20px;
+}
+
+.hero-progress{
+    margin-top:16px;
     position:relative;
     z-index:1;
 }
 
-.today-stat{
-    flex:1;
-    padding:10px 12px;
-    background:rgba(255,255,255,.12);
-    border-radius:14px;
+.hero-progress-bg{
+    height:7px;
+    background:rgba(255,255,255,.18);
+    border-radius:10px;
+    overflow:hidden;
 }
 
-.today-stat strong{
-    display:block;
-    font-size:16px;
+.hero-progress-fill{
+    height:100%;
+    width:0;
+    background:white;
+    border-radius:10px;
+    transition:.3s;
 }
 
-.today-stat span{
-    font-size:9px;
-    opacity:.75;
+.hero-progress-text{
+    display:flex;
+    justify-content:space-between;
+    margin-top:7px;
+    font-size:10px;
+    opacity:.82;
 }
 
-/* =========================
-   MOTIVATION
-========================= */
+/* SECTION */
+.section-title{
+    font-size:12px;
+    font-weight:800;
+    color:var(--text-muted);
+    margin:18px 0 10px;
+    text-transform:uppercase;
+    letter-spacing:.7px;
+}
 
-.motivation-card{
-    background:var(--card);
+/* NEXT */
+.next-card{
+    background:white;
     border:1px solid var(--border);
+    border-left:4px solid var(--primary);
     border-radius:18px;
     padding:15px;
+    box-shadow:var(--shadow);
+    margin-bottom:10px;
+}
+
+.next-top{
     display:flex;
     align-items:center;
     gap:12px;
-    margin-bottom:22px;
-    box-shadow:var(--shadow);
-}
-
-.motivation-icon{
-    width:40px;
-    height:40px;
-    border-radius:13px;
-    background:#fff7df;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:19px;
-}
-
-.motivation-card strong{
-    display:block;
-    font-size:12px;
-}
-
-.motivation-card p{
-    color:var(--muted);
-    font-size:10px;
-    margin-top:3px;
-    line-height:1.45;
-}
-
-/* =========================
-   SECTION
-========================= */
-
-.section-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin:20px 2px 10px;
-}
-
-.section-header h3{
-    font-size:14px;
-    font-weight:800;
-}
-
-.section-header span{
-    color:var(--muted);
-    font-size:10px;
-}
-
-/* =========================
-   NEXT REMINDER
-========================= */
-
-.next-card{
-    background:white;
-    border-radius:22px;
-    padding:17px;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
-    position:relative;
-    overflow:hidden;
-    margin-bottom:12px;
-}
-
-.next-card.active-next{
-    border:1px solid #dcd9ff;
-}
-
-.next-badge{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    font-size:9px;
-    color:var(--primary-dark);
-    background:var(--primary-soft);
-    padding:6px 9px;
-    border-radius:20px;
-    font-weight:800;
-    margin-bottom:13px;
-}
-
-.next-content{
-    display:flex;
-    align-items:center;
-    gap:13px;
 }
 
 .next-icon{
-    width:52px;
-    height:52px;
-    border-radius:16px;
-    background:#f1efff;
+    width:48px;
+    height:48px;
+    border-radius:15px;
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:25px;
+    background:var(--primary-light);
+    font-size:23px;
+    flex-shrink:0;
 }
 
 .next-info{
-    flex:1;
     min-width:0;
+    flex:1;
 }
 
 .next-info h3{
     font-size:15px;
+    font-weight:800;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
 .next-info p{
-    color:var(--muted);
-    font-size:10px;
-    margin-top:4px;
+    font-size:11px;
+    color:var(--text-muted);
+    margin-top:3px;
 }
 
 .next-time{
-    font-size:20px;
+    font-size:18px;
     font-weight:800;
-    color:var(--primary-dark);
 }
 
-/* =========================
-   QUICK ACTIONS
-========================= */
+.next-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:12px;
+    padding-top:10px;
+    border-top:1px solid #f1f5f9;
+}
 
-.quick-grid{
+.next-message{
+    font-size:10px;
+    color:var(--text-muted);
+    max-width:75%;
+}
+
+/* GRID */
+.activity-grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-    margin-bottom:22px;
-}
-
-.quick-button{
-    border:1px solid var(--border);
-    background:var(--card);
-    border-radius:16px;
-    padding:12px 5px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:7px;
-    color:var(--text);
-    box-shadow:0 3px 12px rgba(0,0,0,.025);
-}
-
-.quick-button i{
-    width:32px;
-    height:32px;
-    border-radius:11px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:var(--primary-soft);
-    color:var(--primary);
-    font-size:13px;
-}
-
-.quick-button span{
-    font-size:9px;
-    font-weight:700;
-}
-
-/* =========================
-   ACTIVITY CARD
-========================= */
-
-.activity-list{
-    display:flex;
-    flex-direction:column;
-    gap:9px;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
 }
 
 .activity-card{
-    background:var(--card);
+    background:white;
     border:1px solid var(--border);
-    border-radius:18px;
+    border-radius:17px;
     padding:13px;
+    min-height:135px;
+    box-shadow:0 3px 10px rgba(15,23,42,.025);
     display:flex;
-    align-items:center;
-    gap:11px;
-    box-shadow:0 3px 13px rgba(0,0,0,.025);
+    flex-direction:column;
+    justify-content:space-between;
 }
 
 .activity-card.done{
-    opacity:.7;
+    opacity:.65;
 }
 
-.activity-icon{
-    width:43px;
-    height:43px;
-    flex:none;
-    border-radius:14px;
-    background:var(--primary-soft);
+.activity-left{
     display:flex;
     align-items:center;
-    justify-content:center;
-    font-size:20px;
-}
-
-.activity-info{
-    flex:1;
+    gap:9px;
+    cursor:pointer;
     min-width:0;
 }
 
-.activity-info h4{
-    font-size:12px;
-    font-weight:800;
+.activity-icon{
+    width:40px;
+    height:40px;
+    flex-shrink:0;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--primary-light);
+    font-size:19px;
+}
+
+.activity-details{
+    min-width:0;
+}
+
+.activity-details h4{
+    font-size:13px;
+    font-weight:700;
     white-space:nowrap;
     overflow:hidden;
     text-overflow:ellipsis;
 }
 
-.activity-info p{
-    color:var(--muted);
-    font-size:9px;
+.activity-details span{
+    display:block;
+    font-size:10px;
+    color:var(--text-muted);
     margin-top:3px;
 }
 
-.activity-right{
+.activity-time{
     display:flex;
+    justify-content:space-between;
     align-items:center;
-    gap:8px;
+    margin-top:10px;
 }
 
-.activity-time{
-    font-size:12px;
+.activity-time .time{
+    font-size:14px;
     font-weight:800;
 }
 
-.check-button{
-    width:32px;
-    height:32px;
-    border-radius:11px;
-    border:1px solid var(--border);
-    background:white;
-    color:#c0c3cf;
-}
-
-.check-button.checked{
-    background:var(--green-soft);
-    color:var(--green);
-    border-color:#bdeedc;
-}
-
-.delete-button{
-    width:28px;
-    height:28px;
-    border:0;
+.btn-delete{
     background:none;
-    color:#c7c9d3;
+    border:none;
+    color:#cbd5e1;
+    font-size:14px;
+    cursor:pointer;
+    padding:5px;
 }
 
-.delete-button:hover{
+.btn-delete:hover{
     color:var(--red);
 }
 
-/* =========================
-   EMPTY STATE
-========================= */
-
-.empty-state{
-    text-align:center;
-    padding:32px 15px;
-    background:white;
-    border-radius:20px;
-    border:1px dashed #dcdde6;
+.category-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:9px;
+    font-weight:700;
+    padding:4px 7px;
+    border-radius:10px;
+    margin-top:6px;
 }
 
-.empty-icon{
-    width:54px;
-    height:54px;
-    border-radius:18px;
-    background:var(--primary-soft);
+.priority-badge{
+    font-size:9px;
+    font-weight:800;
+    color:#b91c1c;
+    background:var(--red-light);
+    padding:4px 7px;
+    border-radius:8px;
+}
+
+.repeat-badge{
+    font-size:9px;
+    color:var(--text-muted);
+    background:#f1f5f9;
+    padding:4px 7px;
+    border-radius:8px;
+}
+
+/* CATEGORY COLORS */
+.cat-kesehatan{background:var(--green-light);color:#047857;}
+.cat-pekerjaan{background:var(--blue-light);color:#1d4ed8;}
+.cat-rumah{background:var(--orange-light);color:#b45309;}
+.cat-belajar{background:var(--purple-light);color:#6d28d9;}
+.cat-ibadah{background:var(--primary-light);color:#4338ca;}
+.cat-tidur{background:#ede9fe;color:#6d28d9;}
+.cat-kebiasaan{background:var(--pink-light);color:#be185d;}
+.cat-lainnya{background:#f1f5f9;color:#475569;}
+
+/* PROGRESS */
+.progress-card{
+    background:white;
+    padding:15px;
+    border-radius:17px;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+    margin-bottom:12px;
+}
+
+.progress-info{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    font-weight:700;
+    margin-bottom:8px;
+}
+
+.progress-bar-bg{
+    width:100%;
+    height:8px;
+    background:#f1f5f9;
+    border-radius:8px;
+    overflow:hidden;
+}
+
+.progress-bar-fill{
+    width:0;
+    height:100%;
+    background:linear-gradient(90deg,#6366f1,#8b5cf6);
+    border-radius:8px;
+    transition:.3s;
+}
+
+/* QUICK */
+.quick-scroll{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    padding-bottom:3px;
+}
+
+.quick-scroll::-webkit-scrollbar{
+    display:none;
+}
+
+.quick-btn{
+    flex-shrink:0;
+    border:1px solid var(--border);
+    background:white;
+    border-radius:14px;
+    padding:9px 11px;
+    font-size:10px;
+    font-weight:700;
+    cursor:pointer;
+    box-shadow:0 2px 5px rgba(0,0,0,.02);
+}
+
+.quick-btn i{
+    margin-right:4px;
     color:var(--primary);
+}
+
+/* STATS */
+.stat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.stat-box{
+    background:white;
+    border:1px solid var(--border);
+    border-radius:17px;
+    padding:15px;
+    text-align:center;
+}
+
+.stat-box h3{
+    font-size:25px;
+    font-weight:800;
+    color:var(--primary);
+}
+
+.stat-box p{
+    font-size:10px;
+    color:var(--text-muted);
+    margin-top:3px;
+}
+
+.streak-card{
+    background:linear-gradient(135deg,#fff7ed,#ffffff);
+    border:1px solid #fed7aa;
+}
+
+.streak-number{
+    font-size:34px;
+    font-weight:800;
+    color:#ea580c;
+}
+
+.week-row{
+    display:flex;
+    justify-content:space-between;
+    margin-top:15px;
+}
+
+.week-day{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
+    font-size:9px;
+    color:var(--text-muted);
+}
+
+.week-dot{
+    width:27px;
+    height:27px;
+    border-radius:50%;
+    background:#f1f5f9;
     display:flex;
     align-items:center;
     justify-content:center;
-    margin:0 auto 12px;
-    font-size:22px;
+    font-size:11px;
+}
+
+.week-dot.active{
+    background:var(--green-light);
+    color:#047857;
+}
+
+/* FORM */
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:6px;
+}
+
+.form-control{
+    width:100%;
+    padding:12px 13px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    font-size:13px;
+    outline:none;
+    background:white;
+    color:var(--text-main);
+}
+
+.form-control:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(99,102,241,.1);
+}
+
+textarea.form-control{
+    resize:none;
+}
+
+.btn-primary{
+    width:100%;
+    padding:14px;
+    background:var(--primary);
+    color:white;
+    border:none;
+    border-radius:13px;
+    font-size:14px;
+    font-weight:800;
+    cursor:pointer;
+    box-shadow:0 5px 15px rgba(99,102,241,.25);
+}
+
+.btn-secondary{
+    width:100%;
+    padding:12px;
+    background:#f1f5f9;
+    color:var(--text-main);
+    border:none;
+    border-radius:12px;
+    font-size:13px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.time-trigger{
+    text-align:left;
+    cursor:pointer;
+    font-weight:700;
+}
+
+.form-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.category-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+}
+
+.category-option{
+    border:1px solid var(--border);
+    background:white;
+    border-radius:12px;
+    padding:8px 4px;
+    text-align:center;
+    cursor:pointer;
+    font-size:9px;
+    font-weight:700;
+    transition:.15s;
+}
+
+.category-option .cat-icon{
+    font-size:18px;
+    display:block;
+    margin-bottom:3px;
+}
+
+.category-option.selected{
+    border:2px solid var(--primary);
+    background:var(--primary-light);
+    color:var(--primary-dark);
+}
+
+.priority-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+.priority-option{
+    border:1px solid var(--border);
+    background:white;
+    border-radius:11px;
+    padding:10px;
+    text-align:center;
+    cursor:pointer;
+    font-size:11px;
+    font-weight:700;
+}
+
+.priority-option.selected{
+    border-color:var(--primary);
+    background:var(--primary-light);
+    color:var(--primary-dark);
+}
+
+.repeat-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+}
+
+.day-option{
+    border:1px solid var(--border);
+    background:white;
+    border-radius:9px;
+    padding:8px 2px;
+    text-align:center;
+    font-size:10px;
+    cursor:pointer;
+}
+
+.day-option.selected{
+    background:var(--primary);
+    color:white;
+    border-color:var(--primary);
+}
+
+/* SLEEP */
+.sleep-card{
+    background:linear-gradient(145deg,#eef2ff,#ffffff);
+    border:1px solid #c7d2fe;
+    border-top:3px solid var(--primary);
+}
+
+.sleep-card-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.sleep-card-info{
+    flex:1;
+    min-width:0;
+}
+
+.sleep-card-info h3{
+    font-size:15px;
+    font-weight:800;
+}
+
+.sleep-card-info p{
+    font-size:10px;
+    color:var(--text-muted);
+    margin-top:3px;
+}
+
+/* EMPTY */
+.empty-state{
+    background:white;
+    border:1px dashed var(--border);
+    border-radius:17px;
+    padding:25px 15px;
+    text-align:center;
+    color:var(--text-muted);
+}
+
+.empty-state .empty-icon{
+    font-size:30px;
+    margin-bottom:8px;
 }
 
 .empty-state h3{
-    font-size:14px;
+    font-size:13px;
+    color:var(--text-main);
+    margin-bottom:4px;
 }
 
 .empty-state p{
     font-size:10px;
-    color:var(--muted);
-    margin:5px 0 14px;
 }
 
-/* =========================
-   BUTTON
-========================= */
-
-.primary-button{
-    width:100%;
-    padding:14px;
-    border:0;
-    border-radius:14px;
+/* FAB */
+.fab-btn{
+    position:absolute;
+    bottom:72px;
+    right:18px;
+    width:52px;
+    height:52px;
+    border-radius:50%;
     background:var(--primary);
     color:white;
-    font-size:13px;
-    font-weight:800;
-    box-shadow:0 8px 18px rgba(99,91,255,.22);
+    border:none;
+    font-size:20px;
+    box-shadow:0 7px 20px rgba(99,102,241,.4);
+    cursor:pointer;
+    z-index:20;
 }
 
-.secondary-button{
-    width:100%;
-    padding:13px;
-    border:1px solid var(--border);
-    border-radius:14px;
-    background:white;
-    color:var(--text);
-    font-size:12px;
-    font-weight:700;
-}
-
-/* =========================
-   BOTTOM NAV
-========================= */
-
+/* NAV */
 .bottom-nav{
     position:absolute;
     bottom:0;
     left:0;
     width:100%;
-    height:72px;
-    background:rgba(255,255,255,.96);
-    backdrop-filter:blur(12px);
-    border-top:1px solid var(--border);
+    background:white;
     display:flex;
-    align-items:center;
     justify-content:space-around;
-    z-index:20;
-    padding-bottom:env(safe-area-inset-bottom);
+    padding:10px 0 9px;
+    border-top:1px solid var(--border);
+    z-index:15;
 }
 
 .nav-item{
-    border:0;
     background:none;
-    color:#9698a7;
+    border:none;
     display:flex;
     flex-direction:column;
     align-items:center;
     gap:4px;
-    font-size:8px;
-    font-weight:700;
-    min-width:62px;
+    color:var(--text-muted);
+    font-size:9px;
+    font-weight:600;
+    cursor:pointer;
+    min-width:60px;
 }
 
 .nav-item i{
@@ -651,325 +805,113 @@ button{
 
 .nav-item.active{
     color:var(--primary);
+    font-weight:800;
 }
 
-/* =========================
-   FAB
-========================= */
-
-.fab{
+/* ALARM */
+.alarm-screen{
     position:absolute;
-    right:20px;
-    bottom:82px;
-    width:54px;
-    height:54px;
-    border:0;
-    border-radius:50%;
-    background:var(--primary);
+    inset:0;
+    background:radial-gradient(circle at 50% 10%,#37306d,#0b1028 70%);
     color:white;
-    font-size:19px;
-    box-shadow:0 9px 25px rgba(99,91,255,.38);
-    z-index:21;
+    z-index:100;
+    display:none;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:42px 24px 30px;
+    text-align:center;
 }
 
-/* =========================
-   PAGE HEADER
-========================= */
+.alarm-screen.active{
+    display:flex;
+}
 
-.page-title{
+.alarm-content h3{
+    font-size:12px;
+    letter-spacing:3px;
+    color:#a5b4fc;
     margin-bottom:20px;
 }
 
-.page-title h2{
-    font-size:23px;
+.alarm-pulse{
+    width:14px;
+    height:14px;
+    border-radius:50%;
+    background:#ef4444;
+    margin:0 auto 18px;
+    box-shadow:0 0 0 0 rgba(239,68,68,.7);
+    animation:alarmPulse 1.5s infinite;
 }
 
-.page-title p{
-    color:var(--muted);
-    font-size:11px;
-    margin-top:4px;
+@keyframes alarmPulse{
+    70%{box-shadow:0 0 0 16px rgba(239,68,68,0)}
+    100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}
 }
 
-/* =========================
-   SCHEDULE
-========================= */
+.alarm-greeting{
+    font-size:17px;
+    color:#e0e7ff;
+    margin-bottom:12px;
+    line-height:1.45;
+}
 
-.sleep-card{
-    background:linear-gradient(135deg,#eeecff,#fff);
-    border:1px solid #ddd9ff;
-    border-radius:20px;
-    padding:16px;
+.alarm-time-big{
+    font-size:66px;
+    line-height:1;
+    font-weight:800;
+    letter-spacing:2px;
+    margin-bottom:18px;
+}
+
+.alarm-act-name{
+    font-size:26px;
+    font-weight:800;
     margin-bottom:10px;
 }
 
-.sleep-main{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.sleep-icon{
-    width:48px;
-    height:48px;
-    border-radius:15px;
-    background:#ddd9ff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:23px;
-}
-
-.sleep-info{
-    flex:1;
-}
-
-.sleep-info h3{
-    font-size:14px;
-}
-
-.sleep-info p{
-    color:var(--muted);
-    font-size:9px;
-    margin-top:3px;
-}
-
-.schedule-label{
+.alarm-category{
     display:inline-block;
-    margin-top:7px;
-    font-size:8px;
-    font-weight:800;
-    color:var(--primary-dark);
-    background:white;
-    padding:5px 8px;
-    border-radius:10px;
-}
-
-/* =========================
-   STATS
-========================= */
-
-.stat-grid{
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    margin-bottom:12px;
-}
-
-.stat-card{
-    background:white;
-    border:1px solid var(--border);
+    padding:6px 10px;
+    background:rgba(255,255,255,.1);
     border-radius:20px;
-    padding:17px;
-}
-
-.stat-icon{
-    width:35px;
-    height:35px;
-    border-radius:11px;
-    background:var(--primary-soft);
-    color:var(--primary);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin-bottom:10px;
-}
-
-.stat-card strong{
-    display:block;
-    font-size:25px;
-}
-
-.stat-card span{
-    color:var(--muted);
-    font-size:9px;
-}
-
-.streak-card{
-    background:linear-gradient(135deg,#fff5d9,#fff);
-    border:1px solid #f8e8b7;
-    border-radius:21px;
-    padding:18px;
-    margin-bottom:12px;
-}
-
-.streak-head{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.streak-fire{
-    width:46px;
-    height:46px;
-    border-radius:15px;
-    background:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:23px;
-}
-
-.streak-card h3{
-    font-size:15px;
-}
-
-.streak-card p{
     font-size:10px;
-    color:var(--muted);
-    margin-top:3px;
-}
-
-.mini-progress{
-    height:8px;
-    background:#f1eee3;
-    border-radius:10px;
-    margin-top:16px;
-    overflow:hidden;
-}
-
-.mini-progress-fill{
-    height:100%;
-    width:0;
-    background:#f59e0b;
-    border-radius:10px;
-}
-
-/* =========================
-   SETTINGS
-========================= */
-
-.settings-card{
-    background:white;
-    border:1px solid var(--border);
-    border-radius:20px;
-    padding:17px;
+    color:#c7d2fe;
     margin-bottom:12px;
 }
 
-.settings-card h3{
+.alarm-msg{
     font-size:14px;
-    margin-bottom:5px;
+    color:#c7d2fe;
+    line-height:1.55;
 }
 
-.settings-card > p{
-    color:var(--muted);
-    font-size:10px;
-    margin-bottom:14px;
-}
-
-.form-group{
-    margin-bottom:15px;
-}
-
-.form-group label{
-    display:block;
-    font-size:11px;
-    font-weight:800;
-    margin-bottom:6px;
-}
-
-.form-control{
-    width:100%;
-    padding:12px 13px;
-    border:1px solid var(--border);
-    background:white;
-    border-radius:13px;
-    outline:none;
-    font-size:12px;
-    color:var(--text);
-}
-
-textarea.form-control{
-    resize:none;
-}
-
-.permission-row{
-    padding:10px 0;
-    border-bottom:1px solid #f0f1f5;
-}
-
-.permission-row:last-child{
-    border-bottom:0;
-}
-
-.permission-row strong{
-    font-size:11px;
-}
-
-.permission-row p{
-    color:var(--muted);
-    font-size:9px;
-    margin-top:2px;
-}
-
-/* =========================
-   ADD SCREEN
-========================= */
-
-.add-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:22px;
-}
-
-.close-button{
-    width:38px;
-    height:38px;
-    border:0;
-    background:white;
-    border:1px solid var(--border);
-    border-radius:12px;
-}
-
-.add-title h2{
-    font-size:21px;
-}
-
-.add-title p{
-    color:var(--muted);
-    font-size:10px;
-    margin-top:3px;
-}
-
-.category-grid{
+.alarm-actions{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:7px;
-    margin-top:8px;
+    grid-template-columns:1fr 1.35fr;
+    gap:10px;
 }
 
-.category-button{
-    padding:10px 4px;
-    border:1px solid var(--border);
-    background:white;
-    border-radius:12px;
-    font-size:9px;
-    font-weight:700;
-}
-
-.category-button.active{
-    background:var(--primary-soft);
-    border-color:#d2ceff;
-    color:var(--primary-dark);
-}
-
-.time-button{
-    width:100%;
-    text-align:left;
-    font-size:22px;
+.btn-snooze-alarm,
+.btn-stop-alarm{
+    color:white;
+    padding:16px 10px;
+    border-radius:14px;
+    font-size:14px;
     font-weight:800;
-    color:var(--primary-dark);
-    background:#f7f6ff;
-    border:1px solid #dfdcff;
-    padding:15px;
-    border-radius:16px;
+    border:none;
+    cursor:pointer;
 }
 
-/* =========================
-   WHEEL
-========================= */
+.btn-snooze-alarm{
+    background:rgba(99,102,241,.55);
+    border:1px solid #818cf8;
+}
 
+.btn-stop-alarm{
+    background:#ef4444;
+}
+
+/* TIME WHEEL */
 .wheel-overlay{
     position:fixed;
     inset:0;
@@ -986,33 +928,29 @@ textarea.form-control{
 
 .wheel-sheet{
     width:100%;
-    max-width:430px;
+    max-width:420px;
     background:white;
-    border-radius:25px 25px 0 0;
-    padding:20px 18px 28px;
-}
-
-.wheel-sheet h3{
-    text-align:center;
-    font-size:15px;
+    border-radius:22px 22px 0 0;
+    padding:18px 18px 28px;
 }
 
 .wheel-row{
     display:flex;
-    gap:10px;
+    gap:12px;
     justify-content:center;
-    align-items:center;
-    margin:15px 0;
+    margin:12px 0 18px;
 }
 
 .wheel-column{
     height:190px;
-    width:105px;
     overflow-y:scroll;
     scroll-snap-type:y proximity;
-    background:linear-gradient(#f8fafc,#e5e2ff 46%,#e5e2ff 54%,#f8fafc);
+    overscroll-behavior-y:contain;
+    -webkit-overflow-scrolling:touch;
+    width:100px;
+    border-radius:14px;
+    background:linear-gradient(#f8fafc,#e0e7ff 46%,#e0e7ff 54%,#f8fafc);
     padding:69px 0;
-    border-radius:15px;
     scrollbar-width:none;
 }
 
@@ -1026,27 +964,29 @@ textarea.form-control{
     align-items:center;
     justify-content:center;
     scroll-snap-align:center;
-    font-size:25px;
-    font-weight:800;
-    color:#9aa0b2;
+    font-size:26px;
+    font-weight:700;
+    color:#94a3b8;
+    opacity:.72;
 }
 
 .wheel-option.selected{
-    color:var(--text);
+    color:#1e1b4b;
+    opacity:1;
     transform:scale(1.08);
 }
 
 .wheel-actions{
     display:flex;
-    gap:8px;
+    gap:10px;
 }
 
 .wheel-actions button{
     flex:1;
     padding:13px;
     border:0;
-    border-radius:13px;
-    font-weight:800;
+    border-radius:12px;
+    font-weight:700;
 }
 
 .wheel-confirm{
@@ -1054,161 +994,53 @@ textarea.form-control{
     color:white;
 }
 
-/* =========================
-   ALARM
-========================= */
-
-.alarm-screen{
-    position:absolute;
-    inset:0;
-    background:radial-gradient(circle at 50% 10%,#40377c,#090d22 70%);
-    color:white;
-    z-index:100;
-    display:none;
-    flex-direction:column;
-    justify-content:space-between;
-    padding:48px 23px 28px;
-    text-align:center;
-}
-
-.alarm-screen.active{
-    display:flex;
-}
-
-.alarm-content h3{
-    font-size:12px;
-    letter-spacing:3px;
-    color:#a5b4fc;
-    margin-bottom:20px;
-}
-
-.alarm-pulse{
-    width:15px;
-    height:15px;
-    border-radius:50%;
-    background:#ef4444;
-    margin:0 auto 18px;
-    box-shadow:0 0 0 0 rgba(239,68,68,.7);
-    animation:alarmPulse 1.5s infinite;
-}
-
-@keyframes alarmPulse{
-    70%{
-        box-shadow:0 0 0 17px rgba(239,68,68,0);
-    }
-    100%{
-        box-shadow:0 0 0 0 rgba(239,68,68,0);
-    }
-}
-
-.alarm-greeting{
-    font-size:17px;
-    color:#e0e7ff;
-    margin-bottom:13px;
-}
-
-.alarm-time-big{
-    font-size:67px;
-    line-height:1;
-    font-weight:800;
-    margin-bottom:18px;
-}
-
-.alarm-label{
-    font-size:10px;
-    color:#a5b4fc;
-    letter-spacing:2px;
-}
-
-.alarm-act-name{
-    font-size:26px;
-    font-weight:800;
-    margin-top:5px;
-}
-
-.alarm-msg{
-    color:#c7d2fe;
-    font-size:13px;
-    line-height:1.5;
-    margin-top:10px;
-}
-
-.alarm-actions{
-    display:grid;
-    grid-template-columns:1fr 1.3fr;
-    gap:9px;
-}
-
-.btn-snooze,
-.btn-stop{
-    border:0;
-    color:white;
-    padding:16px 9px;
-    border-radius:14px;
-    font-size:13px;
-    font-weight:800;
-}
-
-.btn-snooze{
-    background:rgba(99,102,241,.55);
-    border:1px solid #818cf8;
-}
-
-.btn-stop{
-    background:#ef4444;
-}
-
-/* =========================
-   TOAST
-========================= */
-
+/* TOAST */
 .toast{
     position:absolute;
     left:18px;
     right:18px;
-    bottom:82px;
-    background:#17172c;
+    bottom:78px;
+    background:#181735;
     color:white;
     padding:12px 14px;
     border-radius:13px;
     font-size:11px;
-    font-weight:700;
+    font-weight:600;
+    z-index:200;
+    transform:translateY(20px);
     opacity:0;
-    transform:translateY(10px);
     pointer-events:none;
     transition:.25s;
-    z-index:200;
-    text-align:center;
 }
 
 .toast.show{
-    opacity:1;
     transform:translateY(0);
+    opacity:1;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
-
-@media(max-width:350px){
-    .screen{
-        padding-left:14px;
-        padding-right:14px;
-    }
-
-    .greeting h1{
-        font-size:22px;
-    }
-
-    .quick-button span{
-        font-size:8px;
-    }
-
-    .activity-time{
-        font-size:10px;
-    }
+/* PERMISSION */
+.permission-panel{
+    margin-top:15px;
 }
 
+.permission-row{
+    margin-top:8px;
+}
+
+/* DESKTOP */
+@media(max-width:360px){
+    .category-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .activity-grid{
+        grid-template-columns:1fr;
+    }
+
+    .hero-number{
+        font-size:26px;
+    }
+}
 </style>
 </head>
 
@@ -1216,381 +1048,567 @@ textarea.form-control{
 
 <div class="phone-frame">
 
-<!-- =====================================================
-     HOME
-===================================================== -->
-
+<!-- ================= HOME ================= -->
 <div id="screen-home" class="screen active">
 
-    <header class="top-header">
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
+        </div>
+        <div class="user-badge" id="display-username">Anto</div>
+    </div>
 
-        <div class="brand">
+    <div class="greeting-section">
+        <h2 id="greeting-title">Selamat datang 👋</h2>
+        <p id="current-date-text"></p>
+    </div>
 
-            <div class="brand-logo">
-                M
-            </div>
-
+    <div class="hero-card">
+        <div class="hero-top">
             <div>
-                <div class="brand-name">MAESTRO</div>
-                <span class="brand-sub">easy does it</span>
+                <div class="hero-title">Progress hari ini</div>
+                <div class="hero-number" id="hero-percent">0%</div>
+                <div class="hero-sub" id="hero-sub">Belum ada aktivitas</div>
             </div>
-
+            <div class="hero-icon">🎯</div>
         </div>
 
-        <button class="profile-button"
-                onclick="switchScreen('settings')"
-                id="profile-letter">
-            A
+        <div class="hero-progress">
+            <div class="hero-progress-bg">
+                <div class="hero-progress-fill" id="hero-progress-fill"></div>
+            </div>
+            <div class="hero-progress-text">
+                <span id="progress-text">0 dari 0 selesai</span>
+                <span id="hero-streak">🔥 0 hari</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title">Quick Reminder</div>
+
+    <div class="quick-scroll">
+        <button class="quick-btn" onclick="quickAdd('💧','Minum air','KESEHATAN')">
+            <i class="fa-solid fa-droplet"></i>Minum
         </button>
+        <button class="quick-btn" onclick="quickAdd('🏃','Olahraga','KESEHATAN')">
+            <i class="fa-solid fa-person-running"></i>Olahraga
+        </button>
+        <button class="quick-btn" onclick="quickAdd('🍽️','Makan','KEBIASAAN')">
+            <i class="fa-solid fa-utensils"></i>Makan
+        </button>
+        <button class="quick-btn" onclick="quickAdd('📚','Belajar','BELAJAR')">
+            <i class="fa-solid fa-book"></i>Belajar
+        </button>
+        <button class="quick-btn" onclick="quickAdd('🪥','Sikat gigi','KEBIASAAN')">
+            <i class="fa-solid fa-tooth"></i>Sikat gigi
+        </button>
+    </div>
 
-    </header>
+    <div class="section-title">Berikutnya</div>
+    <div id="next-activity-container"></div>
+
+    <div class="section-title">Aktivitas Hari Ini</div>
+    <div id="activity-list-container" class="activity-grid"></div>
+
+</div>
 
 
-    <section class="greeting">
+<!-- ================= SCHEDULE ================= -->
+<div id="screen-schedule" class="screen">
 
-        <small id="current-date-text">
-            Rabu, 19 Agustus 2026
-        </small>
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
+        </div>
+        <div class="user-badge">Jadwal</div>
+    </div>
 
-        <h1 id="greeting-title">
-            Selamat datang 👋
-        </h1>
+    <div class="greeting-section">
+        <h2>Semua Jadwal 📅</h2>
+        <p>Atur pengingat agar tidak terlewat.</p>
+    </div>
 
-        <p id="greeting-subtitle">
-            Mari jalani hari sedikit demi sedikit.
-        </p>
+    <div class="section-title">Alarm Tidur</div>
+    <div id="sleep-schedule-container"></div>
 
-    </section>
+    <div class="section-title">Aktivitas Terjadwal</div>
+    <div id="schedule-list-container" class="activity-grid"></div>
+
+</div>
 
 
-    <!-- TODAY -->
+<!-- ================= STATS ================= -->
+<div id="screen-stats" class="screen">
 
-    <div class="today-card">
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
+        </div>
+        <div class="user-badge">Statistik</div>
+    </div>
 
-        <div class="today-top">
+    <div class="greeting-section">
+        <h2>Perkembanganmu 📊</h2>
+        <p>Bukan sekadar alarm. Bangun kebiasaan.</p>
+    </div>
 
-            <div>
-
-                <div class="today-label">
-                    Hari ini
-                </div>
-
-                <h2 id="today-message">
-                    Kamu bisa melakukannya.
-                </h2>
-
-            </div>
-
-            <div class="progress-circle">
-                <span id="progress-percent">0%</span>
-            </div>
-
+    <div class="stat-grid">
+        <div class="stat-box">
+            <h3 id="stat-completed">0</h3>
+            <p>Selesai hari ini</p>
         </div>
 
+        <div class="stat-box">
+            <h3 id="stat-total">0</h3>
+            <p>Total aktivitas</p>
+        </div>
 
-        <div class="today-bottom">
+        <div class="stat-box">
+            <h3 id="stat-rate">0%</h3>
+            <p>Tingkat selesai</p>
+        </div>
 
-            <div class="today-stat">
-                <strong id="today-completed">0</strong>
-                <span>Selesai</span>
+        <div class="stat-box">
+            <h3 id="stat-important">0</h3>
+            <p>Prioritas penting</p>
+        </div>
+    </div>
+
+    <div class="section-title">Streak</div>
+
+    <div class="progress-card streak-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div>
+                <div style="font-size:12px;font-weight:800;">🔥 Konsistensi</div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:4px;">
+                    Selesaikan aktivitas setiap hari.
+                </div>
             </div>
-
-            <div class="today-stat">
-                <strong id="today-remaining">0</strong>
-                <span>Tersisa</span>
+            <div>
+                <span class="streak-number" id="streak-number">0</span>
+                <span style="font-size:10px;color:#ea580c;"> hari</span>
             </div>
+        </div>
 
-            <div class="today-stat">
-                <strong id="today-total">0</strong>
-                <span>Pengingat</span>
-            </div>
+        <div class="week-row" id="week-row"></div>
+    </div>
 
+    <div class="section-title">Tips Maestro</div>
+
+    <div class="progress-card">
+        <div style="font-size:13px;font-weight:800;" id="stats-tip-title">
+            Mulai dari satu kebiasaan.
+        </div>
+        <p style="font-size:11px;color:var(--text-muted);line-height:1.5;margin-top:5px;" id="stats-tip">
+            Konsistensi kecil lebih berguna daripada membuat terlalu banyak alarm.
+        </p>
+    </div>
+
+</div>
+
+
+<!-- ================= SETTINGS ================= -->
+<div id="screen-settings" class="screen">
+
+    <div class="brand-header">
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span>easy does it</span>
+        </div>
+        <div class="user-badge">Pengaturan</div>
+    </div>
+
+    <div class="greeting-section">
+        <h2>Pengaturan ⚙️</h2>
+        <p>Atur cara Maestro mengingatkanmu.</p>
+    </div>
+
+    <div class="progress-card">
+
+        <div class="form-group">
+            <label>Nama Panggilan</label>
+            <input
+                type="text"
+                class="form-control"
+                id="input-name"
+                placeholder="Contoh: Anto"
+                oninput="saveSettings(this.value)"
+            >
         </div>
 
     </div>
 
+    <div class="progress-card permission-panel" id="permission-panel">
 
-    <!-- MOTIVATION -->
+        <h3 style="font-size:14px;margin-bottom:5px;">
+            🔔 Izin Alarm
+        </h3>
 
-    <div class="motivation-card">
+        <p
+            id="permission-summary"
+            style="font-size:10px;color:var(--text-muted);line-height:1.5;"
+        >
+            Memeriksa izin perangkat...
+        </p>
 
-        <div class="motivation-icon" id="motivation-icon">
-            ✨
+        <div id="permission-notification-row" class="permission-row">
+            <button
+                class="btn-primary"
+                onclick="openPermission('notification')"
+            >
+                Izinkan Notifikasi
+            </button>
         </div>
 
-        <div>
+        <div id="permission-alarm-row" class="permission-row">
+            <button
+                class="btn-primary"
+                onclick="openPermission('alarm')"
+            >
+                Izinkan Alarm Tepat Waktu
+            </button>
+        </div>
 
-            <strong id="motivation-title">
-                Pelan-pelan saja
-            </strong>
+        <div id="permission-fullscreen-row" class="permission-row">
+            <button
+                class="btn-primary"
+                style="background:#334155;"
+                onclick="openPermission('fullscreen')"
+            >
+                Izinkan Layar Alarm Penuh
+            </button>
+        </div>
 
-            <p id="motivation-text">
-                Tidak harus sempurna. Yang penting tetap berjalan.
+    </div>
+
+    <div class="progress-card">
+
+        <h3 style="font-size:14px;margin-bottom:6px;">
+            💡 Tentang Maestro
+        </h3>
+
+        <p style="font-size:10px;color:var(--text-muted);line-height:1.6;">
+            Maestro dirancang supaya pengingat tidak terasa seperti alarm
+            biasa. Kategori, prioritas dan aktivitas digunakan untuk membuat
+            pesan pengingat yang lebih sesuai.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= ADD ================= -->
+<div id="screen-add" class="screen">
+
+    <div class="brand-header">
+
+        <div class="brand-logo">
+            <h1>MAESTRO</h1>
+            <span id="add-screen-subtitle">Tambah Pengingat</span>
+        </div>
+
+        <button
+            onclick="cancelAdd()"
+            style="background:none;border:none;font-size:19px;cursor:pointer;"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+    <div class="progress-card">
+
+        <div class="form-group">
+
+            <label>Nama Aktivitas</label>
+
+            <input
+                type="text"
+                id="add-name"
+                class="form-control"
+                placeholder="Contoh: Minum air putih"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Jam Alarm</label>
+
+            <button
+                type="button"
+                id="add-time-button"
+                class="form-control time-trigger"
+                onclick="openTimePicker()"
+            >
+                08:00
+            </button>
+
+            <input
+                type="hidden"
+                id="add-time"
+                value="08:00"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Kategori</label>
+
+            <div class="category-grid">
+
+                <div
+                    class="category-option"
+                    data-category="KESEHATAN"
+                    onclick="selectCategory('KESEHATAN')"
+                >
+                    <span class="cat-icon">💚</span>
+                    Kesehatan
+                </div>
+
+                <div
+                    class="category-option"
+                    data-category="PEKERJAAN"
+                    onclick="selectCategory('PEKERJAAN')"
+                >
+                    <span class="cat-icon">💼</span>
+                    Pekerjaan
+                </div>
+
+                <div
+                    class="category-option"
+                    data-category="RUMAH"
+                    onclick="selectCategory('RUMAH')"
+                >
+                    <span class="cat-icon">🏠</span>
+                    Rumah
+                </div>
+
+                <div
+                    class="category-option"
+                    data-category="BELAJAR"
+                    onclick="selectCategory('BELAJAR')"
+                >
+                    <span class="cat-icon">📚</span>
+                    Belajar
+                </div>
+
+                <div
+                    class="category-option"
+                    data-category="IBADAH"
+                    onclick="selectCategory('IBADAH')"
+                >
+                    <span class="cat-icon">🙏</span>
+                    Ibadah
+                </div>
+
+                <div
+                    class="category-option"
+                    data-category="TIDUR"
+                    onclick="selectCategory('TIDUR')"
+                >
+                    <span class="cat-icon">😴</span>
+                    Tidur
+                </div>
+
+                <div
+                    class="category-option"
+                    data-category="KEBIASAAN"
+                    onclick="selectCategory('KEBIASAAN')"
+                >
+                    <span class="cat-icon">🎯</span>
+                    Kebiasaan
+                </div>
+
+                <div
+                    class="category-option"
+                    data-category="LAINNYA"
+                    onclick="selectCategory('LAINNYA')"
+                >
+                    <span class="cat-icon">📌</span>
+                    Lainnya
+                </div>
+
+            </div>
+
+            <input
+                type="hidden"
+                id="add-category"
+                value="KEBIASAAN"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Prioritas</label>
+
+            <div class="priority-grid">
+
+                <div
+                    class="priority-option selected"
+                    data-priority="NORMAL"
+                    onclick="selectPriority('NORMAL')"
+                >
+                    🟢 Biasa
+                </div>
+
+                <div
+                    class="priority-option"
+                    data-priority="IMPORTANT"
+                    onclick="selectPriority('IMPORTANT')"
+                >
+                    🔴 Penting
+                </div>
+
+            </div>
+
+            <input
+                type="hidden"
+                id="add-priority"
+                value="NORMAL"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Ulangi Pengingat</label>
+
+            <div class="repeat-grid">
+
+                <div
+                    class="day-option"
+                    data-day="1"
+                    onclick="toggleDay(this)"
+                >
+                    Min
+                </div>
+
+                <div
+                    class="day-option"
+                    data-day="2"
+                    onclick="toggleDay(this)"
+                >
+                    Sen
+                </div>
+
+                <div
+                    class="day-option"
+                    data-day="3"
+                    onclick="toggleDay(this)"
+                >
+                    Sel
+                </div>
+
+                <div
+                    class="day-option"
+                    data-day="4"
+                    onclick="toggleDay(this)"
+                >
+                    Rab
+                </div>
+
+                <div
+                    class="day-option"
+                    data-day="5"
+                    onclick="toggleDay(this)"
+                >
+                    Kam
+                </div>
+
+                <div
+                    class="day-option"
+                    data-day="6"
+                    onclick="toggleDay(this)"
+                >
+                    Jum
+                </div>
+
+                <div
+                    class="day-option"
+                    data-day="7"
+                    onclick="toggleDay(this)"
+                >
+                    Sab
+                </div>
+
+                <div
+                    class="day-option"
+                    onclick="selectEveryDay()"
+                >
+                    Semua
+                </div>
+
+            </div>
+
+            <p style="font-size:9px;color:var(--text-muted);margin-top:6px;">
+                Kosongkan jika ingin pengingat satu kali.
             </p>
 
         </div>
 
-    </div>
 
+        <div class="form-group">
 
-    <!-- NEXT -->
+            <label>Ikon</label>
 
-    <div class="section-header">
-
-        <h3>Berikutnya</h3>
-
-        <span id="next-label">
-            -
-        </span>
-
-    </div>
-
-    <div id="next-activity-container"></div>
-
-
-    <!-- QUICK ACTION -->
-
-    <div class="section-header">
-
-        <h3>Tambah cepat</h3>
-
-        <span>sekali tekan</span>
-
-    </div>
-
-    <div class="quick-grid">
-
-        <button class="quick-button"
-                onclick="quickReminder('💧','Minum air','Minum air putih')">
-
-            <i class="fa-solid fa-droplet"></i>
-            <span>Minum</span>
-
-        </button>
-
-
-        <button class="quick-button"
-                onclick="quickReminder('💊','Minum obat','Waktunya minum obat')">
-
-            <i class="fa-solid fa-pills"></i>
-            <span>Obat</span>
-
-        </button>
-
-
-        <button class="quick-button"
-                onclick="quickReminder('🏃','Olahraga','Waktunya bergerak')">
-
-            <i class="fa-solid fa-person-running"></i>
-            <span>Olahraga</span>
-
-        </button>
-
-
-        <button class="quick-button"
-                onclick="quickReminder('📝','Tugas','Jangan lupa menyelesaikan tugas')">
-
-            <i class="fa-solid fa-list-check"></i>
-            <span>Tugas</span>
-
-        </button>
-
-    </div>
-
-
-    <!-- OTHER -->
-
-    <div class="section-header">
-
-        <h3>Aktivitas hari ini</h3>
-
-        <span id="activity-count-label">
-            0 aktivitas
-        </span>
-
-    </div>
-
-    <div id="activity-list-container"
-         class="activity-list">
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     SCHEDULE
-===================================================== -->
-
-<div id="screen-schedule" class="screen">
-
-    <header class="top-header">
-
-        <div class="brand">
-
-            <div class="brand-logo">M</div>
-
-            <div>
-                <div class="brand-name">MAESTRO</div>
-                <span class="brand-sub">Jadwal</span>
-            </div>
+            <input
+                type="text"
+                id="add-icon"
+                class="form-control"
+                value="⏰"
+                maxlength="4"
+            >
 
         </div>
 
-    </header>
 
+        <div class="form-group">
 
-    <div class="page-title">
+            <label>Catatan tambahan <span style="font-weight:500;color:#94a3b8;">(opsional)</span></label>
 
-        <h2>Semua Jadwal</h2>
-
-        <p>
-            Atur rutinitas agar tidak perlu mengingat semuanya sendiri.
-        </p>
-
-    </div>
-
-
-    <div class="section-header">
-        <h3>🌙 Waktu tidur</h3>
-        <span>Rutinitas malam</span>
-    </div>
-
-    <div id="sleep-schedule-container"></div>
-
-
-    <div class="section-header">
-        <h3>⏰ Pengingat</h3>
-        <span id="schedule-count">0 jadwal</span>
-    </div>
-
-    <div id="schedule-list-container"
-         class="activity-list">
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     STATISTICS
-===================================================== -->
-
-<div id="screen-stats" class="screen">
-
-    <header class="top-header">
-
-        <div class="brand">
-
-            <div class="brand-logo">M</div>
-
-            <div>
-                <div class="brand-name">MAESTRO</div>
-                <span class="brand-sub">Progress</span>
-            </div>
-
-        </div>
-
-    </header>
-
-
-    <div class="page-title">
-
-        <h2>Progress kamu</h2>
-
-        <p>
-            Lihat seberapa konsisten kamu menjalani rutinitas.
-        </p>
-
-    </div>
-
-
-    <div class="stat-grid">
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                <i class="fa-solid fa-check"></i>
-            </div>
-
-            <strong id="stat-completed">
-                0
-            </strong>
-
-            <span>
-                Selesai hari ini
-            </span>
+            <textarea
+                id="add-note"
+                class="form-control"
+                rows="3"
+                placeholder="Contoh: jangan lupa bawa botol minum..."
+            ></textarea>
 
         </div>
 
 
-        <div class="stat-card">
+        <div
+            id="sleep-options"
+            style="display:none;"
+        >
 
-            <div class="stat-icon">
-                <i class="fa-solid fa-bell"></i>
-            </div>
+            <div
+                style="
+                    background:#eef2ff;
+                    border:1px solid #c7d2fe;
+                    border-radius:13px;
+                    padding:12px;
+                    margin-bottom:14px;
+                "
+            >
 
-            <strong id="stat-total">
-                0
-            </strong>
+                <div style="font-size:11px;font-weight:800;color:#4338ca;">
+                    😴 Mode Tidur
+                </div>
 
-            <span>
-                Total pengingat
-            </span>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                <i class="fa-solid fa-hourglass-half"></i>
-            </div>
-
-            <strong id="stat-remaining">
-                0
-            </strong>
-
-            <span>
-                Belum selesai
-            </span>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-                <i class="fa-solid fa-fire"></i>
-            </div>
-
-            <strong id="stat-streak">
-                0
-            </strong>
-
-            <span>
-                Hari streak
-            </span>
-
-        </div>
-
-    </div>
-
-
-    <div class="streak-card">
-
-        <div class="streak-head">
-
-            <div class="streak-fire">
-                🔥
-            </div>
-
-            <div>
-
-                <h3 id="streak-title">
-                    Mulai streak kamu
-                </h3>
-
-                <p id="streak-description">
-                    Selesaikan aktivitas hari ini untuk membangun konsistensi.
+                <p style="font-size:10px;color:#64748b;line-height:1.5;margin-top:4px;">
+                    Catatan tidur akan digunakan Maestro untuk membuat pesan
+                    alarm yang lebih personal.
                 </p>
 
             </div>
@@ -1598,475 +1616,95 @@ textarea.form-control{
         </div>
 
 
-        <div class="mini-progress">
-
-            <div class="mini-progress-fill"
-                 id="streak-progress">
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="settings-card">
-
-        <h3>💡 Ingat</h3>
-
-        <p id="stats-motivation">
-            Konsistensi kecil setiap hari lebih baik daripada semangat besar yang hanya sesekali.
-        </p>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     SETTINGS
-===================================================== -->
-
-<div id="screen-settings" class="screen">
-
-    <header class="top-header">
-
-        <div class="brand">
-
-            <div class="brand-logo">M</div>
-
-            <div>
-                <div class="brand-name">MAESTRO</div>
-                <span class="brand-sub">Pengaturan</span>
-            </div>
-
-        </div>
-
-    </header>
-
-
-    <div class="page-title">
-
-        <h2>Pengaturan</h2>
-
-        <p>
-            Sesuaikan Maestro dengan kebiasaanmu.
-        </p>
-
-    </div>
-
-
-    <div class="settings-card">
-
-        <h3>👤 Profil</h3>
-
-        <p>
-            Nama ini akan digunakan saat Maestro mengingatkanmu.
-        </p>
-
-        <div class="form-group">
-
-            <label>
-                Nama panggilan
-            </label>
-
-            <input
-                type="text"
-                class="form-control"
-                id="input-name"
-                value="Anto"
-                oninput="saveSettings(this.value)"
-            >
-
-        </div>
-
-    </div>
-
-
-    <div class="settings-card"
-         id="permission-panel">
-
-        <h3>🔔 Izin perangkat</h3>
-
-        <p id="permission-summary">
-            Memeriksa izin perangkat...
-        </p>
-
-
-        <div class="permission-row"
-             id="permission-notification-row">
-
-            <strong>
-                Notifikasi
-            </strong>
-
-            <p>
-                Agar pengingat dapat muncul.
-            </p>
-
-            <button
-                class="secondary-button"
-                style="margin-top:8px;"
-                onclick="openPermission('notification')">
-
-                Izinkan notifikasi
-
-            </button>
-
-        </div>
-
-
-        <div class="permission-row"
-             id="permission-alarm-row">
-
-            <strong>
-                Alarm tepat waktu
-            </strong>
-
-            <p>
-                Agar alarm tetap berjalan sesuai jadwal.
-            </p>
-
-            <button
-                class="secondary-button"
-                style="margin-top:8px;"
-                onclick="openPermission('alarm')">
-
-                Izinkan alarm
-
-            </button>
-
-        </div>
-
-
-        <div class="permission-row"
-             id="permission-fullscreen-row">
-
-            <strong>
-                Layar alarm penuh
-            </strong>
-
-            <p>
-                Agar alarm dapat tampil jelas ketika berbunyi.
-            </p>
-
-            <button
-                class="secondary-button"
-                style="margin-top:8px;"
-                onclick="openPermission('fullscreen')">
-
-                Izinkan layar penuh
-
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <div class="settings-card">
-
-        <h3>ℹ️ Tentang Maestro</h3>
-
-        <p>
-            Maestro bukan hanya alarm. Tujuannya membantu kamu
-            mengingat hal-hal kecil agar pikiran tidak perlu menyimpan semuanya.
-        </p>
-
-        <p style="margin-bottom:0;">
-            <strong>MAESTRO</strong> — easy does it.
-        </p>
-
-    </div>
-
-</div>
-
-
-<!-- =====================================================
-     ADD ACTIVITY
-===================================================== -->
-
-<div id="screen-add" class="screen">
-
-    <div class="add-header">
-
-        <div class="add-title">
-
-            <h2 id="add-page-title">
-                Pengingat baru
-            </h2>
-
-            <p>
-                Beri tahu Maestro apa yang perlu kamu ingat.
-            </p>
-
-        </div>
-
-
-        <button
-            class="close-button"
-            onclick="switchScreen('home')">
-
-            <i class="fa-solid fa-xmark"></i>
-
-        </button>
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>
-            Apa yang perlu diingat?
-        </label>
-
-        <input
-            type="text"
-            id="add-name"
-            class="form-control"
-            placeholder="Contoh: Minum air putih"
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>
-            Jam pengingat
-        </label>
-
-        <button
-            type="button"
-            id="add-time-button"
-            class="time-button"
-            onclick="openTimePicker()">
-
-            08:00
-
-        </button>
-
-        <input
-            type="hidden"
-            id="add-time"
-            value="08:00"
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>
-            Pilih kategori
-        </label>
-
-        <div class="category-grid">
-
-            <button
-                class="category-button active"
-                data-icon="⏰"
-                onclick="selectCategory(this,'⏰')">
-
-                ⏰ Umum
-
-            </button>
-
-            <button
-                class="category-button"
-                data-icon="💧"
-                onclick="selectCategory(this,'💧')">
-
-                💧 Sehat
-
-            </button>
-
-            <button
-                class="category-button"
-                data-icon="🏃"
-                onclick="selectCategory(this,'🏃')">
-
-                🏃 Olahraga
-
-            </button>
-
-            <button
-                class="category-button"
-                data-icon="📝"
-                onclick="selectCategory(this,'📝')">
-
-                📝 Tugas
-
-            </button>
-
-        </div>
-
-        <input
-            type="hidden"
-            id="add-icon"
-            value="⏰"
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>
-            Jenis pengingat
-        </label>
-
-        <select
-            id="add-kind"
-            class="form-control"
-            onchange="toggleSleepOptions()">
-
-            <option value="ACTIVITY">
-                Aktivitas biasa
-            </option>
-
-            <option value="SLEEP">
-                🌙 Alarm tidur / bangun
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div
-        id="sleep-options"
-        class="settings-card"
-        style="display:none;">
-
-        <h3>
-            🌙 Pengaturan tidur
-        </h3>
-
-        <p>
-            Atur pengulangan jika alarm ini digunakan sebagai rutinitas.
-        </p>
-
-
-        <label style="font-size:11px;font-weight:800;">
-            Ulangi pada
-        </label>
-
-
         <div
-            id="sleep-days"
+            id="message-preview"
             style="
-                display:grid;
-                grid-template-columns:repeat(4,1fr);
-                gap:7px;
-                margin-top:9px;
-            ">
+                background:#f8fafc;
+                border:1px dashed #cbd5e1;
+                border-radius:13px;
+                padding:12px;
+                margin-bottom:14px;
+            "
+        >
 
-            <label>
-                <input type="checkbox" value="2">
-                Sen
-            </label>
+            <div
+                style="
+                    font-size:9px;
+                    color:#64748b;
+                    font-weight:800;
+                    text-transform:uppercase;
+                    letter-spacing:.5px;
+                    margin-bottom:5px;
+                "
+            >
+                Preview pesan Maestro
+            </div>
 
-            <label>
-                <input type="checkbox" value="3">
-                Sel
-            </label>
-
-            <label>
-                <input type="checkbox" value="4">
-                Rab
-            </label>
-
-            <label>
-                <input type="checkbox" value="5">
-                Kam
-            </label>
-
-            <label>
-                <input type="checkbox" value="6">
-                Jum
-            </label>
-
-            <label>
-                <input type="checkbox" value="7">
-                Sab
-            </label>
-
-            <label>
-                <input type="checkbox" value="1">
-                Min
-            </label>
+            <div
+                id="message-preview-text"
+                style="
+                    font-size:11px;
+                    line-height:1.5;
+                    color:#334155;
+                "
+            >
+                Anto, waktunya melakukan aktivitas.
+            </div>
 
         </div>
 
 
-        <div class="form-group"
-             style="margin-top:15px;margin-bottom:0;">
-
-            <label>
-                Catatan tidur
-            </label>
-
-            <textarea
-                id="add-note"
-                class="form-control"
-                rows="3"
-                placeholder="Contoh: tidur lebih awal agar besok segar">
-            </textarea>
-
-        </div>
+        <button
+            class="btn-primary"
+            onclick="addNewActivity()"
+            id="save-activity-button"
+        >
+            <i class="fa-solid fa-check"></i>
+            Simpan Pengingat
+        </button>
 
     </div>
-
-
-    <button
-        class="primary-button"
-        onclick="addNewActivity()">
-
-        <i class="fa-solid fa-check"></i>
-        Simpan Pengingat
-
-    </button>
 
 </div>
 
 
-<!-- =====================================================
-     TIME PICKER
-===================================================== -->
-
+<!-- ================= TIME PICKER ================= -->
 <div
     id="time-wheel"
     class="wheel-overlay"
-    onclick="if(event.target===this)closeTimePicker()">
+    onclick="if(event.target===this) closeTimePicker()"
+>
 
     <div class="wheel-sheet">
 
-        <h3>
-            Pilih waktu pengingat
+        <h3 style="color:#1e1b4b;text-align:center;font-size:15px;">
+            Pilih jam alarm
         </h3>
-
 
         <div class="wheel-row">
 
             <div
                 id="hour-wheel"
-                class="wheel-column">
-            </div>
+                class="wheel-column"
+            ></div>
 
-            <div style="
-                font-size:28px;
-                font-weight:800;
-            ">
+            <div
+                style="
+                    font-size:28px;
+                    font-weight:800;
+                    align-self:center;
+                    color:#1e1b4b;
+                "
+            >
                 :
             </div>
 
             <div
                 id="minute-wheel"
-                class="wheel-column">
-            </div>
+                class="wheel-column"
+            ></div>
 
         </div>
-
 
         <div class="wheel-actions">
 
@@ -2076,10 +1714,9 @@ textarea.form-control{
 
             <button
                 class="wheel-confirm"
-                onclick="confirmTimePicker()">
-
+                onclick="confirmTimePicker()"
+            >
                 Pilih waktu
-
             </button>
 
         </div>
@@ -2089,156 +1726,127 @@ textarea.form-control{
 </div>
 
 
-<!-- =====================================================
-     FAB
-===================================================== -->
-
+<!-- ================= FAB ================= -->
 <button
-    class="fab"
-    onclick="openAddScreen()">
-
+    class="fab-btn"
+    onclick="openAddScreen()"
+>
     <i class="fa-solid fa-plus"></i>
-
 </button>
 
 
-<!-- =====================================================
-     BOTTOM NAV
-===================================================== -->
-
+<!-- ================= NAV ================= -->
 <nav class="bottom-nav">
 
     <button
         class="nav-item active"
-        onclick="switchScreen('home',this)">
-
+        onclick="switchScreen('home',this)"
+    >
         <i class="fa-solid fa-house"></i>
-
-        <span>
-            Hari Ini
-        </span>
-
+        <span>Hari Ini</span>
     </button>
-
 
     <button
         class="nav-item"
-        onclick="switchScreen('schedule',this)">
-
+        onclick="switchScreen('schedule',this)"
+    >
         <i class="fa-solid fa-calendar-days"></i>
-
-        <span>
-            Jadwal
-        </span>
-
+        <span>Jadwal</span>
     </button>
-
 
     <button
         class="nav-item"
-        onclick="switchScreen('stats',this)">
-
-        <i class="fa-solid fa-chart-simple"></i>
-
-        <span>
-            Progress
-        </span>
-
+        onclick="switchScreen('stats',this)"
+    >
+        <i class="fa-solid fa-chart-pie"></i>
+        <span>Progress</span>
     </button>
-
 
     <button
         class="nav-item"
-        onclick="switchScreen('settings',this)">
-
+        onclick="switchScreen('settings',this)"
+    >
         <i class="fa-solid fa-gear"></i>
-
-        <span>
-            Pengaturan
-        </span>
-
+        <span>Pengaturan</span>
     </button>
 
 </nav>
 
 
-<!-- =====================================================
-     ALARM
-===================================================== -->
-
+<!-- ================= ALARM ================= -->
 <div
     id="alarm-screen"
-    class="alarm-screen">
+    class="alarm-screen"
+>
 
     <div class="alarm-content">
 
         <div class="alarm-pulse"></div>
 
-        <h3>
-            MAESTRO REMINDER
-        </h3>
-
+        <h3>MAESTRO REMINDER</h3>
 
         <div
             class="alarm-greeting"
-            id="alarm-greeting">
-
+            id="alarm-greeting"
+        >
             Anto, waktunya melakukan aktivitas.
-
         </div>
-
 
         <div
             class="alarm-time-big"
-            id="alarm-time-display">
-
+            id="alarm-time-display"
+        >
             16:00
-
         </div>
 
-
-        <div class="alarm-label">
+        <div
+            style="
+                font-size:11px;
+                color:#a5b4fc;
+                letter-spacing:1px;
+                margin-bottom:5px;
+            "
+        >
             WAKTUNYA
         </div>
 
-
         <div
             class="alarm-act-name"
-            id="alarm-act-title">
-
+            id="alarm-act-title"
+        >
             🏃 OLAHRAGA
-
         </div>
 
+        <div
+            class="alarm-category"
+            id="alarm-category-display"
+        >
+            Kesehatan
+        </div>
 
         <div
             class="alarm-msg"
-            id="alarm-msg-text">
-
+            id="alarm-msg-text"
+        >
             Jangan lupa menyelesaikan jadwalmu.
-
         </div>
 
     </div>
-
 
     <div class="alarm-actions">
 
         <button
-            class="btn-snooze"
-            onclick="snoozeAlarm()">
-
+            class="btn-snooze-alarm"
+            onclick="snoozeAlarm()"
+        >
             TUNDA 5 MENIT
-
         </button>
 
-
         <button
-            class="btn-stop"
-            onclick="stopAlarm()">
-
+            class="btn-stop-alarm"
+            onclick="stopAlarm()"
+        >
             MATIKAN
-
         </button>
 
     </div>
@@ -2246,86 +1854,322 @@ textarea.form-control{
 </div>
 
 
-<!-- TOAST -->
-
+<!-- ================= TOAST ================= -->
 <div
     id="toast"
-    class="toast">
-
-    Pengingat berhasil dibuat.
-
-</div>
-
-</div>
+    class="toast"
+></div>
 
 
 <script>
 
-/* =====================================================
+/* ============================================================
    DATA DASAR
-===================================================== */
+============================================================ */
 
-let defaultActivities = [
-
+const defaultActivities = [
     {
         id:1,
         name:"Bangun",
         time:"06:00",
         icon:"🌅",
         kind:"SLEEP",
-        done:false,
+        category:"TIDUR",
+        priority:"NORMAL",
+        note:"",
         days:[],
-        note:"Mulai hari dengan tenang."
+        done:false
     },
-
     {
         id:2,
         name:"Olahraga",
         time:"07:00",
         icon:"🏃",
         kind:"ACTIVITY",
-        done:false,
+        category:"KESEHATAN",
+        priority:"NORMAL",
+        note:"",
         days:[],
-        note:"Gerakkan tubuh sebentar."
+        done:false
     }
-
 ];
 
-
 let activities =
-    JSON.parse(localStorage.getItem("maestro_activities"))
-    || defaultActivities;
+    JSON.parse(localStorage.getItem("maestro_activities")) ||
+    defaultActivities;
 
+
+/*
+ * Kompatibilitas data lama.
+ * Kalau aktivitas lama belum punya category/priority/days,
+ * otomatis diberi nilai default.
+ */
+activities = activities.map(normalizeActivity);
 
 let userName =
-    localStorage.getItem("maestro_username")
-    || "Anto";
-
+    localStorage.getItem("maestro_username") ||
+    "Anto";
 
 let triggeredAlarms = {};
 
 let selectedTime = deviceTime();
 
-let selectedCategoryIcon = "⏰";
+let editingActivityId = null;
 
 const WHEEL_ROW = 52;
 
 
-/* =====================================================
-   INIT
-===================================================== */
+/* ============================================================
+   KATEGORI
+============================================================ */
 
-document.addEventListener("DOMContentLoaded",function(){
+const CATEGORY_INFO = {
+
+    KESEHATAN:{
+        label:"Kesehatan",
+        icon:"💚",
+        className:"cat-kesehatan"
+    },
+
+    PEKERJAAN:{
+        label:"Pekerjaan",
+        icon:"💼",
+        className:"cat-pekerjaan"
+    },
+
+    RUMAH:{
+        label:"Rumah",
+        icon:"🏠",
+        className:"cat-rumah"
+    },
+
+    BELAJAR:{
+        label:"Belajar",
+        icon:"📚",
+        className:"cat-belajar"
+    },
+
+    IBADAH:{
+        label:"Ibadah",
+        icon:"🙏",
+        className:"cat-ibadah"
+    },
+
+    TIDUR:{
+        label:"Tidur",
+        icon:"😴",
+        className:"cat-tidur"
+    },
+
+    KEBIASAAN:{
+        label:"Kebiasaan",
+        icon:"🎯",
+        className:"cat-kebiasaan"
+    },
+
+    LAINNYA:{
+        label:"Lainnya",
+        icon:"📌",
+        className:"cat-lainnya"
+    }
+
+};
+
+
+/* ============================================================
+   NORMALISASI DATA
+============================================================ */
+
+function normalizeActivity(act){
+
+    if(!act) return act;
+
+    if(!act.category){
+
+        if(act.kind === "SLEEP"){
+            act.category = "TIDUR";
+        }
+        else{
+            act.category = guessCategory(act.name || "");
+        }
+
+    }
+
+    if(!act.priority){
+        act.priority = "NORMAL";
+    }
+
+    if(!Array.isArray(act.days)){
+        act.days = [];
+    }
+
+    if(typeof act.note !== "string"){
+        act.note = "";
+    }
+
+    if(typeof act.done !== "boolean"){
+        act.done = false;
+    }
+
+    return act;
+}
+
+
+function guessCategory(name){
+
+    const text = name.toLowerCase();
+
+    if(
+        /minum|air|obat|vitamin|olahraga|lari|jalan|kesehatan|gym/.test(text)
+    ){
+        return "KESEHATAN";
+    }
+
+    if(
+        /kerja|meeting|rapat|kantor|tugas|deadline/.test(text)
+    ){
+        return "PEKERJAAN";
+    }
+
+    if(
+        /rumah|bersih|sapu|cuci|masak|belanja/.test(text)
+    ){
+        return "RUMAH";
+    }
+
+    if(
+        /belajar|baca|membaca|kursus|latihan|ujian/.test(text)
+    ){
+        return "BELAJAR";
+    }
+
+    if(
+        /sholat|shalat|ibadah|ngaji|mengaji/.test(text)
+    ){
+        return "IBADAH";
+    }
+
+    if(
+        /tidur|bangun|istirahat/.test(text)
+    ){
+        return "TIDUR";
+    }
+
+    if(
+        /makan|sikat|gigi|mandi|kebiasaan/.test(text)
+    ){
+        return "KEBIASAAN";
+    }
+
+    return "LAINNYA";
+}
+
+
+/* ============================================================
+   PESAN OTOMATIS MAESTRO
+============================================================ */
+
+function generateReminderMessage(act){
+
+    const name = act.name || "aktivitas";
+    const category = act.category || "LAINNYA";
+    const important = act.priority === "IMPORTANT";
+
+    if(category === "TIDUR"){
+
+        if(act.note && act.note.trim()){
+
+            return `${userName}, waktunya istirahat. ${act.note.trim()}`;
+
+        }
+
+        return `${userName}, waktunya istirahat. Tidur yang cukup agar besok lebih siap.`;
+    }
+
+
+    const messages = {
+
+        KESEHATAN:[
+            `${userName}, waktunya ${name.toLowerCase()}. Jangan lupa jaga kesehatanmu.`,
+            `💚 Hei ${userName}, waktunya ${name.toLowerCase()}. Sedikit perhatian untuk tubuhmu hari ini.`,
+            `${userName}, tubuhmu juga perlu diperhatikan. Yuk, ${name.toLowerCase()}.`
+        ],
+
+        PEKERJAAN:[
+            `${userName}, waktunya ${name.toLowerCase()}. Yuk, selesaikan satu per satu.`,
+            `💼 ${userName}, ada pekerjaan yang perlu diperhatikan. Fokus sebentar, yuk.`,
+            `${userName}, waktunya kembali fokus ke ${name.toLowerCase()}.`
+        ],
+
+        RUMAH:[
+            `${userName}, waktunya ${name.toLowerCase()}. Biar urusan rumah tetap beres.`,
+            `🏠 Hei ${userName}, jangan lupa ${name.toLowerCase()}.`,
+            `${userName}, satu pekerjaan kecil selesai. Yuk, ${name.toLowerCase()}.`
+        ],
+
+        BELAJAR:[
+            `${userName}, waktunya ${name.toLowerCase()}. Sedikit hari ini, hasilnya nanti.`,
+            `📚 ${userName}, waktunya belajar. Fokus sebentar saja.`,
+            `${userName}, yuk tambah sedikit ilmu hari ini dengan ${name.toLowerCase()}.`
+        ],
+
+        IBADAH:[
+            `${userName}, waktunya ${name.toLowerCase()}. Luangkan sebentar untuk menenangkan diri.`,
+            `🙏 ${userName}, jangan lupa ${name.toLowerCase()}.`,
+            `${userName}, waktunya berhenti sejenak dan melakukan ${name.toLowerCase()}.`
+        ],
+
+        KEBIASAAN:[
+            `${userName}, waktunya ${name.toLowerCase()}. Konsistensi kecil membuat perbedaan.`,
+            `🎯 Hei ${userName}, jangan lewatkan kebiasaanmu: ${name.toLowerCase()}.`,
+            `${userName}, satu kebiasaan lagi. Yuk, ${name.toLowerCase()}.`
+        ],
+
+        LAINNYA:[
+            `${userName}, waktunya ${name.toLowerCase()}. Jangan sampai terlewat.`,
+            `📌 Hei ${userName}, ada pengingat untukmu: ${name.toLowerCase()}.`,
+            `${userName}, ini waktunya ${name.toLowerCase()}.`
+        ]
+
+    };
+
+    const list = messages[category] || messages.LAINNYA;
+
+    let message =
+        list[Math.floor(Math.random() * list.length)];
+
+    if(important){
+
+        message += " Ini pengingat penting, jangan sampai terlewat.";
+
+    }
+
+    if(act.note && act.note.trim()){
+
+        message += ` Catatan: ${act.note.trim()}`;
+
+    }
+
+    return message;
+}
+
+
+/* ============================================================
+   INIT
+============================================================ */
+
+document.addEventListener("DOMContentLoaded",()=>{
 
     document.getElementById("input-name").value = userName;
 
     selectedTime = deviceTime();
 
-    document.getElementById("add-time").value =
-        selectedTime;
+    document.getElementById("add-time").value = selectedTime;
 
     document.getElementById("add-time-button").innerText =
         selectedTime;
+
+    selectCategory("KEBIASAAN");
 
     updateDate();
 
@@ -2333,14 +2177,9 @@ document.addEventListener("DOMContentLoaded",function(){
 
     refreshPermissionPanel();
 
-    updateProfileLetter();
-
     /*
-      Android native bridge tetap digunakan.
-      Jangan hapus bagian ini karena Android
-      membutuhkan data aktivitas dari HTML.
-    */
-
+     * Android native tetap menggunakan AlarmManager.
+     */
     if(window.AndroidBridge){
 
         try{
@@ -2353,97 +2192,116 @@ document.addEventListener("DOMContentLoaded",function(){
 
         }catch(e){
 
-            console.log("Android bridge error",e);
+            console.log("AndroidBridge sync error",e);
 
         }
 
     }
 
-    /*
-      Browser hanya polling ketika HTML
-      dibuka langsung di web.
-    */
 
+    /*
+     * Browser fallback.
+     */
     if(!window.AndroidBridge){
 
         setInterval(checkAlarms,10000);
 
     }
 
+
+    /*
+     * Preview pesan.
+     */
+    setupPreviewListeners();
+
 });
 
 
-/* =====================================================
-   SCREEN
-===================================================== */
+/* ============================================================
+   DATE / GREETING
+============================================================ */
+
+function updateDate(){
+
+    const now = new Date();
+
+    const days = [
+        "Minggu",
+        "Senin",
+        "Selasa",
+        "Rabu",
+        "Kamis",
+        "Jumat",
+        "Sabtu"
+    ];
+
+    const months = [
+        "Januari",
+        "Februari",
+        "Maret",
+        "April",
+        "Mei",
+        "Juni",
+        "Juli",
+        "Agustus",
+        "September",
+        "Oktober",
+        "November",
+        "Desember"
+    ];
+
+    document.getElementById("current-date-text").innerText =
+        `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+
+    const hour = now.getHours();
+
+    let greeting = "Selamat datang 👋";
+
+    if(hour >= 4 && hour < 11){
+        greeting = "Selamat pagi ☀️";
+    }
+    else if(hour >= 11 && hour < 15){
+        greeting = "Selamat siang 🌤️";
+    }
+    else if(hour >= 15 && hour < 18){
+        greeting = "Selamat sore 🌅";
+    }
+    else{
+        greeting = "Selamat malam 🌙";
+    }
+
+    document.getElementById("greeting-title").innerText =
+        `${greeting}, ${userName}`;
+}
+
+
+/* ============================================================
+   NAVIGATION
+============================================================ */
 
 function switchScreen(screenId,btnElement){
 
-    document
-        .querySelectorAll(".screen")
-        .forEach(function(screen){
-
-            screen.classList.remove("active");
-
-        });
-
+    document.querySelectorAll(".screen")
+        .forEach(s=>s.classList.remove("active"));
 
     const target =
         document.getElementById("screen-"+screenId);
 
     if(target){
-
         target.classList.add("active");
-
-        target.scrollTop = 0;
-
     }
-
 
     if(btnElement){
 
-        document
-            .querySelectorAll(".nav-item")
-            .forEach(function(item){
-
-                item.classList.remove("active");
-
-            });
+        document.querySelectorAll(".nav-item")
+            .forEach(n=>n.classList.remove("active"));
 
         btnElement.classList.add("active");
 
     }
-    else{
-
-        document
-            .querySelectorAll(".nav-item")
-            .forEach(function(item){
-
-                item.classList.remove("active");
-
-            });
-
-        const map = {
-
-            home:0,
-            schedule:1,
-            stats:2,
-            settings:3
-
-        };
-
-        if(map[screenId] !== undefined){
-
-            document
-                .querySelectorAll(".nav-item")[map[screenId]]
-                .classList.add("active");
-
-        }
-
-    }
 
     updateUI();
-
 }
 
 
@@ -2456,84 +2314,18 @@ function openAddScreen(){
 }
 
 
-/* =====================================================
-   DATE
-===================================================== */
+function cancelAdd(){
 
-function updateDate(){
+    resetAddForm();
 
-    const now = new Date();
-
-    const dateText =
-        now.toLocaleDateString(
-            "id-ID",
-            {
-                weekday:"long",
-                day:"numeric",
-                month:"long",
-                year:"numeric"
-            }
-        );
-
-    const el =
-        document.getElementById("current-date-text");
-
-    if(el){
-
-        el.innerText = dateText;
-
-    }
-
-
-    const hour =
-        now.getHours();
-
-    let greeting =
-        "Selamat malam";
-
-    if(hour >= 4 && hour < 11){
-
-        greeting = "Selamat pagi";
-
-    }
-    else if(hour >= 11 && hour < 15){
-
-        greeting = "Selamat siang";
-
-    }
-    else if(hour >= 15 && hour < 18){
-
-        greeting = "Selamat sore";
-
-    }
-
-
-    document.getElementById("greeting-title").innerText =
-        `${greeting}, ${userName} 👋`;
+    switchScreen("home");
 
 }
 
 
-/* =====================================================
-   PROFILE
-===================================================== */
-
-function updateProfileLetter(){
-
-    const letter =
-        (userName || "M")
-        .charAt(0)
-        .toUpperCase();
-
-    document.getElementById("profile-letter").innerText =
-        letter;
-
-}
-
-
-/* =====================================================
+/* ============================================================
    SETTINGS
-===================================================== */
+============================================================ */
 
 function saveSettings(value){
 
@@ -2545,16 +2337,18 @@ function saveSettings(value){
         userName
     );
 
+    document.getElementById(
+        "display-username"
+    ).innerText = userName;
+
     updateDate();
 
-    updateProfileLetter();
+    updatePreview();
 
     if(window.AndroidBridge){
 
         try{
-
             AndroidBridge.setUserName(userName);
-
         }catch(e){}
 
     }
@@ -2562,162 +2356,247 @@ function saveSettings(value){
 }
 
 
-/* =====================================================
-   QUICK REMINDER
-===================================================== */
+/* ============================================================
+   PERMISSIONS
+============================================================ */
 
-function quickReminder(icon,name,note){
+function refreshPermissionPanel(){
 
-    selectedCategoryIcon = icon;
+    if(
+        !window.AndroidBridge ||
+        !AndroidBridge.getPermissionStatus
+    ){
 
-    document.getElementById("add-name").value =
-        name;
+        document.getElementById(
+            "permission-panel"
+        ).style.display = "none";
 
-    document.getElementById("add-icon").value =
-        icon;
+        return;
+    }
 
-    document.getElementById("add-note").value =
-        note;
+    try{
 
-    document.getElementById("add-kind").value =
-        "ACTIVITY";
+        const status =
+            JSON.parse(
+                AndroidBridge.getPermissionStatus()
+            );
 
-    selectedTime = deviceTime();
+        const notificationRow =
+            document.getElementById(
+                "permission-notification-row"
+            );
 
-    document.getElementById("add-time").value =
-        selectedTime;
+        const alarmRow =
+            document.getElementById(
+                "permission-alarm-row"
+            );
 
-    document.getElementById("add-time-button").innerText =
-        selectedTime;
-
-    document.getElementById("add-name").dataset.editId =
-        "";
-
-    document.getElementById("add-page-title").innerText =
-        "Pengingat cepat";
-
-    switchScreen("add");
-
-}
-
-
-/* =====================================================
-   CATEGORY
-===================================================== */
-
-function selectCategory(button,icon){
-
-    document
-        .querySelectorAll(".category-button")
-        .forEach(function(btn){
-
-            btn.classList.remove("active");
-
-        });
-
-    button.classList.add("active");
-
-    selectedCategoryIcon = icon;
-
-    document.getElementById("add-icon").value =
-        icon;
-
-}
+        const fullscreenRow =
+            document.getElementById(
+                "permission-fullscreen-row"
+            );
 
 
-/* =====================================================
-   SLEEP
-===================================================== */
+        notificationRow.style.display =
+            status.notification ? "none":"block";
 
-function toggleSleepOptions(){
+        alarmRow.style.display =
+            status.exactAlarm ? "none":"block";
 
-    const kind =
-        document.getElementById("add-kind").value;
-
-    document.getElementById("sleep-options").style.display =
-        kind === "SLEEP"
-            ? "block"
-            : "none";
-
-}
+        fullscreenRow.style.display =
+            status.fullScreen ? "none":"block";
 
 
-function openSleepSettings(id){
+        const pending = [
 
-    const act =
-        activities.find(function(a){
+            !status.notification,
+            !status.exactAlarm,
+            !status.fullScreen
 
-            return Number(a.id) === Number(id);
-
-        });
-
-
-    if(!act)return;
+        ].filter(Boolean).length;
 
 
-    document.getElementById("add-name").value =
-        act.name;
-
-    document.getElementById("add-time").value =
-        act.time;
-
-    document.getElementById("add-time-button").innerText =
-        act.time;
-
-    document.getElementById("add-icon").value =
-        act.icon || "🌙";
-
-    document.getElementById("add-kind").value =
-        "SLEEP";
-
-    document.getElementById("add-note").value =
-        act.note || "";
+        document.getElementById(
+            "permission-summary"
+        ).innerText =
+            pending
+            ? `${pending} izin perlu diaktifkan agar alarm bekerja maksimal.`
+            : "Semua izin alarm sudah aktif ✓";
 
 
-    document
-        .querySelectorAll("#sleep-days input")
-        .forEach(function(input){
-
-            input.checked =
-                (act.days || [])
-                .map(Number)
-                .includes(Number(input.value));
-
-        });
+        document.getElementById(
+            "permission-panel"
+        ).style.display =
+            pending ? "block":"none";
 
 
-    document.getElementById("add-name").dataset.editId =
-        id;
+    }catch(e){
 
-    document.getElementById("add-page-title").innerText =
-        "Edit alarm tidur";
-
-
-    toggleSleepOptions();
-
-    switchScreen("add");
-
-}
-
-
-function scheduleLabel(act){
-
-    if(act.kind !== "SLEEP"){
-
-        return "Setiap hari";
+        document.getElementById(
+            "permission-summary"
+        ).innerText =
+            "Buka pengaturan izin perangkat jika alarm belum berbunyi.";
 
     }
 
+}
 
-    if(!act.days || !act.days.length){
 
+function openPermission(type){
+
+    if(!window.AndroidBridge){
+
+        alert(
+            "Pengaturan izin ini hanya tersedia di aplikasi Android."
+        );
+
+        return;
+    }
+
+    if(type === "notification"){
+
+        AndroidBridge.openNotificationSettings();
+
+    }
+    else if(type === "alarm"){
+
+        AndroidBridge.openAlarmSettings();
+
+    }
+    else if(type === "fullscreen"){
+
+        AndroidBridge.openFullScreenSettings();
+
+    }
+
+}
+
+
+/* ============================================================
+   FORM CATEGORY
+============================================================ */
+
+function selectCategory(category){
+
+    document.getElementById(
+        "add-category"
+    ).value = category;
+
+    document.querySelectorAll(
+        ".category-option"
+    ).forEach(el=>{
+
+        el.classList.toggle(
+            "selected",
+            el.dataset.category === category
+        );
+
+    });
+
+    /*
+     * Kalau kategori tidur dipilih,
+     * otomatis ubah jenis menjadi SLEEP.
+     */
+    if(category === "TIDUR"){
+
+        document.getElementById("add-kind").value =
+            "SLEEP";
+
+    }
+
+    updateSleepVisibility();
+
+    updatePreview();
+
+}
+
+
+function selectPriority(priority){
+
+    document.getElementById(
+        "add-priority"
+    ).value = priority;
+
+    document.querySelectorAll(
+        ".priority-option"
+    ).forEach(el=>{
+
+        el.classList.toggle(
+            "selected",
+            el.dataset.priority === priority
+        );
+
+    });
+
+    updatePreview();
+
+}
+
+
+/* ============================================================
+   REPEAT DAYS
+============================================================ */
+
+function toggleDay(element){
+
+    element.classList.toggle("selected");
+
+}
+
+
+function selectEveryDay(){
+
+    const days = document.querySelectorAll(
+        ".day-option[data-day]"
+    );
+
+    days.forEach(day=>{
+        day.classList.add("selected");
+    });
+
+}
+
+
+function getSelectedDays(){
+
+    return Array.from(
+        document.querySelectorAll(
+            ".day-option[data-day].selected"
+        )
+    ).map(el=>Number(el.dataset.day));
+
+}
+
+
+function setSelectedDays(days){
+
+    document.querySelectorAll(
+        ".day-option[data-day]"
+    ).forEach(el=>{
+
+        el.classList.toggle(
+            "selected",
+            days.includes(
+                Number(el.dataset.day)
+            )
+        );
+
+    });
+
+}
+
+
+function repeatLabel(days){
+
+    if(!days || !days.length){
         return "Satu kali";
-
     }
 
+    if(days.length === 7){
+        return "Setiap hari";
+    }
 
     const labels = {
-
         1:"Min",
         2:"Sen",
         3:"Sel",
@@ -2725,105 +2604,151 @@ function scheduleLabel(act){
         5:"Kam",
         6:"Jum",
         7:"Sab"
-
     };
 
-
-    return "Setiap " +
-        act.days
-            .map(Number)
-            .map(function(d){
-
-                return labels[d];
-
-            })
-            .join(", ");
+    return days
+        .sort((a,b)=>a-b)
+        .map(d=>labels[d])
+        .join(", ");
 
 }
 
 
-/* =====================================================
-   ADD / EDIT
-===================================================== */
+/* ============================================================
+   QUICK REMINDER
+============================================================ */
+
+function quickAdd(icon,name,category){
+
+    resetAddForm();
+
+    document.getElementById("add-name").value =
+        name;
+
+    document.getElementById("add-icon").value =
+        icon;
+
+    selectCategory(category);
+
+    switchScreen("add");
+
+    document.getElementById("add-name").focus();
+
+}
+
+
+/* ============================================================
+   SLEEP OPTIONS
+============================================================ */
+
+function updateSleepVisibility(){
+
+    const category =
+        document.getElementById(
+            "add-category"
+        ).value;
+
+    const kind =
+        category === "TIDUR"
+        ? "SLEEP"
+        : document.getElementById(
+            "add-kind"
+        )?.value || "ACTIVITY";
+
+    const box =
+        document.getElementById(
+            "sleep-options"
+        );
+
+    if(box){
+
+        box.style.display =
+            kind === "SLEEP"
+            ? "block"
+            : "none";
+
+    }
+
+}
+
+
+function toggleSleepOptions(){
+
+    updateSleepVisibility();
+
+}
+
+
+/* ============================================================
+   ADD / EDIT ACTIVITY
+============================================================ */
 
 function addNewActivity(){
 
     const name =
-        document.getElementById("add-name")
-        .value
-        .trim();
+        document.getElementById(
+            "add-name"
+        ).value.trim();
 
     const time =
-        document.getElementById("add-time")
-        .value;
+        document.getElementById(
+            "add-time"
+        ).value;
 
     const icon =
-        document.getElementById("add-icon")
-        .value
-        .trim()
-        || "📌";
+        document.getElementById(
+            "add-icon"
+        ).value.trim() || "📌";
 
-    const kind =
-        document.getElementById("add-kind")
-        .value;
+    const category =
+        document.getElementById(
+            "add-category"
+        ).value || "LAINNYA";
+
+    const priority =
+        document.getElementById(
+            "add-priority"
+        ).value || "NORMAL";
 
     const note =
-        document.getElementById("add-note")
-        .value
-        .trim();
+        document.getElementById(
+            "add-note"
+        ).value.trim();
 
     const days =
-        kind === "SLEEP"
-        ?
-        Array.from(
-            document.querySelectorAll(
-                "#sleep-days input:checked"
-            )
-        ).map(function(x){
+        getSelectedDays();
 
-            return Number(x.value);
-
-        })
-        :
-        [];
-
-
-    const editId =
-        Number(
-            document.getElementById("add-name")
-            .dataset.editId
-            || 0
-        );
+    const kind =
+        category === "TIDUR"
+        ? "SLEEP"
+        : "ACTIVITY";
 
 
     if(!name){
 
         showToast(
-            "Nama pengingat belum diisi."
+            "Nama aktivitas belum diisi."
         );
 
         return;
-
     }
 
 
     if(!time){
 
         showToast(
-            "Jam pengingat belum dipilih."
+            "Jam alarm belum dipilih."
         );
 
         return;
-
     }
 
 
-    const newAct = {
+    const data = {
 
         id:
-            editId
-            ? editId
-            : Date.now(),
+            editingActivityId ||
+            Date.now(),
 
         name:name,
 
@@ -2832,6 +2757,10 @@ function addNewActivity(){
         icon:icon,
 
         kind:kind,
+
+        category:category,
+
+        priority:priority,
 
         note:note,
 
@@ -2842,30 +2771,32 @@ function addNewActivity(){
     };
 
 
-    if(editId){
+    if(editingActivityId){
 
         const old =
-            activities.find(function(a){
+            activities.find(
+                a =>
+                Number(a.id) ===
+                Number(editingActivityId)
+            );
 
-                return Number(a.id) === editId;
-
-            });
-
-
-        newAct.done =
+        /*
+         * Pertahankan status selesai lama
+         * ketika hanya mengedit jadwal.
+         */
+        data.done =
             old
-            ? !!old.done
+            ? Boolean(old.done)
             : false;
 
 
         activities =
-            activities.map(function(a){
-
-                return Number(a.id) === editId
-                    ? newAct
-                    : a;
-
-            });
+            activities.map(a=>
+                Number(a.id) ===
+                Number(editingActivityId)
+                ? data
+                : a
+            );
 
 
         if(window.AndroidBridge){
@@ -2873,7 +2804,7 @@ function addNewActivity(){
             try{
 
                 AndroidBridge.deleteActivity(
-                    editId
+                    Number(editingActivityId)
                 );
 
             }catch(e){}
@@ -2883,7 +2814,7 @@ function addNewActivity(){
     }
     else{
 
-        activities.push(newAct);
+        activities.push(data);
 
     }
 
@@ -2892,30 +2823,39 @@ function addNewActivity(){
 
 
     /*
-      Pertahankan fungsi native Android lama.
-    */
-
+     * Tetap memakai API AndroidBridge lama.
+     */
     if(window.AndroidBridge){
 
         try{
 
             AndroidBridge.scheduleActivity(
-                newAct.id,
-                newAct.name,
-                newAct.time,
-                newAct.icon,
-                newAct.kind,
-                newAct.days.join(","),
-                newAct.note
+                data.id,
+                data.name,
+                data.time,
+                data.icon,
+                data.kind,
+                data.days.join(","),
+                data.note
             );
 
         }catch(e){
 
-            console.log(e);
+            console.log(
+                "scheduleActivity error",
+                e
+            );
 
         }
 
     }
+
+
+    showToast(
+        editingActivityId
+        ? "Pengingat berhasil diperbarui ✓"
+        : "Pengingat berhasil dibuat ✓"
+    );
 
 
     resetAddForm();
@@ -2924,85 +2864,223 @@ function addNewActivity(){
 
     updateUI();
 
-    showToast(
-        editId
-        ? "Pengingat berhasil diperbarui ✓"
-        : "Pengingat berhasil dibuat ✓"
+}
+
+
+/* ============================================================
+   EDIT
+============================================================ */
+
+function editActivity(id){
+
+    const act =
+        activities.find(
+            a => Number(a.id) === Number(id)
+        );
+
+    if(!act) return;
+
+
+    editingActivityId =
+        Number(act.id);
+
+
+    document.getElementById(
+        "add-screen-subtitle"
+    ).innerText =
+        "Edit Pengingat";
+
+
+    document.getElementById(
+        "add-name"
+    ).value =
+        act.name;
+
+
+    document.getElementById(
+        "add-time"
+    ).value =
+        act.time;
+
+
+    document.getElementById(
+        "add-time-button"
+    ).innerText =
+        act.time;
+
+
+    document.getElementById(
+        "add-icon"
+    ).value =
+        act.icon || "📌";
+
+
+    document.getElementById(
+        "add-category"
+    ).value =
+        act.category || guessCategory(act.name);
+
+
+    document.getElementById(
+        "add-priority"
+    ).value =
+        act.priority || "NORMAL";
+
+
+    document.getElementById(
+        "add-note"
+    ).value =
+        act.note || "";
+
+
+    selectCategory(
+        document.getElementById(
+            "add-category"
+        ).value
+    );
+
+
+    selectPriority(
+        document.getElementById(
+            "add-priority"
+        ).value
+    );
+
+
+    setSelectedDays(
+        act.days || []
+    );
+
+
+    document.getElementById(
+        "save-activity-button"
+    ).innerHTML =
+        '<i class="fa-solid fa-check"></i> Simpan Perubahan';
+
+
+    updateSleepVisibility();
+
+    updatePreview();
+
+    switchScreen("add");
+
+}
+
+
+/* ============================================================
+   RESET FORM
+============================================================ */
+
+function resetAddForm(){
+
+    editingActivityId = null;
+
+    document.getElementById(
+        "add-screen-subtitle"
+    ).innerText =
+        "Tambah Pengingat";
+
+
+    document.getElementById(
+        "add-name"
+    ).value = "";
+
+
+    selectedTime = deviceTime();
+
+
+    document.getElementById(
+        "add-time"
+    ).value =
+        selectedTime;
+
+
+    document.getElementById(
+        "add-time-button"
+    ).innerText =
+        selectedTime;
+
+
+    document.getElementById(
+        "add-icon"
+    ).value =
+        "⏰";
+
+
+    document.getElementById(
+        "add-note"
+    ).value =
+        "";
+
+
+    document.getElementById(
+        "add-category"
+    ).value =
+        "KEBIASAAN";
+
+
+    document.getElementById(
+        "add-priority"
+    ).value =
+        "NORMAL";
+
+
+    document.querySelectorAll(
+        ".day-option[data-day]"
+    ).forEach(el=>{
+        el.classList.remove("selected");
+    });
+
+
+    document.querySelectorAll(
+        ".category-option"
+    ).forEach(el=>{
+        el.classList.remove("selected");
+    });
+
+
+    document.querySelectorAll(
+        ".priority-option"
+    ).forEach(el=>{
+        el.classList.remove("selected");
+    });
+
+
+    selectCategory("KEBIASAAN");
+
+    selectPriority("NORMAL");
+
+    document.getElementById(
+        "save-activity-button"
+    ).innerHTML =
+        '<i class="fa-solid fa-check"></i> Simpan Pengingat';
+
+
+    updatePreview();
+
+}
+
+
+/* ============================================================
+   SAVE
+============================================================ */
+
+function saveActivities(){
+
+    activities =
+        activities.map(normalizeActivity);
+
+    localStorage.setItem(
+        "maestro_activities",
+        JSON.stringify(activities)
     );
 
 }
 
 
-/* =====================================================
-   RESET FORM
-===================================================== */
-
-function resetAddForm(){
-
-    document.getElementById("add-name").value =
-        "";
-
-    selectedTime =
-        deviceTime();
-
-    document.getElementById("add-time").value =
-        selectedTime;
-
-    document.getElementById("add-time-button").innerText =
-        selectedTime;
-
-    document.getElementById("add-icon").value =
-        "⏰";
-
-    document.getElementById("add-kind").value =
-        "ACTIVITY";
-
-    document.getElementById("add-note").value =
-        "";
-
-    document.getElementById("add-name").dataset.editId =
-        "";
-
-    document
-        .querySelectorAll("#sleep-days input")
-        .forEach(function(input){
-
-            input.checked = false;
-
-        });
-
-
-    document
-        .querySelectorAll(".category-button")
-        .forEach(function(btn){
-
-            btn.classList.remove("active");
-
-        });
-
-
-    const first =
-        document.querySelector(".category-button");
-
-    if(first){
-
-        first.classList.add("active");
-
-    }
-
-
-    document.getElementById("add-page-title").innerText =
-        "Pengingat baru";
-
-
-    toggleSleepOptions();
-
-}
-
-
-/* =====================================================
+/* ============================================================
    DELETE
-===================================================== */
+============================================================ */
 
 function deleteActivity(id,event){
 
@@ -3014,27 +3092,22 @@ function deleteActivity(id,event){
 
     }
 
-
     const numericId =
         Number(id);
-
 
     const before =
         activities.length;
 
 
     activities =
-        activities.filter(function(act){
-
-            return Number(act.id) !== numericId;
-
-        });
+        activities.filter(
+            act =>
+            Number(act.id) !== numericId
+        );
 
 
     if(activities.length === before){
-
         return false;
-
     }
 
 
@@ -3065,25 +3138,22 @@ function deleteActivity(id,event){
 }
 
 
-/* =====================================================
-   DONE
-===================================================== */
+/* ============================================================
+   TOGGLE DONE
+============================================================ */
 
 function toggleDone(id){
 
-    activities =
-        activities.map(function(act){
+    const act =
+        activities.find(
+            a => Number(a.id) === Number(id)
+        );
 
-            if(Number(act.id) === Number(id)){
+    if(!act) return;
 
-                act.done =
-                    !act.done;
 
-            }
-
-            return act;
-
-        });
+    act.done =
+        !act.done;
 
 
     saveActivities();
@@ -3091,134 +3161,40 @@ function toggleDone(id){
 
     if(window.AndroidBridge){
 
-        const changed =
-            activities.find(function(act){
-
-                return Number(act.id) === Number(id);
-
-            });
-
-
-        if(changed){
-
-            try{
-
-                AndroidBridge.setActivityEnabled(
-                    changed.id,
-                    !changed.done
-                );
-
-            }catch(e){}
-
-        }
-
-    }
-
-
-    updateUI();
-
-}
-
-
-/* =====================================================
-   SAVE
-===================================================== */
-
-function saveActivities(){
-
-    localStorage.setItem(
-        "maestro_activities",
-        JSON.stringify(activities)
-    );
-
-
-    if(window.AndroidBridge){
-
         try{
 
-            AndroidBridge.syncActivities(
-                JSON.stringify(activities)
+            AndroidBridge.setActivityEnabled(
+                Number(act.id),
+                !act.done
             );
 
         }catch(e){}
 
     }
 
+
+    updateUI();
+
+
+    showToast(
+        act.done
+        ? "Aktivitas selesai ✓"
+        : "Aktivitas dibuka kembali."
+    );
+
 }
 
 
-/* =====================================================
-   DEVICE TIME
-===================================================== */
+/* ============================================================
+   TIME
+============================================================ */
 
 function deviceTime(){
 
     const now =
         new Date();
 
-    return (
-        String(now.getHours()).padStart(2,"0")
-        +
-        ":"
-        +
-        String(now.getMinutes()).padStart(2,"0")
-    );
-
-}
-
-
-/* =====================================================
-   TIME WHEEL
-===================================================== */
-
-function buildWheel(column,count,value){
-
-    column.innerHTML = "";
-
-    const cycles = 5;
-
-
-    for(let cycle=0;cycle<cycles;cycle++){
-
-        for(let i=0;i<count;i++){
-
-            const option =
-                document.createElement("div");
-
-            option.className =
-                "wheel-option";
-
-            option.dataset.value =
-                String(i).padStart(2,"0");
-
-            option.dataset.index =
-                cycle * count + i;
-
-            option.innerText =
-                String(i).padStart(2,"0");
-
-            column.appendChild(option);
-
-        }
-
-    }
-
-
-    const center =
-        2 * count + value;
-
-
-    requestAnimationFrame(function(){
-
-        column.scrollTop =
-            center * WHEEL_ROW;
-
-        selectWheelValue(
-            column,
-            count
-        );
-
-    });
+    return `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
 
 }
 
@@ -3226,10 +3202,10 @@ function buildWheel(column,count,value){
 function openTimePicker(){
 
     const current =
-        document.getElementById("add-time").value
-        ||
-        selectedTime
-        ||
+        document.getElementById(
+            "add-time"
+        ).value ||
+        selectedTime ||
         deviceTime();
 
 
@@ -3255,9 +3231,61 @@ function openTimePicker(){
     );
 
 
-    document
-        .getElementById("time-wheel")
-        .classList.add("active");
+    document.getElementById(
+        "time-wheel"
+    ).classList.add("active");
+
+}
+
+
+function buildWheel(column,count,value){
+
+    column.innerHTML = "";
+
+    const cycles = 5;
+
+    for(
+        let cycle=0;
+        cycle<cycles;
+        cycle++
+    ){
+
+        for(
+            let i=0;
+            i<count;
+            i++
+        ){
+
+            column.innerHTML += `
+                <div
+                    class="wheel-option"
+                    data-value="${String(i).padStart(2,"0")}"
+                    data-index="${cycle*count+i}"
+                >
+                    ${String(i).padStart(2,"0")}
+                </div>
+            `;
+
+        }
+
+    }
+
+
+    const center =
+        2*count + value;
+
+
+    requestAnimationFrame(()=>{
+
+        column.scrollTop =
+            center * WHEEL_ROW;
+
+        selectWheelValue(
+            column,
+            count
+        );
+
+    });
 
 }
 
@@ -3293,8 +3321,7 @@ function normalizeWheel(column,count){
 function selectWheelValue(column,count){
 
     count =
-        count
-        ||
+        count ||
         (
             column.id === "hour-wheel"
             ? 24
@@ -3310,31 +3337,28 @@ function selectWheelValue(column,count){
 
     const index =
         Math.round(
-            column.scrollTop /
-            WHEEL_ROW
+            column.scrollTop / WHEEL_ROW
         );
 
 
     const value =
-        (
-            index % count
-            + count
-        ) % count;
+        ((index % count)+count)%count;
 
 
     column
         .querySelectorAll(".wheel-option")
-        .forEach(function(option){
-
-            option.classList.remove("selected");
-
-        });
+        .forEach(x=>
+            x.classList.remove("selected")
+        );
 
 
     const selected =
         column.querySelector(
             `[data-index="${index}"]`
-        );
+        ) ||
+        column.children[
+            2*count+value
+        ];
 
 
     if(selected){
@@ -3353,60 +3377,59 @@ function confirmTimePicker(){
     const h =
         document.querySelector(
             "#hour-wheel .wheel-option.selected"
+        ) ||
+        document.querySelector(
+            "#hour-wheel .wheel-option"
         );
 
 
     const m =
         document.querySelector(
             "#minute-wheel .wheel-option.selected"
+        ) ||
+        document.querySelector(
+            "#minute-wheel .wheel-option"
         );
 
 
-    if(!h || !m){
-
-        closeTimePicker();
-
-        return;
-
-    }
-
-
     selectedTime =
-        h.dataset.value
-        +
-        ":"
-        +
-        m.dataset.value;
+        `${h.dataset.value}:${m.dataset.value}`;
 
 
-    document.getElementById("add-time").value =
+    document.getElementById(
+        "add-time"
+    ).value =
         selectedTime;
 
-    document.getElementById("add-time-button").innerText =
+
+    document.getElementById(
+        "add-time-button"
+    ).innerText =
         selectedTime;
 
 
     closeTimePicker();
+
+    updatePreview();
 
 }
 
 
 function closeTimePicker(){
 
-    document
-        .getElementById("time-wheel")
-        .classList.remove("active");
+    document.getElementById(
+        "time-wheel"
+    ).classList.remove("active");
 
 }
 
 
 document.addEventListener(
     "scroll",
-    function(event){
+    event=>{
 
         if(
-            event.target.classList
-            &&
+            event.target.classList &&
             event.target.classList.contains(
                 "wheel-column"
             )
@@ -3425,11 +3448,9 @@ document.addEventListener(
 
 document.addEventListener(
     "click",
-    function(event){
+    event=>{
 
         if(
-            event.target.classList
-            &&
             event.target.classList.contains(
                 "wheel-option"
             )
@@ -3444,9 +3465,7 @@ document.addEventListener(
                 top:
                     Number(
                         event.target.dataset.index
-                    )
-                    *
-                    WHEEL_ROW,
+                    ) * WHEEL_ROW,
 
                 behavior:"smooth"
 
@@ -3458,9 +3477,9 @@ document.addEventListener(
 );
 
 
-/* =====================================================
-   ALARM CHECK
-===================================================== */
+/* ============================================================
+   ALARM CHECK BROWSER
+============================================================ */
 
 function checkAlarms(){
 
@@ -3468,34 +3487,24 @@ function checkAlarms(){
         new Date();
 
 
-    const currentTimeStr =
-        String(now.getHours()).padStart(2,"0")
-        +
-        ":"
-        +
-        String(now.getMinutes()).padStart(2,"0");
+    const currentTime =
+        `${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
 
 
-    activities.forEach(function(act){
+    activities.forEach(act=>{
 
         if(
-            act.time === currentTimeStr
-            &&
-            !act.done
-            &&
-            !triggeredAlarms[act.id]
+            act.time === currentTime &&
+            !act.done &&
+            !triggeredAlarms[act.id] &&
+            isActivityForToday(act)
         ){
 
             triggeredAlarms[act.id] =
                 true;
 
 
-            triggerRealAlarm(
-                act.name,
-                act.time,
-                act.icon,
-                act.kind || "ACTIVITY"
-            );
+            triggerRealAlarm(act);
 
         }
 
@@ -3504,56 +3513,78 @@ function checkAlarms(){
 }
 
 
-/* =====================================================
-   REAL ALARM
-===================================================== */
+/* ============================================================
+   CHECK REPEAT
+============================================================ */
 
-function triggerRealAlarm(
-    name,
-    time,
-    icon,
-    kind="ACTIVITY"
-){
+function isActivityForToday(act){
+
+    if(
+        !act.days ||
+        !act.days.length
+    ){
+
+        return true;
+
+    }
+
+
+    const today =
+        new Date().getDay() || 7;
+
+
+    return act.days.includes(
+        today
+    );
+
+}
+
+
+/* ============================================================
+   REAL ALARM
+============================================================ */
+
+function triggerRealAlarm(act){
+
+    const message =
+        generateReminderMessage(act);
+
 
     document.getElementById(
         "alarm-time-display"
     ).innerText =
-        time;
+        act.time;
 
 
     document.getElementById(
         "alarm-act-title"
     ).innerText =
-        `${icon} ${name.toUpperCase()}`;
-
-
-    const sleep =
-        kind === "SLEEP";
+        `${act.icon || "⏰"} ${act.name.toUpperCase()}`;
 
 
     document.getElementById(
         "alarm-greeting"
     ).innerText =
-        sleep
-        ?
-        `${userName}, bangun yuk. Waktunya memulai hari.`
-        :
-        `${userName}, waktunya ${name.toLowerCase()}.`;
+        act.priority === "IMPORTANT"
+        ? `${userName}, ini pengingat penting.`
+        : `${userName}, waktunya memperhatikan jadwalmu.`;
+
+
+    document.getElementById(
+        "alarm-category-display"
+    ).innerText =
+        `${CATEGORY_INFO[act.category]?.icon || "📌"} ${CATEGORY_INFO[act.category]?.label || "Lainnya"}`;
 
 
     document.getElementById(
         "alarm-msg-text"
     ).innerText =
-        sleep
-        ?
-        "Istirahatmu sudah cukup. Mari mulai hari dengan tenang."
-        :
-        `Jangan lupa ${name.toLowerCase()}.`;
+        message;
 
 
-    document
-        .getElementById("alarm-screen")
-        .classList.add("active");
+    document.getElementById(
+        "alarm-screen"
+    ).classList.add("active");
 
 
     if(navigator.vibrate){
@@ -3570,15 +3601,15 @@ function triggerRealAlarm(
 }
 
 
-/* =====================================================
+/* ============================================================
    STOP / SNOOZE
-===================================================== */
+============================================================ */
 
 function stopAlarm(){
 
-    document
-        .getElementById("alarm-screen")
-        .classList.remove("active");
+    document.getElementById(
+        "alarm-screen"
+    ).classList.remove("active");
 
 
     if(navigator.vibrate){
@@ -3603,6 +3634,18 @@ function stopAlarm(){
 
 function snoozeAlarm(){
 
+    document.getElementById(
+        "alarm-screen"
+    ).classList.remove("active");
+
+
+    if(navigator.vibrate){
+
+        navigator.vibrate(0);
+
+    }
+
+
     if(window.AndroidBridge){
 
         try{
@@ -3613,373 +3656,34 @@ function snoozeAlarm(){
 
     }
 
-
-    document
-        .getElementById("alarm-screen")
-        .classList.remove("active");
-
-
-    if(navigator.vibrate){
-
-        navigator.vibrate(0);
-
-    }
-
 }
 
 
-/* =====================================================
-   PERMISSION
-===================================================== */
-
-function refreshPermissionPanel(){
-
-    if(
-        !window.AndroidBridge
-        ||
-        !AndroidBridge.getPermissionStatus
-    ){
-
-        document.getElementById(
-            "permission-summary"
-        ).innerText =
-            "Izin khusus Android akan muncul ketika aplikasi dijalankan di perangkat.";
-
-        return;
-
-    }
-
-
-    try{
-
-        const status =
-            JSON.parse(
-                AndroidBridge.getPermissionStatus()
-            );
-
-
-        const notificationRow =
-            document.getElementById(
-                "permission-notification-row"
-            );
-
-
-        const alarmRow =
-            document.getElementById(
-                "permission-alarm-row"
-            );
-
-
-        const fullscreenRow =
-            document.getElementById(
-                "permission-fullscreen-row"
-            );
-
-
-        notificationRow.style.display =
-            status.notification
-            ? "none"
-            : "block";
-
-
-        alarmRow.style.display =
-            status.exactAlarm
-            ? "none"
-            : "block";
-
-
-        fullscreenRow.style.display =
-            status.fullScreen
-            ? "none"
-            : "block";
-
-
-        const pending =
-            [
-                !status.notification,
-                !status.exactAlarm,
-                !status.fullScreen
-            ]
-            .filter(Boolean)
-            .length;
-
-
-        document.getElementById(
-            "permission-summary"
-        ).innerText =
-            pending
-            ?
-            `${pending} izin perlu diaktifkan agar alarm bekerja maksimal.`
-            :
-            "Semua izin alarm sudah aktif ✓";
-
-
-        document.getElementById(
-            "permission-panel"
-        ).style.display =
-            pending
-            ? "block"
-            : "block";
-
-    }
-    catch(e){
-
-        document.getElementById(
-            "permission-summary"
-        ).innerText =
-            "Buka pengaturan izin perangkat jika alarm belum berbunyi.";
-
-    }
-
-}
-
-
-function openPermission(type){
-
-    if(!window.AndroidBridge){
-
-        showToast(
-            "Pengaturan izin tersedia di aplikasi Android."
-        );
-
-        return;
-
-    }
-
-
-    try{
-
-        if(type === "notification"){
-
-            AndroidBridge.openNotificationSettings();
-
-        }
-        else if(type === "alarm"){
-
-            AndroidBridge.openAlarmSettings();
-
-        }
-        else if(type === "fullscreen"){
-
-            AndroidBridge.openFullScreenSettings();
-
-        }
-
-    }catch(e){
-
-        console.log(e);
-
-    }
-
-}
-
-
-/* =====================================================
-   NEXT ACTIVITY
-===================================================== */
-
-function getNextActivity(){
-
-    const now =
-        deviceTime();
-
-
-    const pending =
-        activities
-        .filter(function(act){
-
-            return !act.done;
-
-        })
-        .sort(function(a,b){
-
-            return a.time.localeCompare(
-                b.time
-            );
-
-        });
-
-
-    if(!pending.length){
-
-        return null;
-
-    }
-
-
-    const future =
-        pending.filter(function(act){
-
-            return act.time >= now;
-
-        });
-
-
-    return future.length
-        ? future[0]
-        : pending[0];
-
-}
-
-
-/* =====================================================
-   MOTIVATION
-===================================================== */
-
-function updateMotivation(){
-
-    const messages = [
-
-        [
-            "✨",
-            "Pelan-pelan saja",
-            "Tidak harus sempurna. Yang penting tetap berjalan."
-        ],
-
-        [
-            "💪",
-            "Satu hal dulu",
-            "Selesaikan satu pengingat, lalu lanjut ke berikutnya."
-        ],
-
-        [
-            "🌱",
-            "Kebiasaan kecil",
-            "Hal kecil yang dilakukan berulang bisa menjadi perubahan besar."
-        ],
-
-        [
-            "🧠",
-            "Biar Maestro yang ingat",
-            "Kamu tidak perlu menyimpan semuanya di kepala."
-        ],
-
-        [
-            "🚀",
-            "Tetap jalan",
-            "Hari yang baik dimulai dari satu langkah sederhana."
-        ]
-
-    ];
-
-
-    const index =
-        new Date().getDate()
-        %
-        messages.length;
-
-
-    const item =
-        messages[index];
-
-
-    document.getElementById(
-        "motivation-icon"
-    ).innerText =
-        item[0];
-
-
-    document.getElementById(
-        "motivation-title"
-    ).innerText =
-        item[1];
-
-
-    document.getElementById(
-        "motivation-text"
-    ).innerText =
-        item[2];
-
-
-    document.getElementById(
-        "stats-motivation"
-    ).innerText =
-        item[2];
-
-}
-
-
-/* =====================================================
-   STREAK
-===================================================== */
-
-function getStreak(){
-
-    const completed =
-        activities.length > 0
-        &&
-        activities.every(function(a){
-
-            return a.done;
-
-        });
-
-
-    let streak =
-        Number(
-            localStorage.getItem(
-                "maestro_streak"
-            )
-            || 0
-        );
-
-
-    if(completed){
-
-        const today =
-            new Date()
-            .toISOString()
-            .slice(0,10);
-
-
-        const last =
-            localStorage.getItem(
-                "maestro_streak_date"
-            );
-
-
-        if(last !== today){
-
-            streak += 1;
-
-            localStorage.setItem(
-                "maestro_streak",
-                streak
-            );
-
-            localStorage.setItem(
-                "maestro_streak_date",
-                today
-            );
-
-        }
-
-    }
-
-
-    return streak;
-
-}
-
-
-/* =====================================================
+/* ============================================================
    UI
-===================================================== */
+============================================================ */
 
 function updateUI(){
 
+    activities =
+        activities
+            .map(normalizeActivity)
+            .sort(
+                (a,b)=>
+                    a.time.localeCompare(b.time)
+            );
+
+
+    saveActivities();
+
+
+    document.getElementById(
+        "display-username"
+    ).innerText =
+        userName;
+
+
     updateDate();
-
-    updateMotivation();
-
-
-    activities.sort(function(a,b){
-
-        return a.time.localeCompare(
-            b.time
-        );
-
-    });
 
 
     const total =
@@ -3987,253 +3691,61 @@ function updateUI(){
 
 
     const completed =
-        activities.filter(function(a){
-
-            return a.done;
-
-        }).length;
+        activities.filter(
+            a=>a.done
+        ).length;
 
 
-    const remaining =
-        total - completed;
+    const important =
+        activities.filter(
+            a=>
+            a.priority === "IMPORTANT" &&
+            !a.done
+        ).length;
 
 
     const percent =
         total
-        ?
-        Math.round(
-            completed /
-            total *
-            100
+        ? Math.round(
+            completed/total*100
         )
-        :
-        0;
-
-
-    /* TODAY */
-
-    document.getElementById(
-        "today-completed"
-    ).innerText =
-        completed;
+        : 0;
 
 
     document.getElementById(
-        "today-remaining"
-    ).innerText =
-        remaining;
-
-
-    document.getElementById(
-        "today-total"
-    ).innerText =
-        total;
-
-
-    document.getElementById(
-        "progress-percent"
+        "hero-percent"
     ).innerText =
         `${percent}%`;
 
 
     document.getElementById(
-        "activity-count-label"
+        "hero-sub"
     ).innerText =
-        `${total} aktivitas`;
+        total
+        ? `${completed} dari ${total} aktivitas selesai`
+        : "Belum ada aktivitas";
 
 
     document.getElementById(
-        "today-message"
+        "hero-progress-fill"
+    ).style.width =
+        `${percent}%`;
+
+
+    document.getElementById(
+        "progress-text"
     ).innerText =
-        percent === 100 && total > 0
-        ?
-        "Semua selesai! 🎉"
-        :
-        percent >= 70
-        ?
-        "Tinggal sedikit lagi!"
-        :
-        percent > 0
-        ?
-        "Bagus, lanjutkan!"
-        :
-        "Kamu bisa melakukannya.";
+        `${completed} dari ${total} selesai`;
 
-
-    /* NEXT */
-
-    const nextContainer =
-        document.getElementById(
-            "next-activity-container"
-        );
-
-
-    nextContainer.innerHTML =
-        "";
-
-
-    const next =
-        getNextActivity();
-
-
-    if(next){
-
-        nextContainer.innerHTML = `
-
-            <div class="next-card active-next">
-
-                <div class="next-badge">
-
-                    <i class="fa-solid fa-bolt"></i>
-
-                    PENGINGAT BERIKUTNYA
-
-                </div>
-
-                <div class="next-content">
-
-                    <div class="next-icon">
-                        ${next.icon}
-                    </div>
-
-                    <div class="next-info">
-
-                        <h3>
-                            ${escapeHTML(next.name)}
-                        </h3>
-
-                        <p>
-                            ${
-                                next.kind === "SLEEP"
-                                ? "Alarm tidur / bangun"
-                                : "Jadwal aktivitas"
-                            }
-                        </p>
-
-                    </div>
-
-                    <div class="next-time">
-                        ${next.time}
-                    </div>
-
-                </div>
-
-            </div>
-
-        `;
-
-
-        document.getElementById(
-            "next-label"
-        ).innerText =
-            "Siap";
-
-    }
-    else{
-
-        if(total > 0){
-
-            nextContainer.innerHTML = `
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        🎉
-                    </div>
-
-                    <h3>
-                        Semua aktivitas selesai
-                    </h3>
-
-                    <p>
-                        Hebat! Tidak ada pengingat yang tersisa.
-                    </p>
-
-                </div>
-
-            `;
-
-        }
-        else{
-
-            nextContainer.innerHTML = `
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        🔔
-                    </div>
-
-                    <h3>
-                        Belum ada pengingat
-                    </h3>
-
-                    <p>
-                        Tambahkan aktivitas pertama agar Maestro mulai membantu mengingatkanmu.
-                    </p>
-
-                    <button
-                        class="primary-button"
-                        onclick="openAddScreen()">
-
-                        + Buat pengingat
-
-                    </button>
-
-                </div>
-
-            `;
-
-        }
-
-
-        document.getElementById(
-            "next-label"
-        ).innerText =
-            "Selesai";
-
-    }
-
-
-    /* ACTIVITY LIST */
-
-    const listContainer =
-        document.getElementById(
-            "activity-list-container"
-        );
-
-
-    listContainer.innerHTML =
-        "";
-
-
-    if(!activities.length){
-
-        listContainer.innerHTML =
-            "";
-
-    }
-    else{
-
-        activities.forEach(function(act){
-
-            listContainer.innerHTML +=
-                createActivityCard(act);
-
-        });
-
-    }
-
-
-    /* SCHEDULE */
-
-    updateSchedule();
-
-
-    /* STATS */
 
     const streak =
-        getStreak();
+        calculateStreak();
+
+
+    document.getElementById(
+        "hero-streak"
+    ).innerText =
+        `🔥 ${streak} hari`;
 
 
     document.getElementById(
@@ -4249,144 +3761,396 @@ function updateUI(){
 
 
     document.getElementById(
-        "stat-remaining"
+        "stat-rate"
     ).innerText =
-        remaining;
+        `${percent}%`;
 
 
     document.getElementById(
-        "stat-streak"
+        "stat-important"
     ).innerText =
-        streak;
+        important;
 
 
-    document.getElementById(
-        "streak-progress"
-    ).style.width =
-        `${Math.min(percent,100)}%`;
+    renderNextActivity();
 
+    renderActivityGrid();
 
-    document.getElementById(
-        "streak-title"
-    ).innerText =
-        streak > 0
-        ?
-        `${streak} hari konsisten 🔥`
-        :
-        "Mulai streak kamu";
+    renderSchedule();
 
-
-    document.getElementById(
-        "streak-description"
-    ).innerText =
-        percent === 100 && total > 0
-        ?
-        "Semua aktivitas hari ini selesai. Pertahankan!"
-        :
-        "Selesaikan semua aktivitas hari ini untuk membangun konsistensi.";
+    renderStats();
 
 }
 
 
-/* =====================================================
-   ACTIVITY CARD
-===================================================== */
+/* ============================================================
+   NEXT ACTIVITY
+============================================================ */
 
-function createActivityCard(act){
+function renderNextActivity(){
 
-    const doneClass =
-        act.done
-        ? "done"
-        : "";
-
-
-    return `
-
-        <div class="activity-card ${doneClass}">
-
-            <div class="activity-icon">
-                ${act.icon || "📌"}
-            </div>
+    const container =
+        document.getElementById(
+            "next-activity-container"
+        );
 
 
-            <div class="activity-info">
-
-                <h4
-                    style="${
-                        act.done
-                        ? "text-decoration:line-through;"
-                        : ""
-                    }">
-
-                    ${escapeHTML(act.name)}
-
-                </h4>
+    container.innerHTML = "";
 
 
-                <p>
-
-                    ${
-                        act.done
-                        ? "Selesai ✓"
-                        :
-                        act.kind === "SLEEP"
-                        ? "🌙 Alarm tidur"
-                        : "⏰ Pengingat"
-                    }
-
-                </p>
-
-            </div>
+    const nowTime =
+        deviceTime();
 
 
-            <div class="activity-right">
+    let pending =
+        activities.filter(
+            a =>
+            !a.done &&
+            isActivityForToday(a)
+        );
 
-                <div class="activity-time">
-                    ${act.time}
+
+    if(!pending.length){
+
+        if(activities.length){
+
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🎉</div>
+                    <h3>Semua selesai!</h3>
+                    <p>Kamu sudah menyelesaikan semua pengingat hari ini.</p>
+                </div>
+            `;
+
+        }
+        else{
+
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">✨</div>
+                    <h3>Belum ada pengingat</h3>
+                    <p>Tekan tombol + untuk membuat pengingat pertamamu.</p>
+                </div>
+            `;
+
+        }
+
+        return;
+
+    }
+
+
+    /*
+     * Cari aktivitas terdekat dari sekarang.
+     */
+    let future =
+        pending.filter(
+            a =>
+            a.time >= nowTime
+        );
+
+
+    let next =
+        future.length
+        ? future[0]
+        : pending[0];
+
+
+    const cat =
+        CATEGORY_INFO[
+            next.category
+        ] ||
+        CATEGORY_INFO.LAINNYA;
+
+
+    const message =
+        generateReminderMessage(next);
+
+
+    container.innerHTML = `
+
+        <div
+            class="next-card"
+            onclick="editActivity(${next.id})"
+            style="cursor:pointer;"
+        >
+
+            <div class="next-top">
+
+                <div
+                    class="next-icon"
+                    style="
+                        background:
+                        ${next.priority==="IMPORTANT"
+                            ? "#fee2e2"
+                            : "#e0e7ff"};
+                    "
+                >
+                    ${next.icon || cat.icon}
                 </div>
 
+                <div class="next-info">
 
-                <button
-                    class="check-button ${
-                        act.done
-                        ? "checked"
-                        : ""
-                    }"
-                    onclick="toggleDone(${act.id})">
+                    <h3>
+                        ${escapeHTML(next.name)}
+                    </h3>
 
-                    <i class="fa-solid fa-check"></i>
+                    <p>
+                        ${cat.icon}
+                        ${cat.label}
+                        •
+                        ${repeatLabel(next.days)}
+                    </p>
 
-                </button>
+                </div>
 
+                <div class="next-time">
+                    ${next.time}
+                </div>
 
-                <button
-                    class="delete-button"
-                    onclick="return deleteActivity(${act.id},event)">
+            </div>
 
-                    <i class="fa-solid fa-trash-can"></i>
+            <div class="next-bottom">
 
-                </button>
+                <div class="next-message">
+                    ${escapeHTML(
+                        shortenText(message,80)
+                    )}
+                </div>
+
+                ${
+                    next.priority === "IMPORTANT"
+                    ? `<span class="priority-badge">PENTING</span>`
+                    : ""
+                }
 
             </div>
 
         </div>
-
     `;
 
 }
 
 
-/* =====================================================
-   SCHEDULE
-===================================================== */
+/* ============================================================
+   ACTIVITY GRID
+============================================================ */
 
-function updateSchedule(){
+function renderActivityGrid(){
 
-    const scheduleContainer =
+    const container =
         document.getElementById(
-            "schedule-list-container"
+            "activity-list-container"
         );
 
+
+    container.innerHTML = "";
+
+
+    if(!activities.length){
+
+        return;
+
+    }
+
+
+    activities.forEach(act=>{
+
+        /*
+         * Berikutnya tidak ditampilkan ulang.
+         */
+        const now =
+            deviceTime();
+
+
+        const pending =
+            activities.filter(
+                a =>
+                !a.done &&
+                isActivityForToday(a)
+            );
+
+
+        const future =
+            pending.filter(
+                a=>a.time>=now
+            );
+
+
+        const next =
+            future.length
+            ? future[0]
+            : pending[0];
+
+
+        if(
+            next &&
+            Number(next.id) ===
+            Number(act.id) &&
+            !act.done
+        ){
+
+            return;
+
+        }
+
+
+        const cat =
+            CATEGORY_INFO[
+                act.category
+            ] ||
+            CATEGORY_INFO.LAINNYA;
+
+
+        container.innerHTML +=
+            activityCardHTML(act,cat);
+
+    });
+
+}
+
+
+/* ============================================================
+   ACTIVITY CARD
+============================================================ */
+
+function activityCardHTML(act,cat){
+
+    return `
+
+        <div
+            class="activity-card ${act.done ? "done":""}"
+        >
+
+            <div>
+
+                <div
+                    class="activity-left"
+                    onclick="toggleDone(${act.id})"
+                >
+
+                    <div
+                        class="activity-icon"
+                    >
+                        ${act.icon || cat.icon}
+                    </div>
+
+                    <div
+                        class="activity-details"
+                    >
+
+                        <h4
+                            style="
+                                ${
+                                    act.done
+                                    ? "text-decoration:line-through;"
+                                    : ""
+                                }
+                            "
+                        >
+                            ${escapeHTML(act.name)}
+                        </h4>
+
+                        <span>
+                            ${
+                                act.done
+                                ? "Selesai ✓"
+                                : "Ketuk untuk selesai"
+                            }
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <span
+                        class="category-badge ${cat.className}"
+                    >
+                        ${cat.icon}
+                        ${cat.label}
+                    </span>
+
+                    ${
+                        act.priority === "IMPORTANT"
+                        ? `
+                            <span
+                                class="priority-badge"
+                            >
+                                Penting
+                            </span>
+                        `
+                        : ""
+                    }
+
+                </div>
+
+            </div>
+
+
+            <div class="activity-time">
+
+                <div>
+
+                    <div class="time">
+                        ${act.time}
+                    </div>
+
+                    <div
+                        style="
+                            font-size:9px;
+                            color:#94a3b8;
+                            margin-top:3px;
+                        "
+                    >
+                        ${repeatLabel(act.days)}
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        type="button"
+                        class="btn-delete"
+                        title="Edit"
+                        onclick="
+                            event.stopPropagation();
+                            editActivity(${act.id});
+                        "
+                    >
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn-delete"
+                        title="Hapus"
+                        onclick="
+                            return deleteActivity(${act.id},event);
+                        "
+                    >
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+    `;
+
+}
+
+
+/* ============================================================
+   SCHEDULE
+============================================================ */
+
+function renderSchedule(){
 
     const sleepContainer =
         document.getElementById(
@@ -4394,129 +4158,101 @@ function updateSchedule(){
         );
 
 
-    scheduleContainer.innerHTML =
-        "";
+    const scheduleContainer =
+        document.getElementById(
+            "schedule-list-container"
+        );
 
-    sleepContainer.innerHTML =
-        "";
+
+    sleepContainer.innerHTML = "";
+
+    scheduleContainer.innerHTML = "";
+
+
+    const sleeps =
+        activities.filter(
+            a =>
+            a.kind === "SLEEP" ||
+            a.category === "TIDUR"
+        );
 
 
     const normal =
-        activities.filter(function(a){
-
-            return a.kind !== "SLEEP";
-
-        });
-
-
-    const sleep =
-        activities.filter(function(a){
-
-            return a.kind === "SLEEP";
-
-        });
+        activities.filter(
+            a =>
+            a.kind !== "SLEEP" &&
+            a.category !== "TIDUR"
+        );
 
 
-    document.getElementById(
-        "schedule-count"
-    ).innerText =
-        `${activities.length} jadwal`;
-
-
-    sleep.forEach(function(act){
-
-        sleepContainer.innerHTML += `
-
-            <div
-                class="sleep-card"
-                onclick="openSleepSettings(${act.id})">
-
-                <div class="sleep-main">
-
-                    <div class="sleep-icon">
-                        ${act.icon || "🌙"}
-                    </div>
-
-                    <div class="sleep-info">
-
-                        <h3>
-                            ${escapeHTML(act.name)}
-                        </h3>
-
-                        <p>
-                            ${act.time}
-                        </p>
-
-                        <span class="schedule-label">
-                            ${scheduleLabel(act)}
-                        </span>
-
-                    </div>
-
-                    <button
-                        class="delete-button"
-                        onclick="event.stopPropagation();return deleteActivity(${act.id},event)">
-
-                        <i class="fa-solid fa-trash-can"></i>
-
-                    </button>
-
-                </div>
-
-
-                ${
-                    act.note
-                    ?
-                    `
-                    <p style="
-                        margin-top:10px;
-                        font-size:9px;
-                        color:var(--muted);
-                    ">
-                        ${escapeHTML(act.note)}
-                    </p>
-                    `
-                    :
-                    ""
-                }
-
-            </div>
-
-        `;
-
-    });
-
-
-    normal.forEach(function(act){
-
-        scheduleContainer.innerHTML +=
-            createActivityCard(act);
-
-    });
-
-
-    if(!sleep.length){
+    if(!sleeps.length){
 
         sleepContainer.innerHTML = `
-
-            <div class="empty-state"
-                 style="padding:20px;margin-bottom:10px;">
-
-                <div class="empty-icon">
-                    🌙
-                </div>
-
-                <h3>
-                    Belum ada alarm tidur
-                </h3>
-
-                <p>
-                    Buat rutinitas tidur atau bangun agar Maestro membantu menjaga jadwalmu.
-                </p>
-
+            <div class="empty-state">
+                <div class="empty-icon">😴</div>
+                <h3>Belum ada alarm tidur</h3>
+                <p>Buat pengingat dengan kategori Tidur.</p>
             </div>
-
         `;
+
+    }
+    else{
+
+        sleeps.forEach(act=>{
+
+            sleepContainer.innerHTML += `
+
+                <div
+                    class="progress-card sleep-card"
+                    onclick="editActivity(${act.id})"
+                    style="cursor:pointer;"
+                >
+
+                    <div class="sleep-card-row">
+
+                        <div class="activity-icon">
+                            ${act.icon || "😴"}
+                        </div>
+
+                        <div class="sleep-card-info">
+
+                            <h3>
+                                ${escapeHTML(act.name)}
+                            </h3>
+
+                            <p>
+                                ${act.time}
+                                •
+                                ${repeatLabel(act.days)}
+                            </p>
+
+                            <p>
+                                ${
+                                    act.note
+                                    ? escapeHTML(act.note)
+                                    : "Ketuk untuk mengatur alarm tidur."
+                                }
+                            </p>
+
+                        </div>
+
+                        <button
+                            type="button"
+                            class="btn-delete"
+                            onclick="
+                                event.stopPropagation();
+                                return deleteActivity(${act.id},event);
+                            "
+                        >
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+            `;
+
+        });
 
     }
 
@@ -4524,38 +4260,419 @@ function updateSchedule(){
     if(!normal.length){
 
         scheduleContainer.innerHTML = `
-
-            <div class="empty-state"
-                 style="padding:20px;">
-
-                <div class="empty-icon">
-                    ⏰
-                </div>
-
-                <h3>
-                    Belum ada aktivitas
-                </h3>
-
-                <p>
-                    Tambahkan pengingat baru.
-                </p>
-
+            <div
+                class="empty-state"
+                style="grid-column:1/-1;"
+            >
+                <div class="empty-icon">📅</div>
+                <h3>Belum ada aktivitas</h3>
+                <p>Tambahkan pengingat untuk mengatur harimu.</p>
             </div>
-
         `;
+
+    }
+    else{
+
+        normal.forEach(act=>{
+
+            const cat =
+                CATEGORY_INFO[
+                    act.category
+                ] ||
+                CATEGORY_INFO.LAINNYA;
+
+
+            scheduleContainer.innerHTML +=
+                activityCardHTML(
+                    act,
+                    cat
+                );
+
+        });
 
     }
 
 }
 
 
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
+/* ============================================================
+   STATS
+============================================================ */
 
-function escapeHTML(value){
+function renderStats(){
 
-    return String(value)
+    const streak =
+        calculateStreak();
+
+
+    document.getElementById(
+        "streak-number"
+    ).innerText =
+        streak;
+
+
+    const week =
+        document.getElementById(
+            "week-row"
+        );
+
+
+    week.innerHTML = "";
+
+
+    const labels =
+        ["M","S","S","R","K","J","S"];
+
+
+    const completedDays =
+        getCompletionHistory();
+
+
+    labels.forEach((label,index)=>{
+
+        const dayNumber =
+            index;
+
+
+        const active =
+            completedDays.includes(
+                dayNumber
+            );
+
+
+        week.innerHTML += `
+
+            <div class="week-day">
+
+                <div
+                    class="week-dot ${active ? "active":""}"
+                >
+                    ${
+                        active
+                        ? "✓"
+                        : "•"
+                    }
+                </div>
+
+                <span>
+                    ${label}
+                </span>
+
+            </div>
+        `;
+
+    });
+
+
+    const total =
+        activities.length;
+
+
+    const completed =
+        activities.filter(
+            a=>a.done
+        ).length;
+
+
+    let tipTitle =
+        "Mulai dari satu kebiasaan.";
+
+
+    let tip =
+        "Konsistensi kecil lebih berguna daripada membuat terlalu banyak alarm.";
+
+
+    if(total === 0){
+
+        tipTitle =
+            "Belum ada pengingat.";
+
+        tip =
+            "Tambahkan satu aktivitas penting yang sering kamu lupakan.";
+
+    }
+    else if(completed === total){
+
+        tipTitle =
+            "Mantap! Semua selesai 🎉";
+
+        tip =
+            "Pertahankan ritme ini. Besok lanjutkan lagi.";
+
+    }
+    else if(completed > 0){
+
+        tipTitle =
+            "Sedikit lagi! 💪";
+
+        tip =
+            `Kamu sudah menyelesaikan ${completed} dari ${total} aktivitas hari ini.`;
+
+    }
+
+
+    document.getElementById(
+        "stats-tip-title"
+    ).innerText =
+        tipTitle;
+
+
+    document.getElementById(
+        "stats-tip"
+    ).innerText =
+        tip;
+
+}
+
+
+/* ============================================================
+   STREAK
+============================================================ */
+
+function calculateStreak(){
+
+    const history =
+        JSON.parse(
+            localStorage.getItem(
+                "maestro_completion_history"
+            ) || "{}"
+        );
+
+
+    /*
+     * Simpan hari ini jika semua aktivitas
+     * selesai.
+     */
+    const today =
+        dateKey(new Date());
+
+
+    if(
+        activities.length &&
+        activities.every(
+            a=>a.done
+        )
+    ){
+
+        history[today] = true;
+
+        localStorage.setItem(
+            "maestro_completion_history",
+            JSON.stringify(history)
+        );
+
+    }
+
+
+    let streak = 0;
+
+    const cursor =
+        new Date();
+
+
+    while(true){
+
+        const key =
+            dateKey(cursor);
+
+
+        if(history[key]){
+
+            streak++;
+
+            cursor.setDate(
+                cursor.getDate()-1
+            );
+
+        }
+        else{
+
+            break;
+
+        }
+
+    }
+
+
+    return streak;
+
+}
+
+
+function dateKey(date){
+
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+
+}
+
+
+function getCompletionHistory(){
+
+    const history =
+        JSON.parse(
+            localStorage.getItem(
+                "maestro_completion_history"
+            ) || "{}"
+        );
+
+
+    const result = [];
+
+    const now =
+        new Date();
+
+
+    for(let i=6;i>=0;i--){
+
+        const d =
+            new Date();
+
+
+        d.setDate(
+            now.getDate()-i
+        );
+
+
+        const key =
+            dateKey(d);
+
+
+        if(history[key]){
+
+            result.push(
+                d.getDay()
+            );
+
+        }
+
+    }
+
+
+    /*
+     * Hari ini juga dianggap aktif
+     * kalau semua aktivitas selesai.
+     */
+    if(
+        activities.length &&
+        activities.every(
+            a=>a.done
+        )
+    ){
+
+        result.push(
+            new Date().getDay()
+        );
+
+    }
+
+
+    return result;
+
+}
+
+
+/* ============================================================
+   PREVIEW
+============================================================ */
+
+function setupPreviewListeners(){
+
+    [
+        "add-name",
+        "add-note"
+    ].forEach(id=>{
+
+        const el =
+            document.getElementById(id);
+
+        if(el){
+
+            el.addEventListener(
+                "input",
+                updatePreview
+            );
+
+        }
+
+    });
+
+}
+
+
+function updatePreview(){
+
+    const act = {
+
+        name:
+            document.getElementById(
+                "add-name"
+            )?.value ||
+            "aktivitas",
+
+        category:
+            document.getElementById(
+                "add-category"
+            )?.value ||
+            "KEBIASAAN",
+
+        priority:
+            document.getElementById(
+                "add-priority"
+            )?.value ||
+            "NORMAL",
+
+        note:
+            document.getElementById(
+                "add-note"
+            )?.value ||
+            "",
+
+        kind:
+            document.getElementById(
+                "add-category"
+            )?.value === "TIDUR"
+            ? "SLEEP"
+            : "ACTIVITY"
+
+    };
+
+
+    const preview =
+        document.getElementById(
+            "message-preview-text"
+        );
+
+
+    if(preview){
+
+        preview.innerText =
+            generateReminderMessage(
+                act
+            );
+
+    }
+
+}
+
+
+/* ============================================================
+   UTILITY
+============================================================ */
+
+function shortenText(text,max){
+
+    if(!text) return "";
+
+    return text.length > max
+        ? text.substring(0,max-1)+"…"
+        : text;
+
+}
+
+
+function escapeHTML(text){
+
+    return String(text)
         .replace(/&/g,"&amp;")
         .replace(/</g,"&lt;")
         .replace(/>/g,"&gt;")
@@ -4565,12 +4682,11 @@ function escapeHTML(value){
 }
 
 
-/* =====================================================
+/* ============================================================
    TOAST
-===================================================== */
+============================================================ */
 
-let toastTimer;
-
+let toastTimer = null;
 
 function showToast(message){
 
@@ -4595,7 +4711,7 @@ function showToast(message){
 
 
     toastTimer =
-        setTimeout(function(){
+        setTimeout(()=>{
 
             toast.classList.remove(
                 "show"
@@ -4606,78 +4722,51 @@ function showToast(message){
 }
 
 
-/* =====================================================
-   MIDNIGHT RESET
-===================================================== */
+/* ============================================================
+   KEYBOARD / FORM PREVIEW
+============================================================ */
 
-function resetDailyCompletionIfNeeded(){
+document.addEventListener(
+    "input",
+    event=>{
 
-    const today =
-        new Date()
-        .toISOString()
-        .slice(0,10);
+        if(
+            event.target.id === "add-name" ||
+            event.target.id === "add-note"
+        ){
 
+            updatePreview();
 
-    const lastDate =
-        localStorage.getItem(
-            "maestro_last_date"
-        );
-
-
-    if(!lastDate){
-
-        localStorage.setItem(
-            "maestro_last_date",
-            today
-        );
-
-        return;
+        }
 
     }
+);
 
 
-    if(lastDate !== today){
+/* ============================================================
+   BACKUP / SAFETY
+============================================================ */
 
-        activities =
-            activities.map(function(act){
-
-                return {
-                    ...act,
-                    done:false
-                };
-
-            });
-
-
-        localStorage.setItem(
-            "maestro_last_date",
-            today
-        );
-
-
+window.addEventListener(
+    "beforeunload",
+    ()=>{
         saveActivities();
-
     }
-
-}
-
-
-setInterval(function(){
-
-    resetDailyCompletionIfNeeded();
-
-    updateUI();
-
-},30000);
+);
 
 
-/* =====================================================
-   STARTUP DAILY STATE
-===================================================== */
+/* ============================================================
+   PERIODIC DATE UPDATE
+============================================================ */
 
-resetDailyCompletionIfNeeded();
+setInterval(
+    updateDate,
+    30000
+);
 
 </script>
+
+</div>
 
 </body>
 </html>
