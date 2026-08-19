@@ -1,42 +1,90 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp">
+package com.maestro.reminder;
 
-    <TextView
-        android:id="@+id/greetingText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.Settings;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-    <TextView
-        android:id="@+id/displayUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:textSize="16sp" />
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
-    <TextView
-        android:id="@+id/progressInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp" />
+public class MainActivity extends AppCompatActivity {
+    private static final int NOTIFICATION_PERMISSION_REQUEST = 100;
+    private EditText inputName;
+    private TextView progressInfo;
 
-    <EditText
-        android:id="@+id/inputNameSetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:hint="Nama panggilan" />
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-    <Button
-        android:id="@+id/btnTestAlarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="Tes Alarm (1 menit lagi)" />
+        inputName = findViewById(R.id.inputNameSetting);
+        progressInfo = findViewById(R.id.progressInfo);
+        TextView greeting = findViewById(R.id.greetingText);
+        TextView displayName = findViewById(R.id.displayUsername);
+        Button testAlarm = findViewById(R.id.btnTestAlarm);
 
-</LinearLayout>
+        greeting.setText("Maestro Reminder");
+        String savedName = getSharedPreferences(AlarmScheduler.PREFS, MODE_PRIVATE)
+                .getString(AlarmScheduler.KEY_USER_NAME, "Maestro");
+        inputName.setText(savedName);
+        displayName.setText("Pengingat tetap aktif meskipun aplikasi ditutup");
+        updateStatus();
+
+        requestNotificationPermissionIfNeeded();
+        testAlarm.setOnClickListener(v -> scheduleTestAlarm());
+    }
+
+    private void scheduleTestAlarm() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                && !AlarmScheduler.canScheduleExactAlarms(this)) {
+            try {
+                startActivity(AlarmScheduler.exactAlarmSettings(this));
+                Toast.makeText(this, "Aktifkan izin Alarm & pengingat, lalu tekan tombol lagi.", Toast.LENGTH_LONG).show();
+            } catch (Exception ignored) {
+                Toast.makeText(this, "Izin alarm tepat tidak tersedia; alarm akan memakai waktu perkiraan.", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        String name = inputName.getText().toString().trim();
+        if (name.isEmpty()) name = "Maestro";
+        long triggerAt = System.currentTimeMillis() + 60_000L;
+        AlarmScheduler.saveAndSchedule(this, triggerAt, "Tes pengingat", name);
+        updateStatus();
+        Toast.makeText(this, "Alarm dijadwalkan 1 menit lagi.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    NOTIFICATION_PERMISSION_REQUEST);
+        }
+    }
+
+    private void updateStatus() {
+        long triggerAt = getSharedPreferences(AlarmScheduler.PREFS, MODE_PRIVATE)
+                .getLong(AlarmScheduler.KEY_TRIGGER_AT, 0L);
+        if (triggerAt > System.currentTimeMillis()) {
+            progressInfo.setText("Alarm aktif: " + android.text.format.DateFormat.getTimeFormat(this).format(triggerAt));
+        } else {
+            progressInfo.setText("Belum ada alarm aktif");
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AlarmScheduler.reschedule(this);
+        if (progressInfo != null) updateStatus();
+    }
+}
