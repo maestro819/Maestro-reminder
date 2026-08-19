@@ -146,6 +146,7 @@
             height: 100%;
             background: var(--indigo-primary);
             border-radius: 4px;
+            transition: width 0.3s ease;
         }
 
         /* Section Titles */
@@ -427,53 +428,21 @@
             <div class="progress-card">
                 <div class="progress-info">
                     <span>Progress hari ini</span>
-                    <span>6 dari 9 aktivitas selesai</span>
+                    <span id="progress-text">0 dari 0 aktivitas</span>
                 </div>
                 <div class="progress-bar-bg">
-                    <div class="progress-bar-fill"></div>
+                    <div class="progress-bar-fill" id="progress-bar" style="width: 0%;"></div>
                 </div>
             </div>
 
             <div class="section-title">Berikutnya</div>
-            <div class="activity-card next">
-                <div class="activity-left">
-                    <div class="activity-icon">🏃</div>
-                    <div class="activity-details">
-                        <h4>Olahraga</h4>
-                        <span>Setiap hari • 10m sebelumnya</span>
-                    </div>
-                </div>
-                <div class="activity-time">
-                    <div class="time">16:00</div>
-                    <div class="countdown">4 jam lagi</div>
-                </div>
+            <div id="next-activity-container">
+                <!-- Dinamis dari script -->
             </div>
 
-            <div class="section-title">Mendatang</div>
-            <div class="activity-card">
-                <div class="activity-left">
-                    <div class="activity-icon">💼</div>
-                    <div class="activity-details">
-                        <h4>Selesai kerja</h4>
-                        <span>Hari ini</span>
-                    </div>
-                </div>
-                <div class="activity-time">
-                    <div class="time">18:30</div>
-                </div>
-            </div>
-
-            <div class="activity-card">
-                <div class="activity-left">
-                    <div class="activity-icon">😴</div>
-                    <div class="activity-details">
-                        <h4>Persiapan tidur</h4>
-                        <span>Setiap hari</span>
-                    </div>
-                </div>
-                <div class="activity-time">
-                    <div class="time">21:30</div>
-                </div>
+            <div class="section-title">Mendatang & Lainnya</div>
+            <div id="activity-list-container">
+                <!-- Daftar aktivitas tersimpan -->
             </div>
 
             <button class="sim-alarm-btn" onclick="triggerAlarm()">🔔 Simulasi Alarm Masuk</button>
@@ -491,48 +460,11 @@
 
             <div class="greeting-section">
                 <h2>Rabu, 19 Agustus</h2>
-                <p>Daftar aktivitas hari ini</p>
+                <p>Daftar seluruh aktivitas</p>
             </div>
 
-            <div class="activity-card">
-                <div class="activity-left">
-                    <div class="activity-icon">🌅</div>
-                    <div class="activity-details">
-                        <h4>Bangun</h4>
-                        <span>Selesai ✓</span>
-                    </div>
-                </div>
-                <div class="activity-time"><div class="time">06:00</div></div>
-            </div>
-            <div class="activity-card">
-                <div class="activity-left">
-                    <div class="activity-icon">🍳</div>
-                    <div class="activity-details">
-                        <h4>Sarapan</h4>
-                        <span>Selesai ✓</span>
-                    </div>
-                </div>
-                <div class="activity-time"><div class="time">07:00</div></div>
-            </div>
-            <div class="activity-card">
-                <div class="activity-left">
-                    <div class="activity-icon">💼</div>
-                    <div class="activity-details">
-                        <h4>Kerja</h4>
-                        <span>Selesai ✓</span>
-                    </div>
-                </div>
-                <div class="activity-time"><div class="time">08:00</div></div>
-            </div>
-            <div class="activity-card next">
-                <div class="activity-left">
-                    <div class="activity-icon">🏃</div>
-                    <div class="activity-details">
-                        <h4>Olahraga</h4>
-                        <span>Berikutnya</span>
-                    </div>
-                </div>
-                <div class="activity-time"><div class="time">16:00</div></div>
+            <div id="schedule-list-container">
+                <!-- Render jadwal -->
             </div>
         </div>
 
@@ -553,12 +485,12 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
                 <div class="progress-card" style="text-align: center; margin-bottom: 0;">
-                    <h3 style="font-size: 28px; color: var(--indigo-primary); font-weight: 700;">6</h3>
+                    <h3 id="stat-completed" style="font-size: 28px; color: var(--indigo-primary); font-weight: 700;">0</h3>
                     <p style="font-size: 12px; color: var(--text-muted);">Selesai hari ini</p>
                 </div>
                 <div class="progress-card" style="text-align: center; margin-bottom: 0;">
-                    <h3 style="font-size: 28px; color: var(--text-main); font-weight: 700;">9</h3>
-                    <p style="font-size: 12px; color: var(--text-muted);">Total hari ini</p>
+                    <h3 id="stat-total" style="font-size: 28px; color: var(--text-main); font-weight: 700;">0</h3>
+                    <p style="font-size: 12px; color: var(--text-muted);">Total aktivitas</p>
                 </div>
             </div>
 
@@ -580,7 +512,7 @@
 
             <div class="form-group">
                 <label>Nama Panggilan</label>
-                <input type="text" class="form-control" id="input-name" value="Anto" oninput="updateName(this.value)">
+                <input type="text" class="form-control" id="input-name" value="Anto" oninput="saveSettings(this.value)">
             </div>
 
             <div class="form-group">
@@ -588,14 +520,6 @@
                 <select class="form-control">
                     <option>ON (Gunakan Nama)</option>
                     <option>OFF</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Tema Aplikasi</label>
-                <select class="form-control">
-                    <option>Indigo / Violet (Default)</option>
-                    <option>Dark Mode</option>
                 </select>
             </div>
         </div>
@@ -612,29 +536,29 @@
 
             <div class="form-group">
                 <label>Nama Aktivitas</label>
-                <input type="text" class="form-control" placeholder="Contoh: Minum air putih">
+                <input type="text" id="add-name" class="form-control" placeholder="Contoh: Olahraga sore">
             </div>
 
             <div class="form-group">
                 <label>Jam</label>
-                <input type="time" class="form-control" value="08:00">
+                <input type="time" id="add-time" class="form-control" value="16:00">
             </div>
 
             <div class="form-group">
-                <label>Ikon</label>
-                <input type="text" class="form-control" value="🏃">
+                <label>Ikon (Emoji)</label>
+                <input type="text" id="add-icon" class="form-control" value="🏃">
             </div>
 
             <div class="form-group">
                 <label>Pengulangan</label>
-                <select class="form-control">
+                <select id="add-repeat" class="form-control">
                     <option>Setiap hari</option>
                     <option>Sekali</option>
                     <option>Senin - Jumat</option>
                 </select>
             </div>
 
-            <button class="btn-primary" onclick="switchScreen('home')">Simpan Aktivitas</button>
+            <button class="btn-primary" onclick="addNewActivity()">Simpan Aktivitas</button>
         </div>
 
         <!-- FLOATING ACTION BUTTON -->
@@ -680,23 +604,165 @@
     </div>
 
     <script>
+        // Default Data jika LocalStorage kosong
+        let defaultActivities = [
+            { id: 1, name: "Bangun", time: "06:00", icon: "🌅", repeat: "Setiap hari", done: true },
+            { id: 2, name: "Sarapan", time: "07:00", icon: "🍳", repeat: "Setiap hari", done: true },
+            { id: 3, name: "Kerja", time: "08:00", icon: "💼", repeat: "Senin - Jumat", done: false },
+            { id: 4, name: "Olahraga", time: "16:00", icon: "🏃", repeat: "Setiap hari", done: false },
+            { id: 5, name: "Persiapan tidur", time: "21:30", icon: "😴", repeat: "Setiap hari", done: false }
+        ];
+
+        let activities = JSON.parse(localStorage.getItem('maestro_activities')) || defaultActivities;
+        let userName = localStorage.getItem('maestro_username') || "Anto";
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('input-name').value = userName;
+            updateUI();
+        });
+
         function switchScreen(screenId, btnElement) {
-            // Hide all screens
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            // Show target screen
             document.getElementById('screen-' + screenId).classList.add('active');
 
-            // Handle nav active state if triggered via nav
             if (btnElement) {
                 document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
                 btnElement.classList.add('active');
             }
+            if(screenId === 'home' || screenId === 'schedule' || screenId === 'stats') {
+                updateUI();
+            }
         }
 
-        function updateName(val) {
-            const name = val.trim() || 'Maestro';
-            document.getElementById('display-username').innerText = name;
-            document.getElementById('alarm-msg-text').innerText = `${name}, saatnya olahraga.`;
+        function saveSettings(val) {
+            userName = val.trim() || 'Maestro';
+            localStorage.setItem('maestro_username', userName);
+            document.getElementById('display-username').innerText = userName;
+            document.getElementById('alarm-msg-text').innerText = `${userName}, saatnya beraktivitas.`;
+        }
+
+        function addNewActivity() {
+            const name = document.getElementById('add-name').value;
+            const time = document.getElementById('add-time').value;
+            const icon = document.getElementById('add-icon').value || '📌';
+            const repeat = document.getElementById('add-repeat').value;
+
+            if(!name) {
+                alert('Nama aktivitas harus diisi!');
+                return;
+            }
+
+            const newAct = {
+                id: Date.now(),
+                name: name,
+                time: time,
+                icon: icon,
+                repeat: repeat,
+                done: false
+            };
+
+            activities.push(newAct);
+            localStorage.setItem('maestro_activities', JSON.stringify(activities));
+
+            // Reset form & kembali ke home
+            document.getElementById('add-name').value = '';
+            switchScreen('home');
+            updateUI();
+        }
+
+        function toggleDone(id) {
+            activities = activities.map(act => {
+                if(act.id === id) {
+                    act.done = !act.done;
+                }
+                return act;
+            });
+            localStorage.setItem('maestro_activities', JSON.stringify(activities));
+            updateUI();
+        }
+
+        function updateUI() {
+            // Update Username
+            document.getElementById('display-username').innerText = userName;
+
+            // Sort berdasarkan waktu
+            activities.sort((a, b) => a.time.localeCompare(b.time));
+
+            let completedCount = activities.filter(a => a.done).length;
+            let totalCount = activities.length;
+            let percent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+            // Progress Bar
+            document.getElementById('progress-text').innerText = `${completedCount} dari ${totalCount} aktivitas selesai`;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            // Statistik
+            document.getElementById('stat-completed').innerText = completedCount;
+            document.getElementById('stat-total').innerText = totalCount;
+
+            // Render Dashboard (Next & Rest)
+            let nextContainer = document.getElementById('next-activity-container');
+            let listContainer = document.getElementById('activity-list-container');
+            let scheduleContainer = document.getElementById('schedule-list-container');
+
+            nextContainer.innerHTML = '';
+            listContainer.innerHTML = '';
+            scheduleContainer.innerHTML = '';
+
+            let nextFound = false;
+
+            activities.forEach((act, index) => {
+                // Render Schedule
+                scheduleContainer.innerHTML += `
+                    <div class="activity-card" onclick="toggleDone(${act.id})" style="cursor: pointer;">
+                        <div class="activity-left">
+                            <div class="activity-icon">${act.icon}</div>
+                            <div class="activity-details">
+                                <h4>${act.name}</h4>
+                                <span>${act.repeat} • ${act.done ? 'Selesai ✓' : 'Belum'}</span>
+                            </div>
+                        </div>
+                        <div class="activity-time"><div class="time">${act.time}</div></div>
+                    </div>
+                `;
+
+                // Render Dashboard
+                if(!act.done && !nextFound) {
+                    nextFound = true;
+                    nextContainer.innerHTML = `
+                        <div class="activity-card next" onclick="toggleDone(${act.id})" style="cursor: pointer;">
+                            <div class="activity-left">
+                                <div class="activity-icon">${act.icon}</div>
+                                <div class="activity-details">
+                                    <h4>${act.name}</h4>
+                                    <span>${act.repeat} • Klik untuk tandai selesai</span>
+                                </div>
+                            </div>
+                            <div class="activity-time">
+                                <div class="time">${act.time}</div>
+                                <div class="countdown">Berikutnya</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    listContainer.innerHTML += `
+                        <div class="activity-card" onclick="toggleDone(${act.id})" style="cursor: pointer;">
+                            <div class="activity-left">
+                                <div class="activity-icon">${act.icon}</div>
+                                <div class="activity-details">
+                                    <h4 style="${act.done ? 'text-decoration: line-through; color: var(--text-muted);' : ''}">${act.name}</h4>
+                                    <span>${act.done ? 'Selesai ✓' : act.repeat}</span>
+                                </div>
+                            </div>
+                            <div class="activity-time"><div class="time">${act.time}</div></div>
+                        </div>
+                    `;
+                }
+            });
+
+            if(!nextFound && totalCount > 0) {
+                nextContainer.innerHTML = `<p style="font-size: 13px; color: var(--indigo-primary); font-weight: 600; margin-bottom: 12px;">🎉 Semua aktivitas hari ini sudah selesai!</p>`;
+            }
         }
 
         function triggerAlarm() {
