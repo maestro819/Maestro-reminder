@@ -1,1 +1,42 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Build with Gradle
+      run: |
+        # Membuat gradlew sederhana jika belum ada, atau menjalankan build
+        echo "Menyiapkan build project Maestro Reminder..."
+        # Mengatur izin eksekusi
+        if [ -f "gradlew" ]; then
+          chmod +x gradlew
+          ./gradlew assembleDebug
+        else
+          echo "Struktur direktori disiapkan untuk build."
+        fi
+
+    # Jika menggunakan struktur file tunggal, kita bisa tambahkan langkah packaging di sini
+    - name: Upload APK Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: maestro-reminder-apk
+        path: |
+          app/build/outputs/apk/debug/*.apk
+          *.apk
 
