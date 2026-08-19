@@ -1,0 +1,31 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.MaestroReminder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color (Indigo/Violet) -->
+        <item name="colorPrimary">#6366f1</item>
+        <item name="colorPrimaryVariant">#4f46e5</item>
+        <item name="colorOnPrimary">#ffffff</item>
+        
+        <!-- Secondary brand color -->
+        <item name="colorSecondary">#818cf8</item>
+        <item name="colorSecondaryVariant">#6366f1</item>
+        <item name="colorOnSecondary">#ffffff</item>
+        
+        <!-- Status bar color -->
+        <item name="android:statusBarColor">#f8f9fc</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+    </style>
+
+    <!-- Tema khusus untuk Full-Screen Alarm (Deep Navy & Teks Putih) -->
+    <style name="Theme.MaestroReminder.FullScreenAlarm" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">#1e1b4b</item>
+        <item name="android:statusBarColor">#1e1b4b</item>
+        <item name="android:navigationBarColor">#1e1b4b</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.MaestroReminder.NoActionBar" parent="Theme.MaestroReminder">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoAction">true</item>
+    </style>
+</resources>
