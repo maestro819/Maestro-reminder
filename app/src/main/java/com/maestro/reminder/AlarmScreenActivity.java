@@ -1,175 +1,65 @@
 package com.maestro.reminder;
 
-import android.app.KeyguardManager;
+import android.app.NotificationManager;
 import android.content.Context;
-import android.media.AudioAttributes;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-import android.os.VibratorManager;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AlarmScreenActivity extends AppCompatActivity {
 
-    private MediaPlayer mediaPlayer;
-    private Vibrator vibrator;
+    private static final int NOTIFICATION_ID = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Tampilkan alarm di atas layar kunci.
-        Window window = getWindow();
-
+        // Ini pengganti android:showOnLockScreen / android:turnScreenOn yang
+        // dulu ditulis (salah) di AndroidManifest.xml. Sejak API 27, dua
+        // perilaku ini WAJIB diatur lewat kode, bukan atribut manifest.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
         } else {
-            window.addFlags(
+            getWindow().addFlags(
                     WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                             | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                            | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                             | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
             );
         }
 
-        window.addFlags(
-                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-        );
-
         setContentView(R.layout.activity_alarm_screen);
 
-        startVibration();
-        startAlarmSound();
-
-        Button stopButton = findViewById(R.id.stopAlarmButton);
-
-        stopButton.setOnClickListener(v -> stopAlarm());
-    }
-
-    private void startAlarmSound() {
-
-        try {
-
-            mediaPlayer = MediaPlayer.create(
-                    this,
-                    android.provider.Settings.System.DEFAULT_ALARM_ALERT_URI
-            );
-
-            if (mediaPlayer != null) {
-
-                mediaPlayer.setAudioAttributes(
-                        new AudioAttributes.Builder()
-                                .setUsage(AudioAttributes.USAGE_ALARM)
-                                .setContentType(
-                                        AudioAttributes.CONTENT_TYPE_SONIFICATION
-                                )
-                                .build()
-                );
-
-                mediaPlayer.setLooping(true);
-                mediaPlayer.start();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void startVibration() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-
-            VibratorManager vibratorManager =
-                    (VibratorManager) getSystemService(
-                            Context.VIBRATOR_MANAGER_SERVICE
-                    );
-
-            vibrator = vibratorManager.getDefaultVibrator();
-
-        } else {
-
-            vibrator = (Vibrator) getSystemService(
-                    Context.VIBRATOR_SERVICE
-            );
+        // Notifikasi full-screen sudah menjalankan tugasnya (membuka activity
+        // ini), jadi boleh langsung dibersihkan dari status bar.
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notificationManager != null) {
+            notificationManager.cancel(NOTIFICATION_ID);
         }
 
-        if (vibrator == null) {
-            return;
+        String activityName = getIntent().getStringExtra("ACTIVITY_NAME");
+        String userName = getIntent().getStringExtra("USER_NAME");
+        if (activityName == null) activityName = "Aktivitas";
+        if (userName == null) userName = "Maestro";
+
+        TextView txtAlarmActivity = findViewById(R.id.txtAlarmActivity);
+        TextView txtAlarmUser = findViewById(R.id.txtAlarmUser);
+        if (txtAlarmActivity != null) {
+            txtAlarmActivity.setText(activityName);
+        }
+        if (txtAlarmUser != null) {
+            txtAlarmUser.setText("Untuk: " + userName);
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            long[] pattern = {
-                    0,
-                    800,
-                    500,
-                    800,
-                    500
-            };
-
-            vibrator.vibrate(
-                    VibrationEffect.createWaveform(
-                            pattern,
-                            0
-                    )
-            );
-
-        } else {
-
-            long[] pattern = {
-                    0,
-                    800,
-                    500,
-                    800,
-                    500
-            };
-
-            vibrator.vibrate(pattern, 0);
+        Button btnDismiss = findViewById(R.id.btnDismissAlarm);
+        if (btnDismiss != null) {
+            btnDismiss.setOnClickListener(v -> finish());
         }
-    }
-
-    private void stopAlarm() {
-
-        if (mediaPlayer != null) {
-
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
-
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-
-        finish();
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        if (mediaPlayer != null) {
-
-            if (mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
-
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-
-        super.onDestroy();
     }
 }
