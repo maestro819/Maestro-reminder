@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Izin Sistem Android untuk Maestro Reminder -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/maestro_launcher_icon"
+        android:label="Maestro Reminder"
+        android:roundIcon="@drawable/maestro_launcher_icon"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MaestroReminder">
+
+        <!-- MainActivity langsung membuka menu Maestro tanpa splash screen -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.MaestroReminder.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!--
+            Alarm Screen Activity (tampil saat HP terkunci).
+            CATATAN: android:showOnLockScreen dan android:turnScreenOn BUKAN
+            atribut manifest yang valid -> dihapus. Perilaku "tampil di atas
+            lock screen & nyalakan layar" sekarang diatur lewat kode di
+            AlarmScreenActivity.onCreate() (setShowWhenLocked/setTurnScreenOn).
+        -->
+        <activity
+            android:name=".AlarmScreenActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.MaestroReminder.FullScreenAlarm" />
+
+        <!-- Alarm Receiver untuk menjalankan Alarm di Background -->
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.maestro.reminder.ACTION_FIRE" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>
