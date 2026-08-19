@@ -14,4 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MaestroReminder"
 include(":app")
-
