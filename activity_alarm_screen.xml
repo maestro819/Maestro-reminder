@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1e1b4b"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:gravity="space-between">
+
+    <!-- Header / Brand -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="40dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MAESTRO"
+            android:textColor="#a5b4fc"
+            android:textSize="14sp"
+            android:letterSpacing="0.2"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="easy does it"
+            android:textColor="#818cf8"
+            android:textSize="11sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- Informasi Aktivitas & Waktu -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WAKTUNYA"
+            android:textColor="#a5b4fc"
+            android:textSize="13sp"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="12px" />
+
+        <TextView
+            android:id="@+id/alarmActName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🏃 OLAHRAGA"
+            android:textColor="#ffffff"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/alarmMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anto, saatnya olahraga."
+            android:textColor="#e0e7ff"
+            android:textSize="16sp"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <!-- Tombol Aksi (Matikan & Snooze) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="30dp">
+
+        <Button
+            android:id="@+id/btnStopAlarm"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="MATIKAN"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:backgroundTint="#ef4444"
+            android:layout_marginBottom="12dp"
+            android:elevation="4dp" />
+
+        <Button
+            android:id="@+id/btnSnoozeAlarm"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Tunda 5 menit"
+            android:textColor="#ffffff"
+            android:textSize="14sp"
+            android:textStyle="semibold"
+            android:backgroundTint="#312e81"
+            android:elevation="2dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
