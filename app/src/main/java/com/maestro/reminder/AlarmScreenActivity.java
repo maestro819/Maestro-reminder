@@ -2,8 +2,15 @@ package com.maestro.reminder;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -11,75 +18,62 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class AlarmScreenActivity extends AppCompatActivity {
-
-    private static final int NOTIFICATION_ID = 1001;
+    private static final int DEFAULT_NOTIFICATION_ID = 1001;
+    private int notificationId = DEFAULT_NOTIFICATION_ID;
     private Vibrator vibrator;
+    private Ringtone ringtone;
+    private final Handler soundHandler = new Handler(Looper.getMainLooper());
+    private final Runnable replaySound = new Runnable() {
+        @Override public void run() {
+            if (ringtone != null) { if (!ringtone.isPlaying()) ringtone.play(); soundHandler.postDelayed(this, 2500L); }
+        }
+    };
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Ini pengganti android:showOnLockScreen / android:turnScreenOn yang
-        // dulu ditulis (salah) di AndroidManifest.xml. Sejak API 27, dua
-        // perilaku ini WAJIB diatur lewat kode, bukan atribut manifest.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setShowWhenLocked(true);
-            setTurnScreenOn(true);
-        } else {
-            getWindow().addFlags(
-                    WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                            | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                            | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                            | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-            );
-        }
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) { setShowWhenLocked(true); setTurnScreenOn(true); }
+        else getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.activity_alarm_screen);
-
-        // Notifikasi full-screen sudah menjalankan tugasnya (membuka activity
-        // ini), jadi boleh langsung dibersihkan dari status bar.
+        notificationId = getIntent().getIntExtra("NOTIFICATION_ID", DEFAULT_NOTIFICATION_ID);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
-            notificationManager.cancel(NOTIFICATION_ID);
-        }
+        startAlarmSound();
 
-        String activityName = getIntent().getStringExtra("ACTIVITY_NAME");
-        String userName = getIntent().getStringExtra("USER_NAME");
-        if (activityName == null) activityName = "Aktivitas";
-        if (userName == null) userName = "Maestro";
+        String name = getIntent().getStringExtra("USER_NAME"); if (name == null) name = "Maestro";
+        String activity = getIntent().getStringExtra("ACTIVITY_NAME"); if (activity == null) activity = "Aktivitas";
+        String icon = getIntent().getStringExtra("ACTIVITY_ICON"); if (icon == null) icon = "⏰";
+        String kind = getIntent().getStringExtra("KIND"); boolean sleep = Reminder.SLEEP.equals(kind);
+        TextView time = findViewById(R.id.txtAlarmTime); TextView title = findViewById(R.id.txtAlarmActivity); TextView greeting = findViewById(R.id.txtAlarmGreeting); TextView user = findViewById(R.id.txtAlarmUser);
+        time.setText(new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()));
+        title.setText(icon + "  " + activity.toUpperCase(Locale.getDefault()));
+        greeting.setText(sleep ? name + ", bangun yuk. Waktunya memulai hari." : name + ", waktunya " + activity.toLowerCase(Locale.getDefault()) + ".");
+        user.setText(sleep ? "Alarm tidur • istirahat sudah cukup" : "Jadwal aktivitas • tetap konsisten");
 
-        TextView txtAlarmActivity = findViewById(R.id.txtAlarmActivity);
-        TextView txtAlarmUser = findViewById(R.id.txtAlarmUser);
-        if (txtAlarmActivity != null) {
-            txtAlarmActivity.setText(activityName);
-        }
-        if (txtAlarmUser != null) {
-            txtAlarmUser.setText("Untuk: " + userName);
-        }
-
-        Button btnDismiss = findViewById(R.id.btnDismissAlarm);
-        if (btnDismiss != null) {
-            btnDismiss.setOnClickListener(v -> {
-                stopAlarmSignal();
-                finish();
-            });
-        }
+        Button dismiss = findViewById(R.id.btnDismissAlarm); dismiss.setOnClickListener(v -> { stopAlarmSignal(); finish(); });
+        Button snooze = findViewById(R.id.btnSnoozeAlarm); snooze.setOnClickListener(v -> { AlarmReceiver.snoozeActiveAlarm(this, 5); finish(); });
     }
 
-    @Override
-    protected void onDestroy() {
-        stopAlarmSignal();
-        super.onDestroy();
+    private void startAlarmSound() {
+        try {
+            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM); if (alarmUri == null) alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            ringtone = RingtoneManager.getRingtone(this, alarmUri);
+            if (ringtone != null) {
+                ringtone.setStreamType(AudioManager.STREAM_ALARM);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) ringtone.setAudioAttributes(new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build());
+                ringtone.play(); soundHandler.postDelayed(replaySound, 1800L);
+            }
+        } catch (Exception ignored) {}
     }
+
+    @Override protected void onDestroy() { stopAlarmSignal(); super.onDestroy(); }
 
     private void stopAlarmSignal() {
-        if (vibrator != null) vibrator.cancel();
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) notificationManager.cancel(NOTIFICATION_ID);
+        soundHandler.removeCallbacks(replaySound); if (ringtone != null) { if (ringtone.isPlaying()) ringtone.stop(); ringtone = null; }
+        if (vibrator != null) vibrator.cancel(); AlarmReceiver.stopActiveAlarm(this);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE); if (manager != null) manager.cancel(notificationId);
     }
 }
-
