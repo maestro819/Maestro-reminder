@@ -46,6 +46,8 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .putExtra("KIND", reminder.kind)
                 .putExtra("USER_NAME", ownerName)
                 .putExtra("NOTE", reminder.note)
+                .putExtra("CATEGORY", reminder.category)
+                .putExtra("ALARM_MESSAGE", alarmMessage(reminder, ownerName))
                 .putExtra("NOTIFICATION_ID", notificationId)
                 .putExtra("REMINDER_ID", id)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -53,7 +55,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(com.maestro.reminder.R.drawable.ic_alarm)
                 .setContentTitle(reminder.icon + "  " + reminder.title)
-                .setContentText(Reminder.SLEEP.equals(reminder.kind) ? ownerName + ", waktunya bangun." : ownerName + ", waktunya " + reminder.title.toLowerCase() + ".")
+                .setContentText(alarmMessage(reminder, ownerName))
                 .setPriority(NotificationCompat.PRIORITY_MAX).setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setFullScreenIntent(screenPending, true)
                 .setContentIntent(screenPending).setAutoCancel(true).setOngoing(true);
@@ -76,6 +78,27 @@ public class AlarmReceiver extends BroadcastReceiver {
         List<Reminder> items = ReminderStore.load(context);
         for (int i = 0; i < items.size(); i++) if (items.get(i).id == reminder.id) items.set(i, reminder);
         ReminderStore.save(context, items);
+    }
+
+
+    private String alarmMessage(Reminder reminder, String ownerName) {
+        String period = period(reminder.triggerAt);
+        if (Reminder.SLEEP.equals(reminder.kind)) return ownerName + ", bangun yuk. Selamat " + period + ".";
+        if (reminder.message != null && !reminder.message.trim().isEmpty()) return reminder.message.replace("{name}", ownerName);
+        String[] messages;
+        if ("HEALTH".equals(reminder.category)) messages = new String[]{"{name}, waktunya menjaga kesehatan.", "Yuk lakukan kebiasaan sehatmu sekarang."};
+        else if ("SPORT".equals(reminder.category)) messages = new String[]{"{name}, waktunya bergerak.", "Ayo olahraga sebentar agar tubuh tetap aktif."};
+        else if ("MEDICINE".equals(reminder.category)) messages = new String[]{"{name}, jangan lupa obatmu.", "Waktunya minum obat sesuai jadwal."};
+        else if ("WORK".equals(reminder.category)) messages = new String[]{"{name}, waktunya fokus pada pekerjaan.", "Satu tugas dulu, pelan-pelan yang penting selesai."};
+        else if ("STUDY".equals(reminder.category)) messages = new String[]{"{name}, waktunya belajar.", "Saatnya fokus pada pelajaranmu."};
+        else if ("WORSHIP".equals(reminder.category)) messages = new String[]{"{name}, waktunya ibadah.", "Luangkan waktu untuk menenangkan hati."};
+        else if ("MENGAJI".equals(reminder.category)) messages = new String[]{"{name}, waktunya mengaji.", "Luangkan waktu untuk membaca dan memahami Al-Qur'an."};
+        else messages = new String[]{"{name}, ada pengingat untukmu.", "Jangan sampai jadwalmu terlewat."};
+        return messages[(int)(Math.abs(reminder.id) % messages.length)].replace("{name}", ownerName);
+    }
+    private String period(long time) {
+        Calendar c=Calendar.getInstance(); c.setTimeInMillis(time); int h=c.get(Calendar.HOUR_OF_DAY);
+        if(h>=5&&h<11) return "pagi"; if(h>=11&&h<15) return "siang"; if(h>=15&&h<18) return "sore"; return "malam";
     }
 
     private Reminder copy(Reminder r) { return r; }

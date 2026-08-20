@@ -28,16 +28,16 @@ public class ReminderBridge {
             for (int i = 0; i < array.length(); i++) {
                 JSONObject obj = array.getJSONObject(i);
                 long id = obj.getLong("id"); String name = obj.optString("name", "Aktivitas"); String time = obj.optString("time", "08:00");
-                String icon = obj.optString("icon", "⏰"); String kind = obj.optString("kind", Reminder.ACTIVITY); String note = obj.optString("note", ""); String days = daysValue(obj); boolean enabled = !obj.optBoolean("done", false);
-                Reminder r = new Reminder(id, name, note, icon, kind, nextDaily(time), repeatFor(kind, days), enabled);
+                String icon = obj.optString("icon", "⏰"); String kind = obj.optString("kind", Reminder.ACTIVITY); String category = obj.optString("category", "OTHER"); String message = obj.optString("message", ""); String note = obj.optString("note", ""); String days = daysValue(obj); boolean enabled = !obj.optBoolean("done", false);
+                Reminder r = new Reminder(id, name, note, icon, kind, category, message, nextDaily(time), repeatFor(kind, days), enabled);
                 items.add(r); AlarmScheduler.cancel(context, id); if (enabled) AlarmScheduler.schedule(context, r);
             }
             ReminderStore.save(context, items);
         } catch (Exception ignored) {}
     }
 
-    @JavascriptInterface public void scheduleActivity(long id, String name, String time, String icon, String kind, String days, String note) {
-        Reminder r = new Reminder(id, name, note == null ? "" : note, icon, kind, nextDaily(time), repeatFor(kind, days), true);
+    @JavascriptInterface public void scheduleActivity(long id, String name, String time, String icon, String kind, String days, String note, String category) {
+        Reminder r = new Reminder(id, name, note == null ? "" : note, icon, kind, category, note == null ? "" : note, nextDaily(time), repeatFor(kind, days), true);
         List<Reminder> items = ReminderStore.load(context); boolean found = false;
         for (int i = 0; i < items.size(); i++) if (items.get(i).id == id) { items.set(i, r); found = true; }
         if (!found) items.add(r); ReminderStore.save(context, items); AlarmScheduler.cancel(context, id); AlarmScheduler.schedule(context, r);
