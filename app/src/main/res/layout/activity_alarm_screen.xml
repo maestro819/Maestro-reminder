@@ -13,6 +13,7 @@
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WAKTUNYA" android:textColor="#A5B4FC" android:textSize="12sp" android:letterSpacing="0.18" />
     <TextView android:id="@+id/txtAlarmActivity" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:gravity="center" android:textColor="#FFFFFF" android:textSize="28sp" android:textStyle="bold" />
     <TextView android:id="@+id/txtAlarmUser" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:gravity="center" android:textColor="#C7D2FE" android:textSize="15sp" />
+    <TextView android:id="@+id/txtAlarmMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:gravity="center" android:textColor="#E2E8F0" android:textSize="14sp" android:lineSpacingExtra="2dp" />
     <Space android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:layout_marginBottom="18dp">
         <Button android:id="@+id/btnSnoozeAlarm" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="6dp" android:text="TUNDA 5 MENIT" android:textSize="12sp" android:textColor="#FFFFFF" android:backgroundTint="#4F46E5" />
