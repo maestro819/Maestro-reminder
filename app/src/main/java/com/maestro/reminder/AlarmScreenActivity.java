@@ -2,6 +2,7 @@ package com.maestro.reminder;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +31,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -42,10 +43,12 @@ public class AlarmScreenActivity extends AppCompatActivity {
     private Ringtone ringtone;
     private final Handler soundHandler = new Handler(Looper.getMainLooper());
     private final Random random = new Random();
-    private int basePaddingLeft;
-    private int basePaddingTop;
-    private int basePaddingRight;
-    private int basePaddingBottom;
+    private FrameLayout snoozeOverlay;
+    private int baseBodyLeft;
+    private int baseBodyTop;
+    private int baseBodyRight;
+    private int baseBodyBottom;
+    private int baseSheetBottom;
 
     private final Runnable replaySound = new Runnable() {
         @Override public void run() {
@@ -62,14 +65,20 @@ public class AlarmScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarm_screen);
 
         View root = findViewById(R.id.alarmRoot);
-        applyResponsiveSafeArea(root);
-        root.post(() -> applyVercelBackground(root));
+        LinearLayout body = findViewById(R.id.alarmBody);
+        snoozeOverlay = findViewById(R.id.snoozeOverlay);
+        applyResponsiveInsets(root, body, findViewById(R.id.snoozeSheet));
+        root.post(() -> applyVercelBackground(body));
 
         notificationId = getIntent().getIntExtra("NOTIFICATION_ID", DEFAULT_NOTIFICATION_ID);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         startAlarmSound();
         startAlarmVibration();
+        bindAlarmContent();
+        bindSnoozeActions();
+    }
 
+    private void bindAlarmContent() {
         String name = valueOrDefault(getIntent().getStringExtra("USER_NAME"), "Maestro");
         String activity = valueOrDefault(getIntent().getStringExtra("ACTIVITY_NAME"), "Aktivitas");
         String icon = valueOrDefault(getIntent().getStringExtra("ACTIVITY_ICON"), "⏰");
@@ -79,43 +88,64 @@ public class AlarmScreenActivity extends AppCompatActivity {
         String alarmTime = getIntent().getStringExtra("ALARM_TIME");
         if (alarmTime == null || alarmTime.trim().isEmpty()) alarmTime = currentTime();
 
-        TextView time = findViewById(R.id.txtAlarmTime);
-        TextView title = findViewById(R.id.txtAlarmActivity);
-        TextView greeting = findViewById(R.id.txtAlarmGreeting);
-        TextView action = findViewById(R.id.txtAlarmAction);
-        TextView messageView = findViewById(R.id.txtAlarmMessage);
-
         String period = timePeriod(alarmTime);
         boolean sleep = Reminder.SLEEP.equals(kind) || "SLEEP".equalsIgnoreCase(category);
 
-        time.setText(alarmTime);
-        title.setText(icon + " " + activity.toUpperCase(Locale.getDefault()));
-        greeting.setText(sleep
+        ((TextView) findViewById(R.id.txtAlarmTime)).setText(alarmTime);
+        ((TextView) findViewById(R.id.txtAlarmActivity)).setText(icon + " " + activity.toUpperCase(Locale.getDefault()));
+        ((TextView) findViewById(R.id.txtAlarmGreeting)).setText(sleep
                 ? name + ", bangun yuk 🌅"
                 : name + ", selamat " + period + " " + periodEmoji(period));
-        action.setText(sleep
+        ((TextView) findViewById(R.id.txtAlarmAction)).setText(sleep
                 ? "Waktunya memulai hari."
                 : "Waktunya " + activity.toLowerCase(Locale.getDefault()) + ".");
-        messageView.setText(resolveMessage(message, category, name));
+        ((TextView) findViewById(R.id.txtAlarmMessage)).setText(resolveMessage(message, category, name));
 
-        Button dismiss = findViewById(R.id.btnDismissAlarm);
-        dismiss.setOnClickListener(v -> {
+        findViewById(R.id.btnDismissAlarm).setOnClickListener(v -> {
             stopAlarmSignal();
             finish();
         });
+    }
 
-        Button snooze = findViewById(R.id.btnSnoozeAlarm);
-        snooze.setOnClickListener(v -> {
-            AlarmReceiver.snoozeActiveAlarm(this, 5);
-            finish();
-        });
+    private void bindSnoozeActions() {
+        findViewById(R.id.btnSnoozeAlarm).setOnClickListener(v -> openSnoozeSheet());
+        findViewById(R.id.snoozeOverlay).setOnClickListener(v -> closeSnoozeSheet());
+        findViewById(R.id.snoozeSheet).setOnClickListener(v -> { /* Jangan tutup saat menyentuh sheet. */ });
+        findViewById(R.id.btnSnooze5).setOnClickListener(v -> applySnooze(5));
+        findViewById(R.id.btnSnooze10).setOnClickListener(v -> applySnooze(10));
+        findViewById(R.id.btnSnooze15).setOnClickListener(v -> applySnooze(15));
+        findViewById(R.id.btnSnooze30).setOnClickListener(v -> applySnooze(30));
+    }
+
+    private void openSnoozeSheet() {
+        snoozeOverlay.setVisibility(View.VISIBLE);
+        snoozeOverlay.bringToFront();
+    }
+
+    private void closeSnoozeSheet() {
+        if (snoozeOverlay != null) snoozeOverlay.setVisibility(View.GONE);
+    }
+
+    private void applySnooze(int minutes) {
+        closeSnoozeSheet();
+        AlarmReceiver.snoozeActiveAlarm(this, minutes);
+        stopAlarmSignal();
+        finish();
+    }
+
+    @Override public void onBackPressed() {
+        if (snoozeOverlay != null && snoozeOverlay.getVisibility() == View.VISIBLE) {
+            closeSnoozeSheet();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void configureAlarmWindow() {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
-        window.setNavigationBarColor(android.graphics.Color.TRANSPARENT);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        window.setNavigationBarColor(Color.TRANSPARENT);
         WindowCompat.setDecorFitsSystemWindows(window, false);
 
         WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
@@ -127,33 +157,40 @@ public class AlarmScreenActivity extends AppCompatActivity {
         }
     }
 
-    private void applyResponsiveSafeArea(@NonNull View root) {
-        basePaddingLeft = root.getPaddingLeft();
-        basePaddingTop = root.getPaddingTop();
-        basePaddingRight = root.getPaddingRight();
-        basePaddingBottom = root.getPaddingBottom();
+    private void applyResponsiveInsets(@NonNull View root, @NonNull View body, @NonNull View sheet) {
+        baseBodyLeft = body.getPaddingLeft();
+        baseBodyTop = body.getPaddingTop();
+        baseBodyRight = body.getPaddingRight();
+        baseBodyBottom = body.getPaddingBottom();
+        baseSheetBottom = sheet.getPaddingBottom();
 
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
-            view.setPadding(
-                    basePaddingLeft + bars.left,
-                    basePaddingTop + bars.top,
-                    basePaddingRight + bars.right,
-                    basePaddingBottom + bars.bottom
+            body.setPadding(
+                    baseBodyLeft + bars.left,
+                    baseBodyTop + bars.top,
+                    baseBodyRight + bars.right,
+                    baseBodyBottom + bars.bottom
+            );
+            sheet.setPadding(
+                    sheet.getPaddingLeft(),
+                    sheet.getPaddingTop(),
+                    sheet.getPaddingRight(),
+                    baseSheetBottom + bars.bottom
             );
             return insets;
         });
         ViewCompat.requestApplyInsets(root);
     }
 
-    private void applyVercelBackground(@NonNull View root) {
+    private void applyVercelBackground(@NonNull View body) {
         GradientDrawable background = new GradientDrawable();
         background.setGradientType(GradientDrawable.RADIAL_GRADIENT);
         background.setColors(new int[]{0xFF37306D, 0xFF0B1028});
         background.setGradientCenter(0.50f, 0.10f);
-        background.setGradientRadius(Math.max(root.getWidth(), root.getHeight()) * 0.95f);
-        root.setBackground(background);
+        background.setGradientRadius(Math.max(body.getWidth(), body.getHeight()) * 0.95f);
+        body.setBackground(background);
     }
 
     private String currentTime() {
@@ -166,9 +203,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
             if (hour >= 5 && hour < 11) return "pagi";
             if (hour >= 11 && hour < 15) return "siang";
             if (hour >= 15 && hour < 18) return "sore";
-        } catch (Exception ignored) {
-            // Gunakan malam sebagai fallback yang sama dengan HTML.
-        }
+        } catch (Exception ignored) {}
         return "malam";
     }
 
@@ -183,7 +218,6 @@ public class AlarmScreenActivity extends AppCompatActivity {
         if (explicitMessage != null && !explicitMessage.trim().isEmpty()) {
             return explicitMessage.replace("{name}", name);
         }
-
         String[] messages;
         if ("HEALTH".equalsIgnoreCase(category)) {
             messages = new String[]{"Jangan lupa luangkan waktu untuk tubuhmu.", "Sedikit konsisten hari ini berdampak besar untuk kesehatanmu."};
