@@ -128,38 +128,115 @@ body{
 .today-hero{
     background:linear-gradient(135deg,#6366f1,#4f46e5);
     color:#fff;
-    border-radius:22px;
-    padding:18px;
+    border-radius:24px;
+    padding:20px;
     margin-bottom:18px;
-    box-shadow:0 8px 20px rgba(99,102,241,.22);
+    box-shadow:0 10px 24px rgba(99,102,241,.28);
+    position:relative;
+    overflow:hidden;
+}
+
+.today-hero::before{
+    content:"";
+    position:absolute;
+    width:140px;
+    height:140px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    top:-60px;
+    right:-40px;
+}
+
+.today-hero::after{
+    content:"";
+    position:absolute;
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:rgba(255,255,255,.06);
+    bottom:-30px;
+    left:30px;
 }
 
 .today-hero-top{
     display:flex;
     justify-content:space-between;
     align-items:center;
+    position:relative;
+    z-index:1;
 }
 
 .today-hero small{
-    opacity:.8;
+    opacity:.85;
     font-size:11px;
+    font-weight:700;
+    letter-spacing:.4px;
 }
 
 .today-hero h3{
-    font-size:25px;
-    margin-top:3px;
+    font-size:27px;
+    margin-top:4px;
 }
 
 .hero-percent{
-    width:58px;
-    height:58px;
+    width:60px;
+    height:60px;
     border-radius:50%;
-    background:rgba(255,255,255,.15);
+    background:rgba(255,255,255,.18);
+    border:1.5px solid rgba(255,255,255,.25);
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:15px;
+    font-size:13px;
     font-weight:800;
+}
+
+.done-toggle{
+    width:100%;
+    border:1px dashed var(--border);
+    background:transparent;
+    color:var(--text-muted);
+    font-size:12px;
+    font-weight:700;
+    padding:11px;
+    border-radius:14px;
+    margin-top:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    cursor:pointer;
+}
+
+.done-toggle i{
+    font-size:10px;
+    transition:.2s;
+}
+
+.done-toggle.open i{
+    transform:rotate(180deg);
+}
+
+.tip-card{
+    display:flex;
+    gap:11px;
+    align-items:flex-start;
+    background:var(--primary-light);
+    border-radius:16px;
+    padding:14px;
+    margin-top:20px;
+}
+
+.tip-icon{
+    font-size:18px;
+    flex-shrink:0;
+}
+
+.tip-card p{
+    font-size:12px;
+    color:#4338ca;
+    line-height:1.6;
+    font-weight:600;
 }
 
 /* SECTION */
@@ -238,18 +315,29 @@ body{
 .activity-card{
     background:#fff;
     border:1px solid var(--border);
-    border-radius:17px;
+    border-top:3px solid var(--border);
+    border-radius:18px;
     padding:13px;
     min-height:130px;
     display:flex;
     flex-direction:column;
     justify-content:space-between;
-    box-shadow:0 2px 6px rgba(0,0,0,.025);
+    box-shadow:0 2px 8px rgba(30,27,75,.04);
+    transition:.15s;
+}
+
+.activity-card:active{
+    transform:scale(.98);
 }
 
 .activity-top{
     display:flex;
     justify-content:space-between;
+    align-items:center;
+}
+
+.activity-top.no-delete{
+    justify-content:flex-start;
 }
 
 .activity-icon{
@@ -264,15 +352,23 @@ body{
 }
 
 .delete-btn{
+    width:32px;
+    height:32px;
     border:0;
+    border-radius:50%;
     background:none;
     color:#cbd5e1;
     cursor:pointer;
     font-size:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
 }
 
 .delete-btn:hover{
     color:var(--red);
+    background:var(--red-light);
 }
 
 .activity-name{
@@ -304,15 +400,30 @@ body{
 
 .status-dot{
     font-size:10px;
-    font-weight:700;
+    font-weight:800;
+    padding:6px 11px;
+    border-radius:20px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:.15s;
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+}
+
+.status-dot:active{
+    transform:scale(.94);
 }
 
 .status-done{
     color:var(--green);
+    background:var(--green-light);
 }
 
 .status-pending{
     color:var(--orange);
+    background:var(--orange-light);
+    border-color:var(--orange);
 }
 
 /* PROGRESS */
@@ -366,9 +477,14 @@ body{
 }
 
 .category-option span{
-    display:block;
-    font-size:20px;
-    margin-bottom:4px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;
+    height:32px;
+    border-radius:10px;
+    font-size:16px;
+    margin:0 auto 5px;
 }
 
 .category-option small{
@@ -380,6 +496,10 @@ body{
 .category-option.selected{
     border:2px solid var(--primary);
     background:var(--primary-light);
+}
+
+.category-option:active{
+    transform:scale(.95);
 }
 
 /* FORM */
@@ -441,6 +561,10 @@ textarea.form-control{
     cursor:pointer;
 }
 
+.repeat-option.full-width{
+    grid-column:1/-1;
+}
+
 .repeat-option.selected{
     background:var(--primary-light);
     border-color:var(--primary);
@@ -469,7 +593,92 @@ textarea.form-control{
     color:#fff;
 }
 
+.month-day-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+    margin-top:9px;
+}
+
+.month-day-option{
+    text-align:center;
+    padding:8px 0;
+    border-radius:9px;
+    background:#f1f5f9;
+    font-size:10px;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.month-day-option.selected{
+    background:var(--primary);
+    color:#fff;
+}
+
 /* STATS */
+
+.stat-tabs{
+    display:flex;
+    gap:6px;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:4px;
+    margin-bottom:16px;
+}
+
+.stat-tab{
+    flex:1;
+    border:0;
+    background:none;
+    padding:9px 0;
+    border-radius:10px;
+    font-size:11px;
+    font-weight:700;
+    color:var(--text-muted);
+    cursor:pointer;
+}
+
+.stat-tab.active{
+    background:var(--primary);
+    color:#fff;
+}
+
+.stat-panel{
+    display:none;
+}
+
+.stat-panel.active{
+    display:block;
+}
+
+.heatmap-grid{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:5px;
+}
+
+.heatmap-cell{
+    aspect-ratio:1;
+    border-radius:6px;
+    background:#f1f5f9;
+}
+
+.heatmap-legend{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-top:12px;
+    font-size:10px;
+    color:var(--text-muted);
+    font-weight:600;
+}
+
+.heatmap-legend .dot{
+    width:11px;
+    height:11px;
+    border-radius:3px;
+}
 
 .stat-grid{
     display:grid;
@@ -565,14 +774,23 @@ textarea.form-control{
     font-size:9px;
     font-weight:600;
     cursor:pointer;
+    padding:6px 14px;
+    border-radius:14px;
+    transition:.18s;
 }
 
 .nav-item i{
     font-size:17px;
+    transition:.18s;
 }
 
 .nav-item.active{
     color:var(--primary);
+    background:var(--primary-light);
+}
+
+.nav-item:active{
+    transform:scale(.92);
 }
 
 /* FAB */
@@ -590,6 +808,18 @@ textarea.form-control{
     font-size:20px;
     box-shadow:0 7px 18px rgba(99,102,241,.4);
     z-index:21;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    padding:0;
+    line-height:1;
+    transition:.15s;
+}
+
+.fab-btn:active{
+    transform:scale(.9);
+    box-shadow:0 4px 10px rgba(99,102,241,.35);
 }
 
 /* ALARM */
@@ -825,7 +1055,7 @@ textarea.form-control{
             <h1>MAESTRO</h1>
             <span>easy does it</span>
         </div>
-        <div class="user-badge" id="display-username">Anto</div>
+
     </div>
 
     <div class="greeting-section">
@@ -839,15 +1069,39 @@ textarea.form-control{
                 <small>PROGRESS HARI INI</small>
                 <h3 id="hero-progress">0%</h3>
             </div>
-            <div class="hero-percent" id="hero-percent">0%</div>
+            <div class="hero-percent" id="hero-percent">0/0</div>
         </div>
     </div>
 
     <div class="section-title">Berikutnya</div>
     <div id="next-activity-container"></div>
 
-    <div class="section-title">Aktivitas Hari Ini</div>
+    <div class="section-title" id="today-activities-title">Aktivitas Hari Ini</div>
     <div id="activity-list-container" class="activity-grid"></div>
+
+    <div id="done-section" style="display:none;">
+
+        <button
+            class="done-toggle"
+            id="done-toggle"
+            onclick="toggleDoneSection()"
+        >
+            <span id="done-toggle-label">✓ 0 selesai</span>
+            <i class="fa-solid fa-chevron-down" id="done-toggle-icon"></i>
+        </button>
+
+        <div
+            id="done-list-container"
+            class="activity-grid"
+            style="display:none;margin-top:10px;"
+        ></div>
+
+    </div>
+
+    <div class="tip-card" id="tip-card">
+        <div class="tip-icon">💡</div>
+        <p id="tip-text"></p>
+    </div>
 
 </div>
 
@@ -861,7 +1115,6 @@ textarea.form-control{
             <h1>MAESTRO</h1>
             <span>easy does it</span>
         </div>
-        <div class="user-badge">Jadwal</div>
     </div>
 
     <div class="greeting-section">
@@ -883,7 +1136,7 @@ textarea.form-control{
             <h1>MAESTRO</h1>
             <span>easy does it</span>
         </div>
-        <div class="user-badge">Statistik</div>
+        <div class="user-badge">Performa</div>
     </div>
 
     <div class="greeting-section">
@@ -891,38 +1144,82 @@ textarea.form-control{
         <p>Bukan soal sempurna, tapi soal konsisten.</p>
     </div>
 
-    <div class="stat-grid">
+    <div class="stat-tabs">
+        <button class="stat-tab active" data-stat-tab="harian" onclick="switchStatTab('harian')">Harian</button>
+        <button class="stat-tab" data-stat-tab="mingguan" onclick="switchStatTab('mingguan')">Mingguan</button>
+        <button class="stat-tab" data-stat-tab="bulanan" onclick="switchStatTab('bulanan')">Bulanan</button>
+    </div>
 
-        <div class="stat-box">
-            <strong id="stat-completed">0</strong>
-            <span>Selesai</span>
-        </div>
+    <div class="stat-panel active" id="stat-panel-harian">
 
-        <div class="stat-box">
-            <strong id="stat-missed">0</strong>
-            <span>Terlewat</span>
-        </div>
+        <div class="stat-grid">
 
-        <div class="stat-box">
-            <strong id="stat-snoozed">0</strong>
-            <span>Ditunda</span>
+            <div class="stat-box">
+                <strong id="stat-completed">0</strong>
+                <span>Selesai</span>
+            </div>
+
+            <div class="stat-box">
+                <strong id="stat-missed">0</strong>
+                <span>Terlewat</span>
+            </div>
+
+            <div class="stat-box">
+                <strong id="stat-snoozed">0</strong>
+                <span>Ditunda</span>
+            </div>
+
         </div>
 
     </div>
 
-    <div class="section-title">Konsistensi 7 Hari</div>
+    <div class="stat-panel" id="stat-panel-mingguan">
 
-    <div class="progress-card" id="seven-day-history"></div>
+        <div class="section-title" style="margin-top:0;">Performa 7 Hari</div>
 
-    <div class="progress-card">
-        <h3 style="font-size:15px;margin-bottom:5px;">
-            🔥 Konsistensi
-        </h3>
+        <div class="progress-card" id="seven-day-history"></div>
 
-        <p id="consistency-text"
-           style="font-size:12px;color:var(--text-muted);line-height:1.5;">
-            Belum cukup data.
-        </p>
+        <div class="progress-card">
+            <h3 style="font-size:15px;margin-bottom:5px;">
+                🔥 Konsistensi
+            </h3>
+
+            <p id="consistency-text"
+               style="font-size:12px;color:var(--text-muted);line-height:1.5;">
+                Belum cukup data.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="stat-panel" id="stat-panel-bulanan">
+
+        <div class="progress-card">
+
+            <div class="heatmap-grid" id="monthly-heatmap"></div>
+
+            <div class="heatmap-legend">
+                <span>Sedikit</span>
+                <div class="dot" style="background:#f1f5f9;"></div>
+                <div class="dot" style="background:var(--orange-light);"></div>
+                <div class="dot" style="background:var(--green-light);"></div>
+                <div class="dot" style="background:var(--green);"></div>
+                <span>Konsisten</span>
+            </div>
+
+        </div>
+
+        <div class="progress-card">
+            <h3 style="font-size:15px;margin-bottom:5px;">
+                📅 Ringkasan Bulan Ini
+            </h3>
+
+            <p id="monthly-summary-text"
+               style="font-size:12px;color:var(--text-muted);line-height:1.5;">
+                Belum cukup data.
+            </p>
+        </div>
+
     </div>
 
 </div>
@@ -1089,11 +1386,38 @@ textarea.form-control{
 
             <div
                 class="category-option"
-                data-category="GENERAL"
+                data-category="STUDY"
+                onclick="selectCategory(this)"
+            >
+                <span>📚</span>
+                <small>Belajar</small>
+            </div>
+
+            <div
+                class="category-option"
+                data-category="WORSHIP"
+                onclick="selectCategory(this)"
+            >
+                <span>🕌</span>
+                <small>Ibadah</small>
+            </div>
+
+            <div
+                class="category-option"
+                data-category="MENGAJI"
+                onclick="selectCategory(this)"
+            >
+                <span>📖</span>
+                <small>Mengaji</small>
+            </div>
+
+            <div
+                class="category-option"
+                data-category="OTHER"
                 onclick="selectCategory(this)"
             >
                 <span>📌</span>
-                <small>Umum</small>
+                <small>Lainnya</small>
             </div>
 
         </div>
@@ -1167,7 +1491,7 @@ textarea.form-control{
                 data-repeat="CUSTOM"
                 onclick="selectRepeat(this)"
             >
-                Hari tertentu
+                Mingguan (pilih hari)
             </div>
 
             <div
@@ -1176,6 +1500,14 @@ textarea.form-control{
                 onclick="selectRepeat(this)"
             >
                 Sekali saja
+            </div>
+
+            <div
+                class="repeat-option full-width"
+                data-repeat="MONTHLY"
+                onclick="selectRepeat(this)"
+            >
+                Bulanan (tanggal tertentu)
             </div>
 
         </div>
@@ -1202,6 +1534,19 @@ textarea.form-control{
                 <div class="day-option" data-day="7">Sab</div>
 
             </div>
+
+        </div>
+
+        <div
+            id="custom-month-day"
+            style="display:none;"
+        >
+
+            <p style="font-size:11px;color:var(--text-muted);margin-top:9px;margin-bottom:6px;">
+                Pilih tanggal (1–31)
+            </p>
+
+            <div class="month-day-grid" id="month-day-grid"></div>
 
         </div>
 
@@ -1363,6 +1708,7 @@ textarea.form-control{
 
 <button
     class="fab-btn"
+    style="display:none;"
     onclick="openAddScreen()"
 >
     <i class="fa-solid fa-plus"></i>
@@ -1530,6 +1876,7 @@ let selectedTime=deviceTime();
 let currentAlarmId=null;
 
 let selectedCategory="HEALTH";
+let selectedCategoryLabel="Kesehatan";
 
 let selectedRepeat="DAILY";
 
@@ -1572,10 +1919,30 @@ const categoryMessages={
         "Istirahat yang cukup supaya besok lebih siap."
     ],
 
+    STUDY:[
+        "{name}, waktunya belajar 📚",
+        "Satu halaman dulu. Ilmu kecil hari ini tetap berarti.",
+        "Saatnya fokus pada pelajaranmu."
+    ],
+    WORSHIP:[
+        "{name}, waktunya ibadah 🤲",
+        "Luangkan sejenak untuk mendekat dan menenangkan hati.",
+        "Saatnya menunaikan jadwal ibadahmu."
+    ],
+    MENGAJI:[
+        "{name}, waktunya mengaji 📖",
+        "Luangkan waktu untuk membaca dan memahami Al-Qur'an.",
+        "Saatnya menenangkan hati dengan mengaji."
+    ],
+    OTHER:[
+        "{name}, ada pengingat untukmu 📌",
+        "Jangan sampai jadwalmu terlewat.",
+        "Yuk selesaikan hal kecil yang sudah kamu rencanakan."
+    ],
     GENERAL:[
-        "{name}, waktunya melakukan sesuatu 📌",
-        "Pengingat untukmu. Jangan sampai terlewat.",
-        "Yuk selesaikan yang sudah kamu jadwalkan."
+        "{name}, ada pengingat untukmu 📌",
+        "Jangan sampai jadwalmu terlewat.",
+        "Yuk selesaikan hal kecil yang sudah kamu rencanakan."
     ]
 
 };
@@ -1614,6 +1981,10 @@ document.addEventListener("DOMContentLoaded",()=>{
     updateDate();
 
     updateUI();
+
+    initMonthDayGrid();
+
+    initCategoryColors();
 
     refreshPermissionPanel();
 
@@ -1661,6 +2032,8 @@ function switchScreen(screenId,btnElement){
     }
 
     updateUI();
+    const fab=document.querySelector(".fab-btn");
+    if(fab) fab.style.display=screenId==="schedule" ? "flex" : "none";
 }
 
 
@@ -1732,9 +2105,8 @@ function saveSettings(val){
         userName
     );
 
-    document.getElementById(
-        "display-username"
-    ).innerText=userName;
+    const nameBadge=document.getElementById("display-username");
+    if(nameBadge) nameBadge.innerText=userName;
 
     if(window.AndroidBridge)
         AndroidBridge.setUserName(userName);
@@ -1769,6 +2141,10 @@ function selectCategory(el){
         WORK:"💼",
         MEDICINE:"💊",
         SLEEP:"😴",
+        STUDY:"📚",
+        WORSHIP:"🕌",
+        MENGAJI:"📖",
+        OTHER:"📌",
         GENERAL:"📌"
     };
 
@@ -1804,6 +2180,81 @@ function selectRepeat(el){
         selectedRepeat==="CUSTOM"
         ?"block"
         :"none";
+
+    document.getElementById(
+        "custom-month-day"
+    ).style.display=
+        selectedRepeat==="MONTHLY"
+        ?"block"
+        :"none";
+
+}
+
+
+/* =========================================================
+   MONTHLY DAY PICKER
+========================================================= */
+
+function initMonthDayGrid(){
+
+    const container=
+        document.getElementById(
+            "month-day-grid"
+        );
+
+    if(!container || container.childElementCount)
+        return;
+
+    let html="";
+
+    for(let d=1;d<=31;d++){
+
+        html+=`
+            <div
+                class="month-day-option"
+                data-day="${d}"
+                onclick="selectMonthDay(this)"
+            >
+                ${d}
+            </div>
+        `;
+
+    }
+
+    container.innerHTML=html;
+
+}
+
+
+function selectMonthDay(el){
+
+    document
+        .querySelectorAll(".month-day-option")
+        .forEach(x=>x.classList.remove("selected"));
+
+    el.classList.add("selected");
+
+}
+
+
+/* =========================================================
+   CATEGORY COLORS IN FORM
+========================================================= */
+
+function initCategoryColors(){
+
+    document.querySelectorAll(".category-option").forEach(el=>{
+
+        const c=
+            categoryColor(el.dataset.category);
+
+        const span=
+            el.querySelector("span");
+
+        if(span)
+            span.style.background=c.bg;
+
+    });
 
 }
 
@@ -1864,10 +2315,26 @@ function addNewActivity(){
             document.querySelectorAll(".day-option.selected")
         ).map(x=>Number(x.dataset.day));
 
+    const monthDayEl=
+        document.querySelector(".month-day-option.selected");
+
+    const dayOfMonth=
+        monthDayEl
+        ?Number(monthDayEl.dataset.day)
+        :null;
+
 
     if(!name){
 
         alert("Nama pengingat harus diisi.");
+
+        return;
+
+    }
+
+    if(repeat==="MONTHLY" && !dayOfMonth){
+
+        alert("Pilih tanggal untuk pengingat bulanan.");
 
         return;
 
@@ -1909,6 +2376,8 @@ function addNewActivity(){
         repeat:repeat,
 
         days:days,
+
+        dayOfMonth:dayOfMonth,
 
         message:message,
 
@@ -1963,7 +2432,8 @@ function addNewActivity(){
             newAct.icon,
             newAct.kind,
             newAct.days.join(","),
-            newAct.message || ""
+            newAct.message || "",
+            newAct.category || "OTHER"
         );
 
     }
@@ -2028,6 +2498,12 @@ function resetAddForm(){
         .forEach(x=>x.classList.remove("selected"));
 
     document.getElementById("custom-days")
+        .style.display="none";
+
+    document.querySelectorAll(".month-day-option")
+        .forEach(x=>x.classList.remove("selected"));
+
+    document.getElementById("custom-month-day")
         .style.display="none";
 
     document.getElementById("message-mode")
@@ -2328,16 +2804,17 @@ function triggerRealAlarm(act){
 }
 
 
+function timePeriod(time){
+    const hour=Number(String(time||"00:00").split(":")[0]);
+    if(hour>=5 && hour<11) return "pagi";
+    if(hour>=11 && hour<15) return "siang";
+    if(hour>=15 && hour<18) return "sore";
+    return "malam";
+}
 function generateGreeting(act){
-
-    if(act.category==="SLEEP"){
-
-        return `${userName}, bangun yuk. Waktunya memulai hari.`;
-
-    }
-
-    return `${userName}, waktunya ${act.name.toLowerCase()}.`;
-
+    const period=timePeriod(act.time);
+    if(act.category==="SLEEP") return `${userName}, bangun yuk. Selamat ${period}, waktunya memulai hari.`;
+    return `${userName}, selamat ${period}. Waktunya ${act.name.toLowerCase()}.`;
 }
 
 
@@ -2590,9 +3067,8 @@ function saveActivities(){
 
 function updateUI(){
 
-    document.getElementById(
-        "display-username"
-    ).innerText=userName;
+    const nameBadge=document.getElementById("display-username");
+    if(nameBadge) nameBadge.innerText=userName;
 
     updateDate();
 
@@ -2627,7 +3103,7 @@ function updateUI(){
     document.getElementById(
         "hero-percent"
     ).innerText=
-        percent+"%";
+        completed+"/"+total;
 
 
     renderNextActivity();
@@ -2638,12 +3114,49 @@ function updateUI(){
 
     renderStats();
 
+    renderDailyTip();
+
 }
 
 
 /* =========================================================
    NEXT
 ========================================================= */
+
+/* =========================================================
+   DAILY TIP
+========================================================= */
+
+function renderDailyTip(){
+
+    const el=
+        document.getElementById(
+            "tip-text"
+        );
+
+    if(!el)
+        return;
+
+    const tips=[
+        "Konsisten kecil tiap hari lebih berarti daripada sempurna sesekali.",
+        "Kalau kelewat satu hari, bukan berarti gagal — lanjut lagi besok.",
+        "Pengingat ini cuma alat bantu. Kamu yang pegang kendali.",
+        "Selesai satu per satu, easy does it — nggak perlu buru-buru.",
+        "Rayakan progres kecil. Itu tetap progres.",
+        "Istirahat yang cukup juga bagian dari konsisten, bukan malas.",
+        "Coba tandai selesai begitu kamu beres — biar nggak numpuk di kepala."
+    ];
+
+    const dayIndex=
+        Math.floor(
+            Date.now()/86400000
+        ) % tips.length;
+
+    el.innerText=
+        tips[dayIndex];
+
+}
+
 
 function renderNextActivity(){
 
@@ -2700,7 +3213,7 @@ function renderNextActivity(){
         <div class="next-card"
              onclick="toggleDone(${next.id})">
 
-            <div class="next-icon">
+            <div class="next-icon" style="background:${categoryColor(next.category).bg};">
                 ${next.icon}
             </div>
 
@@ -2740,17 +3253,126 @@ function renderHomeActivities(){
             "activity-list-container"
         );
 
-    container.innerHTML="";
-
-
-    activities.forEach(act=>{
-
-        container.innerHTML+=activityCard(
-            act,
-            true
+    const doneSection=
+        document.getElementById(
+            "done-section"
         );
 
-    });
+    const doneContainer=
+        document.getElementById(
+            "done-list-container"
+        );
+
+
+    const next=
+        activities.find(
+            a=>!a.done
+        );
+
+    const pending=
+        activities.filter(
+            a=>!a.done && a.id!==(next && next.id)
+        );
+
+    const done=
+        activities.filter(
+            a=>a.done
+        );
+
+
+    const title=
+        document.getElementById(
+            "today-activities-title"
+        );
+
+    container.innerHTML="";
+
+    if(!pending.length){
+
+        title.style.display="none";
+
+        container.style.display="none";
+
+    }else{
+
+        title.style.display="block";
+
+        container.style.display="grid";
+
+        pending.forEach(act=>{
+
+            container.innerHTML+=activityCard(
+                act,
+                true
+            );
+
+        });
+
+    }
+
+
+    if(done.length){
+
+        doneSection.style.display="block";
+
+        document.getElementById(
+            "done-toggle-label"
+        ).innerText=`✓ ${done.length} selesai`;
+
+        doneContainer.innerHTML="";
+
+        done.forEach(act=>{
+
+            doneContainer.innerHTML+=activityCard(
+                act,
+                true
+            );
+
+        });
+
+    }else{
+
+        doneSection.style.display="none";
+
+        doneContainer.style.display="none";
+
+        document.getElementById(
+            "done-toggle"
+        ).classList.remove("open");
+
+    }
+
+}
+
+
+/* =========================================================
+   DONE SECTION TOGGLE
+========================================================= */
+
+function toggleDoneSection(){
+
+    const list=
+        document.getElementById(
+            "done-list-container"
+        );
+
+    const btn=
+        document.getElementById(
+            "done-toggle"
+        );
+
+    const open=
+        list.style.display==="none";
+
+    list.style.display=
+        open
+        ?"grid"
+        :"none";
+
+    btn.classList.toggle(
+        "open",
+        open
+    );
 
 }
 
@@ -2773,8 +3395,10 @@ function renderSchedule(){
 
         container.innerHTML=`
             <div class="progress-card"
-                 style="grid-column:1/-1;text-align:center;">
-                Belum ada jadwal.
+                 style="grid-column:1/-1;text-align:center;padding:24px 16px;">
+                <div style="font-size:28px;margin-bottom:8px;">🗓️</div>
+                <p style="font-size:13px;font-weight:700;margin-bottom:4px;">Belum ada pengingat</p>
+                <p style="font-size:11px;color:var(--text-muted);">Tekan tombol + di kanan bawah untuk mulai.</p>
             </div>
         `;
 
@@ -2797,25 +3421,33 @@ function renderSchedule(){
 
 function activityCard(act,home){
 
-    return `
-        <div class="activity-card">
+    const c=categoryColor(act.category);
 
-            <div class="activity-top">
+    return `
+        <div class="activity-card" style="border-top-color:${c.fg};">
+
+            <div class="activity-top${home?' no-delete':''}">
 
                 <div
                     class="activity-icon"
                     onclick="toggleDone(${act.id})"
-                    style="cursor:pointer;"
+                    style="cursor:pointer;background:${c.bg};"
                 >
                     ${act.icon}
                 </div>
 
-                <button
-                    class="delete-btn"
-                    onclick="return deleteActivity(${act.id},event)"
-                >
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
+                ${
+                    home
+                    ?""
+                    :`
+                    <button
+                        class="delete-btn"
+                        onclick="return deleteActivity(${act.id},event)"
+                    >
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                    `
+                }
 
             </div>
 
@@ -2838,16 +3470,19 @@ function activityCard(act,home){
                     ${act.time}
                 </span>
 
-                <span class="status-dot ${
-                    act.done
-                    ?"status-done"
-                    :"status-pending"
-                }">
+                <span
+                    class="status-dot ${
+                        act.done
+                        ?"status-done"
+                        :"status-pending"
+                    }"
+                    onclick="toggleDone(${act.id})"
+                >
 
                     ${
                         act.done
                         ?"✓ Selesai"
-                        :"Belum"
+                        :"○ Tandai Selesai"
                     }
 
                 </span>
@@ -2922,6 +3557,176 @@ function renderStats(){
 
 
     renderSevenDays();
+
+    renderMonthlyHeatmap();
+
+}
+
+
+/* =========================================================
+   STAT TABS
+========================================================= */
+
+function switchStatTab(tab){
+
+    document.querySelectorAll(".stat-tab")
+        .forEach(x=>x.classList.remove("active"));
+
+    document.querySelector(
+        `.stat-tab[data-stat-tab="${tab}"]`
+    ).classList.add("active");
+
+    document.querySelectorAll(".stat-panel")
+        .forEach(x=>x.classList.remove("active"));
+
+    document.getElementById(
+        `stat-panel-${tab}`
+    ).classList.add("active");
+
+}
+
+
+/* =========================================================
+   MONTHLY HEATMAP (30 DAYS)
+========================================================= */
+
+function renderMonthlyHeatmap(){
+
+    const container=
+        document.getElementById(
+            "monthly-heatmap"
+        );
+
+    if(!container)
+        return;
+
+    const history=
+        getHistory();
+
+    let html="";
+
+    let totalPercent=0;
+
+    let countedDays=0;
+
+    let bestDayPercent=0;
+
+
+    for(let i=29;i>=0;i--){
+
+        const date=
+            new Date();
+
+        date.setDate(
+            date.getDate()-i
+        );
+
+        const key=
+            date.toISOString().slice(0,10);
+
+        const day=
+            history[key] || {};
+
+
+        let done=0;
+        let total=0;
+
+        Object.values(day).forEach(item=>{
+
+            done+=item.done||0;
+
+            total+=
+                (item.done||0)
+                +(item.missed||0);
+
+        });
+
+
+        let percent=
+            total
+            ?Math.round(done/total*100)
+            :0;
+
+
+        if(key===todayKey()){
+
+            const todayDone=
+                activities.filter(
+                    a=>a.done
+                ).length;
+
+            if(activities.length){
+
+                percent=
+                    Math.round(
+                        todayDone/
+                        activities.length*
+                        100
+                    );
+
+                total=activities.length;
+
+            }
+
+        }
+
+
+        if(total || key===todayKey()){
+
+            totalPercent+=percent;
+
+            countedDays++;
+
+            bestDayPercent=
+                Math.max(
+                    bestDayPercent,
+                    percent
+                );
+
+        }
+
+
+        let color="#f1f5f9";
+
+        if(total){
+
+            if(percent>=90)
+                color="var(--green)";
+            else if(percent>=50)
+                color="var(--green-light)";
+            else
+                color="var(--orange-light)";
+
+        }
+
+
+        html+=`
+            <div
+                class="heatmap-cell"
+                style="background:${color};"
+                title="${date.toLocaleDateString("id-ID")}: ${percent}%"
+            ></div>
+        `;
+
+    }
+
+
+    container.innerHTML=html;
+
+
+    const average=
+        countedDays
+        ?Math.round(totalPercent/countedDays)
+        :0;
+
+
+    document.getElementById(
+        "monthly-summary-text"
+    ).innerText=
+
+        average
+        ?`Konsistensimu rata-rata ${average}% dalam 30 hari terakhir, dengan hari terbaik mencapai ${bestDayPercent}%.`
+        :"Mulai selesaikan pengingatmu untuk melihat rekap bulanan.";
 
 }
 
@@ -3082,17 +3887,44 @@ function categoryName(category){
 
         SPORT:"🏃 Olahraga",
 
-        WORK:"💼 Kerja",
-
+                WORK:"💼 Kerja",
         MEDICINE:"💊 Obat",
-
+        STUDY:"📚 Belajar",
+        WORSHIP:"🕌 Ibadah",
+        MENGAJI:"📖 Mengaji",
         SLEEP:"😴 Tidur",
-
-        GENERAL:"📌 Umum"
+        OTHER:"📌 Lainnya",
+        GENERAL:"📌 Lainnya"
 
     };
 
     return names[category] || "📌 Umum";
+
+}
+
+
+/* =========================================================
+   CATEGORY COLOR
+========================================================= */
+
+function categoryColor(category){
+
+    const colors={
+
+        HEALTH:{bg:"#dbeafe",fg:"#2563eb"},
+        SPORT:{bg:"#dcfce7",fg:"#16a34a"},
+        WORK:{bg:"#ede9fe",fg:"#7c3aed"},
+        MEDICINE:{bg:"#fee2e2",fg:"#dc2626"},
+        STUDY:{bg:"#fef3c7",fg:"#d97706"},
+        WORSHIP:{bg:"#ccfbf1",fg:"#0d9488"},
+        MENGAJI:{bg:"#fce7f3",fg:"#db2777"},
+        SLEEP:{bg:"#e0e7ff",fg:"#4f46e5"},
+        OTHER:{bg:"#f1f5f9",fg:"#64748b"},
+        GENERAL:{bg:"#f1f5f9",fg:"#64748b"}
+
+    };
+
+    return colors[category] || colors.OTHER;
 
 }
 
@@ -3131,6 +3963,15 @@ function repeatLabel(act){
         return act.days
             .map(x=>names[x])
             .join(", ");
+
+    }
+
+    if(
+        act.repeat==="MONTHLY" &&
+        act.dayOfMonth
+    ){
+
+        return `Tanggal ${act.dayOfMonth} tiap bulan`;
 
     }
 
