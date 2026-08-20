@@ -526,6 +526,44 @@ body{
     font-size:13px;
 }
 
+.form-control.field-error{
+    border:2px solid var(--red);
+    background:var(--red-light);
+    animation:field-shake .22s linear 2;
+}
+
+@keyframes field-shake{
+    25%{transform:translateX(-4px)}
+    75%{transform:translateX(4px)}
+}
+
+/* Pada HP, frame mengisi seluruh viewport. Bingkai hanya dipakai pada desktop. */
+@media (min-width:423px) and (hover:hover) and (pointer:fine){
+    .phone-frame{
+        height:85vh;
+        max-height:892px;
+        border-radius:40px;
+        border:10px solid #1e1b4b;
+        box-shadow:0 20px 50px rgba(0,0,0,.15);
+    }
+}
+
+@media (max-width:700px), (hover:none) and (pointer:coarse){
+    body{
+        align-items:stretch;
+        background:var(--bg-main);
+    }
+    .phone-frame{
+        width:100%;
+        max-width:none;
+        height:100vh;
+        height:100dvh;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+    }
+}
+
 textarea.form-control{
     resize:none;
 }
@@ -1325,20 +1363,6 @@ textarea.form-control{
 
     <div class="form-group">
 
-        <label>Apa yang ingin diingatkan?</label>
-
-        <input
-            type="text"
-            id="add-name"
-            class="form-control"
-            placeholder="Contoh: Minum air"
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
         <label>Kategori</label>
 
         <div class="category-grid">
@@ -1429,6 +1453,21 @@ textarea.form-control{
         <input type="hidden" id="add-category" value="HEALTH">
 
     </div>
+
+
+    <div class="form-group">
+
+        <label>Apa yang ingin diingatkan?</label>
+
+        <input
+            type="text"
+            id="add-name"
+            class="form-control"
+            placeholder="Contoh: Minum air"
+        >
+
+    </div>
+
 
 
     <div class="form-group">
@@ -2328,9 +2367,19 @@ function addNewActivity(){
         :null;
 
 
+    const nameField=document.getElementById("add-name");
+
+    nameField.classList.remove("field-error");
+
     if(!name){
 
-        alert("Nama pengingat harus diisi.");
+        nameField.classList.add("field-error");
+
+        nameField.scrollIntoView({behavior:"smooth",block:"center"});
+
+        setTimeout(()=>{
+            nameField.focus({preventScroll:true});
+        },220);
 
         return;
 
@@ -2346,7 +2395,10 @@ function addNewActivity(){
 
     if(!time){
 
-        alert("Jam alarm harus dipilih.");
+        const timeField=document.getElementById("add-time-button");
+        timeField.classList.add("field-error");
+        timeField.scrollIntoView({behavior:"smooth",block:"center"});
+        setTimeout(()=>timeField.focus({preventScroll:true}),220);
 
         return;
 
