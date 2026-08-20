@@ -1,150 +1,268 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/alarmRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:background="#0B1028"
-    android:paddingStart="22dp"
-    android:paddingTop="42dp"
-    android:paddingEnd="22dp"
-    android:paddingBottom="28dp">
+    android:background="#0B1028">
 
     <LinearLayout
-        android:id="@+id/alarmContent"
+        android:id="@+id/alarmBody"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:background="#0B1028"
+        android:paddingStart="22dp"
+        android:paddingTop="42dp"
+        android:paddingEnd="22dp"
+        android:paddingBottom="28dp">
 
-        <View
-            android:id="@+id/alarmPulse"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
-            android:background="@drawable/alarm_pulse" />
+        <LinearLayout
+            android:id="@+id/alarmContent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/txtAlarmBrand"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="MAESTRO REMINDER"
-            android:textColor="#A5B4FC"
-            android:textSize="13sp"
-            android:letterSpacing="0.23"
-            android:fontFamily="sans"
-            android:textStyle="bold" />
+            <View
+                android:id="@+id/alarmPulse"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:background="@drawable/alarm_pulse" />
 
-        <TextView
-            android:id="@+id/txtAlarmGreeting"
+            <TextView
+                android:id="@+id/txtAlarmBrand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="MAESTRO REMINDER"
+                android:textColor="#A5B4FC"
+                android:textSize="13sp"
+                android:letterSpacing="0.23"
+                android:fontFamily="sans"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtAlarmGreeting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:gravity="center"
+                android:textColor="#E0E7FF"
+                android:textSize="18sp"
+                android:fontFamily="sans"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtAlarmAction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:textColor="#A5B4FC"
+                android:textSize="15sp"
+                android:fontFamily="sans" />
+
+            <TextView
+                android:id="@+id/txtAlarmTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="65sp"
+                android:fontFamily="sans"
+                android:textStyle="bold"
+                android:includeFontPadding="false" />
+
+            <TextView
+                android:id="@+id/txtAlarmActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="26sp"
+                android:fontFamily="sans"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtAlarmMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center"
+                android:textColor="#C7D2FE"
+                android:textSize="14sp"
+                android:lineSpacingExtra="2dp"
+                android:fontFamily="sans" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/alarmActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:orientation="horizontal"
             android:gravity="center"
-            android:textColor="#E0E7FF"
-            android:textSize="18sp"
-            android:fontFamily="sans"
-            android:textStyle="bold" />
+            android:layout_marginTop="24dp">
 
-        <TextView
-            android:id="@+id/txtAlarmAction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:gravity="center"
-            android:textColor="#A5B4FC"
-            android:textSize="15sp"
-            android:fontFamily="sans" />
+            <Button
+                android:id="@+id/btnSnoozeAlarm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_marginEnd="4dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="⏰ TUNDA"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans"
+                android:textStyle="bold"
+                android:background="@drawable/alarm_snooze_button"
+                android:stateListAnimator="@null" />
 
-        <TextView
-            android:id="@+id/txtAlarmTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:textSize="65sp"
-            android:fontFamily="sans"
-            android:textStyle="bold"
-            android:includeFontPadding="false" />
+            <Button
+                android:id="@+id/btnDismissAlarm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:layout_marginStart="4dp"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:paddingTop="14dp"
+                android:paddingBottom="14dp"
+                android:text="MATIKAN"
+                android:textAllCaps="false"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans"
+                android:textStyle="bold"
+                android:background="@drawable/alarm_stop_button"
+                android:stateListAnimator="@null" />
 
-        <TextView
-            android:id="@+id/txtAlarmActivity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:textColor="#FFFFFF"
-            android:textSize="26sp"
-            android:fontFamily="sans"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtAlarmMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:textColor="#C7D2FE"
-            android:textSize="14sp"
-            android:lineSpacingExtra="2dp"
-            android:fontFamily="sans" />
+        </LinearLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/alarmActions"
+    <FrameLayout
+        android:id="@+id/snoozeOverlay"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="24dp">
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="#8C0F172A">
 
-        <Button
-            android:id="@+id/btnSnoozeAlarm"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:id="@+id/snoozeSheet"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_marginEnd="4dp"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:text="⏰ TUNDA"
-            android:textAllCaps="false"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF"
-            android:fontFamily="sans"
-            android:textStyle="bold"
-            android:background="@drawable/alarm_snooze_button"
-            android:stateListAnimator="@null" />
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:paddingStart="20dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/snooze_sheet_background">
 
-        <Button
-            android:id="@+id/btnDismissAlarm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:layout_marginStart="4dp"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp"
-            android:text="MATIKAN"
-            android:textAllCaps="false"
-            android:textSize="12sp"
-            android:textColor="#FFFFFF"
-            android:fontFamily="sans"
-            android:textStyle="bold"
-            android:background="@drawable/alarm_stop_button"
-            android:stateListAnimator="@null" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="⏰ Tunda pengingat"
+                android:textColor="#1E1B4B"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="sans"
+                android:layout_marginBottom="14dp" />
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-</LinearLayout>
+                <Button
+                    android:id="@+id/btnSnooze5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="5 menit"
+                    android:textAllCaps="false"
+                    android:textColor="#3B82F6"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans"
+                    android:background="@drawable/snooze_option_background"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/btnSnooze10"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="10 menit"
+                    android:textAllCaps="false"
+                    android:textColor="#3B82F6"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans"
+                    android:background="@drawable/snooze_option_background"
+                    android:stateListAnimator="@null" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
+
+                <Button
+                    android:id="@+id/btnSnooze15"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    android:text="15 menit"
+                    android:textAllCaps="false"
+                    android:textColor="#3B82F6"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans"
+                    android:background="@drawable/snooze_option_background"
+                    android:stateListAnimator="@null" />
+
+                <Button
+                    android:id="@+id/btnSnooze30"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:text="30 menit"
+                    android:textAllCaps="false"
+                    android:textColor="#3B82F6"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans"
+                    android:background="@drawable/snooze_option_background"
+                    android:stateListAnimator="@null" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
