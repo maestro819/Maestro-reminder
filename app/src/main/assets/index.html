@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MAESTRO Reminder - easy does it</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -46,7 +46,7 @@ body{
     width:100%;
     max-width:420px;
     height:100vh;
-    max-height:892px;
+    height:100dvh;
     background:var(--bg-main);
     position:relative;
     overflow:hidden;
@@ -57,6 +57,7 @@ body{
 @media(min-width:423px){
     .phone-frame{
         height:85vh;
+        max-height:892px;
         border-radius:40px;
         border:10px solid #1e1b4b;
         box-shadow:0 20px 50px rgba(0,0,0,.15);
@@ -759,7 +760,7 @@ textarea.form-control{
     border-top:1px solid var(--border);
     display:flex;
     justify-content:space-around;
-    padding:10px 0 9px;
+    padding:10px 0 calc(9px + env(safe-area-inset-bottom));
     z-index:20;
 }
 
@@ -832,8 +833,9 @@ textarea.form-control{
     z-index:100;
     display:none;
     flex-direction:column;
-    justify-content:space-between;
-    padding:42px 22px 28px;
+    justify-content:center;
+    gap:56px;
+    padding:calc(42px + env(safe-area-inset-top)) 22px calc(28px + env(safe-area-inset-bottom));
     text-align:center;
 }
 
@@ -860,26 +862,33 @@ textarea.form-control{
     font-size:13px;
     letter-spacing:3px;
     color:#a5b4fc;
-    margin-bottom:18px;
+    margin-bottom:22px;
 }
 
-.alarm-greeting{
-    font-size:17px;
+.alarm-greeting-name{
+    font-size:18px;
+    font-weight:600;
     color:#e0e7ff;
-    margin-bottom:13px;
+    margin-bottom:6px;
+}
+
+.alarm-greeting-action{
+    font-size:15px;
+    color:#a5b4fc;
+    margin-bottom:26px;
 }
 
 .alarm-time-big{
     font-size:65px;
     font-weight:800;
     line-height:1;
-    margin-bottom:16px;
+    margin-bottom:20px;
 }
 
 .alarm-act-name{
     font-size:26px;
     font-weight:800;
-    margin-bottom:9px;
+    margin-bottom:12px;
 }
 
 .alarm-msg{
@@ -910,11 +919,6 @@ textarea.form-control{
 
 .stop-btn{
     background:#ef4444;
-}
-
-.done-btn{
-    grid-column:1/-1;
-    background:#10b981;
 }
 
 /* SNOOZE */
@@ -995,7 +999,7 @@ textarea.form-control{
     height:190px;
     width:100px;
     overflow-y:scroll;
-    scroll-snap-type:y proximity;
+    scroll-snap-type:y mandatory;
     padding:69px 0;
     background:linear-gradient(#f8fafc,#e0e7ff 46%,#e0e7ff 54%,#f8fafc);
     border-radius:14px;
@@ -1768,10 +1772,17 @@ textarea.form-control{
         <h3>MAESTRO REMINDER</h3>
 
         <div
-            class="alarm-greeting"
-            id="alarm-greeting"
+            class="alarm-greeting-name"
+            id="alarm-greeting-name"
         >
-            Anto, waktunya melakukan aktivitas.
+            Anto, selamat siang 🌤️
+        </div>
+
+        <div
+            class="alarm-greeting-action"
+            id="alarm-greeting-action"
+        >
+            Waktunya minum.
         </div>
 
         <div
@@ -1812,13 +1823,6 @@ textarea.form-control{
             onclick="stopAlarm()"
         >
             MATIKAN
-        </button>
-
-        <button
-            class="done-btn"
-            onclick="completeAlarm()"
-        >
-            ✓ SUDAH SELESAI
         </button>
 
     </div>
@@ -2778,9 +2782,14 @@ function triggerRealAlarm(act){
         `${act.icon} ${act.name.toUpperCase()}`;
 
     document.getElementById(
-        "alarm-greeting"
+        "alarm-greeting-name"
     ).innerText=
-        generateGreeting(act);
+        generateGreetingName(act);
+
+    document.getElementById(
+        "alarm-greeting-action"
+    ).innerText=
+        generateGreetingAction(act);
 
     document.getElementById(
         "alarm-msg-text"
@@ -2811,10 +2820,25 @@ function timePeriod(time){
     if(hour>=15 && hour<18) return "sore";
     return "malam";
 }
-function generateGreeting(act){
+
+function periodEmoji(period){
+    if(period==="pagi") return "☀️";
+    if(period==="siang") return "🌤️";
+    if(period==="sore") return "🌇";
+    return "🌙";
+}
+
+function generateGreetingName(act){
     const period=timePeriod(act.time);
-    if(act.category==="SLEEP") return `${userName}, bangun yuk. Selamat ${period}, waktunya memulai hari.`;
-    return `${userName}, selamat ${period}. Waktunya ${act.name.toLowerCase()}.`;
+    if(act.category==="SLEEP")
+        return `${userName}, bangun yuk 🌅`;
+    return `${userName}, selamat ${period} ${periodEmoji(period)}`;
+}
+
+function generateGreetingAction(act){
+    if(act.category==="SLEEP")
+        return "Waktunya memulai hari.";
+    return `Waktunya ${act.name.toLowerCase()}.`;
 }
 
 
@@ -2929,17 +2953,26 @@ function selectWheelValue(column,count){
     const value=
         ((index%count)+count)%count;
 
-    column
-        .querySelectorAll(".wheel-option")
-        .forEach(x=>x.classList.remove("selected"));
-
     const selected=
         column.querySelector(
             `[data-index="${index}"]`
         );
 
+    const prevSelected=
+        column.querySelector(
+            ".wheel-option.selected"
+        );
+
+    if(prevSelected===selected)
+        return value;
+
+    if(prevSelected)
+        prevSelected.classList.remove("selected");
+
     if(selected)
         selected.classList.add("selected");
+
+    return value;
 
 }
 
@@ -2995,12 +3028,25 @@ document.addEventListener(
             )
         ){
 
-            selectWheelValue(
-                event.target,
-                event.target.id==="hour-wheel"
-                ?24
-                :60
-            );
+            const column=event.target;
+
+            if(column._wheelTicking)
+                return;
+
+            column._wheelTicking=true;
+
+            requestAnimationFrame(()=>{
+
+                selectWheelValue(
+                    column,
+                    column.id==="hour-wheel"
+                    ?24
+                    :60
+                );
+
+                column._wheelTicking=false;
+
+            });
 
         }
 
