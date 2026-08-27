@@ -2602,9 +2602,7 @@ function deleteActivity(id,event){
     if(window.AndroidBridge &&
        typeof AndroidBridge.deleteActivity==="function"){
 
-        AndroidBridge.deleteActivity(
-            String(id)
-        );
+        AndroidBridge.deleteActivity(id);
 
     }
 
@@ -3479,6 +3477,41 @@ function toggleDoneSection(){
    SCHEDULE
 ========================================================= */
 
+
+function getRemainingTime(timeStr) {
+    if (!timeStr) return "";
+    const now = new Date();
+    const [h, m] = timeStr.split(":").map(Number);
+    const target = new Date();
+    target.setHours(h, m, 0, 0);
+    
+    if (target < now) {
+        target.setDate(target.getDate() + 1);
+    }
+    
+    const diff = target - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+        return `${hours}j ${mins}m lagi`;
+    }
+    return `${mins}m lagi`;
+}
+
+
+
+    
+    const diff = target - now;
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0) {
+        return `${hours}j ${mins}m lagi`;
+    }
+    return `${mins}m lagi`;
+}
+
 function renderSchedule(){
 
     const container=
@@ -3566,6 +3599,7 @@ function activityCard(act,home){
 
                 <span class="activity-time">
                     ${act.time}
+                    ${!act.done ? `<small style="display:block;font-size:9px;color:var(--primary);margin-top:2px;font-weight:600;">${getRemainingTime(act.time)}</small>` : ''}
                 </span>
 
                 <span
