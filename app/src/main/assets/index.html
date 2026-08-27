@@ -1043,6 +1043,57 @@ textarea.form-control{
     background:var(--primary);
     color:#fff;
 }
+
+/* LIST STYLE DASHBOARD */
+.alarm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.alarm-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 14px;
+}
+.alarm-item:last-child { border-bottom: 0; }
+.alarm-item.disabled { opacity: 0.6; }
+.alarm-item-icon { font-size: 20px; width: 32px; text-align: center; cursor: pointer; }
+.alarm-item-info { flex: 1; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.alarm-item-time { font-size: 17px; font-weight: 800; color: var(--text-main); min-width: 55px; }
+.alarm-item-name { font-size: 15px; font-weight: 600; color: var(--text-main); }
+.alarm-item-meta { margin-left: auto; display: flex; align-items: center; gap: 15px; }
+.alarm-countdown { font-size: 10px; font-weight: 700; color: var(--primary); text-align: right; }
+.alarm-item-separator { color: #cbd5e1; margin: 0 4px; }
+
+/* TOGGLE SWITCH */
+.toggle-switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+.toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e2e8f0; transition: .3s; border-radius: 24px; }
+.toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+input:checked + .toggle-slider { background-color: var(--green); }
+input:checked + .toggle-slider:before { transform: translateX(20px); }
+
+/* TIME WHEEL */
+.wheel-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55); z-index: 120; display: none; align-items: flex-end; justify-content: center; }
+.wheel-overlay.active { display: flex; }
+.wheel-sheet { width: 100%; max-width: 420px; background: #fff; border-radius: 22px 22px 0 0; padding: 18px 18px 28px; }
+.wheel-row { display: flex; justify-content: center; gap: 12px; margin: 12px 0 18px; }
+.wheel-column { height: 190px; width: 100px; overflow-y: scroll; scroll-snap-type: y mandatory; padding: 69px 0; background: linear-gradient(#f8fafc, #e0e7ff 46%, #e0e7ff 54%, #f8fafc); border-radius: 14px; scrollbar-width: none; }
+.wheel-column::-webkit-scrollbar { display: none; }
+.wheel-option { height: 52px; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: #94a3b8; scroll-snap-align: center; }
+.wheel-option.selected { color: #1e1b4b; transform: scale(1.08); }
+.wheel-actions { display: flex; gap: 8px; }
+.wheel-actions button { flex: 1; padding: 13px; border: 0; border-radius: 12px; font-weight: 800; cursor: pointer; }
+.wheel-confirm { background: var(--primary); color: #fff; }
+.wheel-cancel { background: #f1f5f9; color: var(--text-muted); }
+
 </style>
 </head>
 
@@ -1053,60 +1104,22 @@ textarea.form-control{
 <!-- HOME -->
 
 <div id="screen-home" class="screen active">
-
     <div class="brand-header">
         <div class="brand-logo">
             <h1>MAESTRO</h1>
             <span>easy does it</span>
         </div>
-
     </div>
-
     <div class="greeting-section">
         <h2 id="greeting-title">Selamat datang 👋</h2>
         <p id="current-date-text"></p>
     </div>
-
-    <div class="today-hero">
-        <div class="today-hero-top">
-            <div>
-                <small>PROGRESS HARI INI</small>
-                <h3 id="hero-progress">0%</h3>
-            </div>
-            <div class="hero-percent" id="hero-percent">0/0</div>
-        </div>
-    </div>
-
-    <div class="section-title">Berikutnya</div>
-    <div id="next-activity-container"></div>
-
-    <div class="section-title" id="today-activities-title">Aktivitas Hari Ini</div>
-    <div id="activity-list-container" class="activity-grid"></div>
-
-    <div id="done-section" style="display:none;">
-
-        <button
-            class="done-toggle"
-            id="done-toggle"
-            onclick="toggleDoneSection()"
-        >
-            <span id="done-toggle-label">✓ 0 selesai</span>
-            <i class="fa-solid fa-chevron-down" id="done-toggle-icon"></i>
-        </button>
-
-        <div
-            id="done-list-container"
-            class="activity-grid"
-            style="display:none;margin-top:10px;"
-        ></div>
-
-    </div>
-
+    <div class="section-title">ALARM HARI INI</div>
+    <div id="alarm-list-container" class="alarm-list"></div>
     <div class="tip-card" id="tip-card">
         <div class="tip-icon">💡</div>
         <p id="tip-text"></p>
     </div>
-
 </div>
 
 
@@ -1834,9 +1847,6 @@ textarea.form-control{
 
 <script>
 
-/* =========================================================
-   DATA & CONFIG
-========================================================= */
 const WHEEL_ROW = 52;
 let defaultActivities = [
     {id:1, name:"Bangun", time:"06:00", icon:"🌅", kind:"SLEEP", category:"SLEEP", repeat:"DAILY", days:[], message:"", done:false, enabled:true},
@@ -1850,32 +1860,22 @@ let selectedTime = "08:00";
 let selectedCategory = "HEALTH";
 let selectedRepeat = "DAILY";
 
-/* =========================================================
-   INIT
-========================================================= */
 document.addEventListener("DOMContentLoaded", () => {
     const nameInput = document.getElementById("input-name");
     if(nameInput) nameInput.value = userName;
-    
     selectedTime = deviceTime();
     updateTime(selectedTime);
-
     initMonthDayGrid();
     initCategoryColors();
     refreshPermissionPanel();
-    
     if(window.AndroidBridge){
         AndroidBridge.setUserName(userName);
         AndroidBridge.syncActivities(JSON.stringify(activities));
     }
-
     updateUI();
     setInterval(updateUI, 60000);
 });
 
-/* =========================================================
-   CORE UI LOGIC
-========================================================= */
 function updateUI(){
     updateDate();
     activities.sort((a,b) => a.time.localeCompare(b.time));
@@ -1889,13 +1889,11 @@ function updateDate(){
     const now = new Date();
     const dateText = document.getElementById("current-date-text");
     if(dateText) dateText.innerText = now.toLocaleDateString("id-ID", {weekday:"long", day:"numeric", month:"long", year:"numeric"});
-    
     const hour = now.getHours();
     let greeting = "Selamat malam 🌙";
     if(hour >= 4 && hour < 11) greeting = "Selamat pagi ☀️";
     else if(hour >= 11 && hour < 15) greeting = "Selamat siang 🌤️";
     else if(hour >= 15 && hour < 18) greeting = "Selamat sore 🌇";
-    
     const gt = document.getElementById("greeting-title");
     if(gt) gt.innerText = greeting + ", " + userName;
 }
@@ -1905,44 +1903,34 @@ function switchScreen(id, btn){
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
     const target = document.getElementById("screen-" + id);
     if(target) target.classList.add("active");
-    
     if(btn){
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
         btn.classList.add("active");
     }
-    
     if(id === "add") {
         const title = document.getElementById("screen-add").querySelector("h1");
         if(title && !document.getElementById("add-name").dataset.editId) title.innerText = "Pengingat baru";
     }
-    
     const fab = document.querySelector(".fab-btn");
     if(fab) fab.style.display = (id === "schedule" || id === "home") ? "flex" : "none";
-    
     updateUI();
 }
 
-/* =========================================================
-   ALARM DASHBOARD (LIST MODEL)
-========================================================= */
 function renderAlarmList(){
     const container = document.getElementById("alarm-list-container");
     if(!container) return;
     container.innerHTML = "";
-    
     if(!activities.length){
         container.innerHTML = `<div style="padding:30px;text-align:center;color:var(--text-muted);"><div style="font-size:30px;margin-bottom:10px;">⏰</div><p style="font-size:13px;font-weight:700;">Belum ada alarm</p><p style="font-size:11px;">Klik + untuk menambah jadwal.</p></div>`;
         return;
     }
-
     activities.forEach(act => {
         const isEnabled = act.enabled !== false;
         const countdown = isEnabled ? getRemainingTime(act.time) : "";
-        
         const item = document.createElement("div");
         item.className = `alarm-item ${isEnabled ? '' : 'disabled'}`;
         item.innerHTML = `
-            <div class="alarm-item-icon" onclick="openEditScreen(${act.id})" style="cursor:pointer;">${act.icon}</div>
+            <div class="alarm-item-icon" onclick="openEditScreen(${act.id})">${act.icon}</div>
             <div class="alarm-item-info" onclick="openEditScreen(${act.id})">
                 <span class="alarm-item-time">${act.time}</span>
                 <span class="alarm-item-separator">—</span>
@@ -1960,9 +1948,6 @@ function renderAlarmList(){
     });
 }
 
-/* =========================================================
-   WHEEL PICKER (ORIGINAL SMOOTH)
-========================================================= */
 function buildWheel(column, count, value){
     column.innerHTML = "";
     const cycles = 5;
@@ -1986,9 +1971,7 @@ function openTimePicker(){
     document.getElementById("time-wheel").classList.add("active");
 }
 
-function closeTimePicker(){
-    document.getElementById("time-wheel").classList.remove("active");
-}
+function closeTimePicker(){ document.getElementById("time-wheel").classList.remove("active"); }
 
 function confirmTimePicker(){
     const h = document.querySelector("#hour-wheel .selected");
@@ -2039,13 +2022,7 @@ document.addEventListener("click", event => {
     }
 });
 
-/* =========================================================
-   FORM ACTIONS
-========================================================= */
-function openAddScreen(){
-    resetAddForm();
-    switchScreen("add");
-}
+function openAddScreen(){ resetAddForm(); switchScreen("add"); }
 
 function addNewActivity(){
     const nameField = document.getElementById("add-name");
@@ -2055,7 +2032,6 @@ function addNewActivity(){
     const repeat = document.getElementById("add-repeat").value;
     const icon = document.getElementById("add-icon").value || "📌";
     const message = document.getElementById("message-mode").value === "CUSTOM" ? document.getElementById("add-message").value.trim() : "";
-    
     const days = Array.from(document.querySelectorAll(".day-option.selected")).map(x => Number(x.dataset.day));
     const monthDayEl = document.querySelector(".month-day-option.selected");
     const dayOfMonth = monthDayEl ? Number(monthDayEl.dataset.day) : null;
@@ -2071,17 +2047,8 @@ function addNewActivity(){
     const editId = Number(nameField.dataset.editId || 0);
     const newAct = {
         id: editId || Date.now(),
-        name: name,
-        time: time,
-        icon: icon,
-        kind: category === "SLEEP" ? "SLEEP" : "ACTIVITY",
-        category: category,
-        repeat: repeat,
-        days: days,
-        dayOfMonth: dayOfMonth,
-        message: message,
-        done: false,
-        enabled: true
+        name: name, time: time, icon: icon, kind: category === "SLEEP" ? "SLEEP" : "ACTIVITY",
+        category: category, repeat: repeat, days: days, dayOfMonth: dayOfMonth, message: message, done: false, enabled: true
     };
 
     if(editId) activities = activities.map(a => a.id === editId ? newAct : a);
@@ -2132,36 +2099,20 @@ function resetAddForm(){
     document.getElementById("custom-message-box").style.display = "none";
 }
 
-/* =========================================================
-   HELPERS & OTHER
-========================================================= */
 function toggleAlarm(id, enabled){
     activities = activities.map(a => a.id === id ? {...a, enabled: enabled} : a);
     localStorage.setItem("maestro_activities", JSON.stringify(activities));
     if(window.AndroidBridge) AndroidBridge.setActivityEnabled(id, enabled);
     renderAlarmList();
 }
-function toggleDone(id){
-    activities = activities.map(a => a.id === id ? {...a, done: !a.done} : a);
-    localStorage.setItem("maestro_activities", JSON.stringify(activities));
-    updateUI();
-}
-function deleteActivity(id, e){
-    if(e) e.stopPropagation();
-    if(!confirm("Hapus pengingat ini?")) return;
-    activities = activities.filter(a => a.id !== id);
-    localStorage.setItem("maestro_activities", JSON.stringify(activities));
-    if(window.AndroidBridge) AndroidBridge.deleteActivity(id);
-    updateUI();
-}
+function toggleDone(id){ activities = activities.map(a => a.id === id ? {...a, done: !a.done} : a); localStorage.setItem("maestro_activities", JSON.stringify(activities)); updateUI(); }
+function deleteActivity(id, e){ if(e) e.stopPropagation(); if(!confirm("Hapus pengingat ini?")) return; activities = activities.filter(a => a.id !== id); localStorage.setItem("maestro_activities", JSON.stringify(activities)); if(window.AndroidBridge) AndroidBridge.deleteActivity(id); updateUI(); }
+
 function renderSchedule(){
     const container = document.getElementById("schedule-list-container");
     if(!container) return;
     container.innerHTML = "";
-    if(!activities.length){
-        container.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);"><p style="font-size:13px;font-weight:700;">Belum ada pengingat</p></div>`;
-        return;
-    }
+    if(!activities.length){ container.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);"><p style="font-size:13px;font-weight:700;">Belum ada pengingat</p></div>`; return; }
     activities.forEach(act => {
         const c = categoryColor(act.category);
         const isEnabled = act.enabled !== false;
@@ -2183,6 +2134,7 @@ function renderSchedule(){
         `;
     });
 }
+
 function getRemainingTime(timeStr){
     const now = new Date();
     const [h, m] = timeStr.split(":").map(Number);
@@ -2244,6 +2196,7 @@ function renderDailyTip(){
 }
 function refreshPermissionPanel(){ /* Placeholder */ }
 function openPermission(type){ if(window.AndroidBridge) AndroidBridge.openPermissionSettings(type); }
+function applySnooze(min){ if(window.AndroidBridge) AndroidBridge.snoozeAlarm(min); }
 
 </script>
 
