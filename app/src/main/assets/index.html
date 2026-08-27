@@ -526,44 +526,6 @@ body{
     font-size:13px;
 }
 
-.form-control.field-error{
-    border:2px solid var(--red);
-    background:var(--red-light);
-    animation:field-shake .22s linear 2;
-}
-
-@keyframes field-shake{
-    25%{transform:translateX(-4px)}
-    75%{transform:translateX(4px)}
-}
-
-/* Pada HP, frame mengisi seluruh viewport. Bingkai hanya dipakai pada desktop. */
-@media (min-width:423px) and (hover:hover) and (pointer:fine){
-    .phone-frame{
-        height:85vh;
-        max-height:892px;
-        border-radius:40px;
-        border:10px solid #1e1b4b;
-        box-shadow:0 20px 50px rgba(0,0,0,.15);
-    }
-}
-
-@media (max-width:700px), (hover:none) and (pointer:coarse){
-    body{
-        align-items:stretch;
-        background:var(--bg-main);
-    }
-    .phone-frame{
-        width:100%;
-        max-width:none;
-        height:100vh;
-        height:100dvh;
-        border:0;
-        border-radius:0;
-        box-shadow:none;
-    }
-}
-
 textarea.form-control{
     resize:none;
 }
@@ -1081,251 +1043,6 @@ textarea.form-control{
     background:var(--primary);
     color:#fff;
 }
-
-/* LIST STYLE DASHBOARD */
-.alarm-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    background: #fff;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
-.alarm-item {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid #f1f5f9;
-    gap: 14px;
-    transition: background 0.2s;
-}
-
-.alarm-item:last-child {
-    border-bottom: 0;
-}
-
-.alarm-item.disabled {
-    opacity: 0.6;
-}
-
-.alarm-item-icon {
-    font-size: 20px;
-    width: 32px;
-    text-align: center;
-}
-
-.alarm-item-info {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.alarm-item-time {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--text-main);
-    min-width: 55px;
-}
-
-.alarm-item-name {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.alarm-item-meta {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.alarm-countdown {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--primary);
-    text-align: right;
-}
-
-/* TOGGLE SWITCH */
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-}
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #e2e8f0;
-    transition: .3s;
-    border-radius: 24px;
-}
-
-.toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .3s;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-input:checked + .toggle-slider {
-    background-color: var(--green);
-}
-
-input:checked + .toggle-slider:before {
-    transform: translateX(20px);
-}
-
-.alarm-item-separator {
-    color: #cbd5e1;
-    margin: 0 4px;
-}
-
-
-/* LIST STYLE DASHBOARD */
-.alarm-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    background: #fff;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    overflow: hidden;
-    margin-bottom: 20px;
-}
-
-.alarm-item {
-    display: flex;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid #f1f5f9;
-    gap: 14px;
-    transition: background 0.2s;
-}
-
-.alarm-item:last-child {
-    border-bottom: 0;
-}
-
-.alarm-item.disabled {
-    opacity: 0.6;
-}
-
-.alarm-item-icon {
-    font-size: 20px;
-    width: 32px;
-    text-align: center;
-}
-
-.alarm-item-info {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-}
-
-.alarm-item-time {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--text-main);
-    min-width: 55px;
-}
-
-.alarm-item-name {
-    font-size: 15px;
-    font-weight: 600;
-    color: var(--text-main);
-}
-
-.alarm-item-meta {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.alarm-countdown {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--primary);
-    text-align: right;
-}
-
-/* TOGGLE SWITCH */
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-}
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #e2e8f0;
-    transition: .3s;
-    border-radius: 24px;
-}
-
-.toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .3s;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-input:checked + .toggle-slider {
-    background-color: var(--green);
-}
-
-input:checked + .toggle-slider:before {
-    transform: translateX(20px);
-}
-
-.alarm-item-separator {
-    color: #cbd5e1;
-    margin: 0 4px;
-}
-
 </style>
 </head>
 
@@ -1342,6 +1059,7 @@ input:checked + .toggle-slider:before {
             <h1>MAESTRO</h1>
             <span>easy does it</span>
         </div>
+
     </div>
 
     <div class="greeting-section">
@@ -1349,8 +1067,40 @@ input:checked + .toggle-slider:before {
         <p id="current-date-text"></p>
     </div>
 
-    <div class="section-title">ALARM HARI INI</div>
-    <div id="alarm-list-container" class="alarm-list"></div>
+    <div class="today-hero">
+        <div class="today-hero-top">
+            <div>
+                <small>PROGRESS HARI INI</small>
+                <h3 id="hero-progress">0%</h3>
+            </div>
+            <div class="hero-percent" id="hero-percent">0/0</div>
+        </div>
+    </div>
+
+    <div class="section-title">Berikutnya</div>
+    <div id="next-activity-container"></div>
+
+    <div class="section-title" id="today-activities-title">Aktivitas Hari Ini</div>
+    <div id="activity-list-container" class="activity-grid"></div>
+
+    <div id="done-section" style="display:none;">
+
+        <button
+            class="done-toggle"
+            id="done-toggle"
+            onclick="toggleDoneSection()"
+        >
+            <span id="done-toggle-label">✓ 0 selesai</span>
+            <i class="fa-solid fa-chevron-down" id="done-toggle-icon"></i>
+        </button>
+
+        <div
+            id="done-list-container"
+            class="activity-grid"
+            style="display:none;margin-top:10px;"
+        ></div>
+
+    </div>
 
     <div class="tip-card" id="tip-card">
         <div class="tip-icon">💡</div>
@@ -1537,16 +1287,6 @@ input:checked + .toggle-slider:before {
             </button>
         </div>
 
-        <div id="permission-overlay-row">
-            <button
-                class="btn-primary"
-                onclick="openPermission('overlay')"
-                style="background:#f59e0b;margin-bottom:7px;"
-            >
-                Izinkan Tampil di Atas Aplikasi Lain
-            </button>
-        </div>
-
         <div id="permission-fullscreen-row">
             <button
                 class="btn-primary"
@@ -1579,6 +1319,20 @@ input:checked + .toggle-slider:before {
         >
             <i class="fa-solid fa-xmark"></i>
         </button>
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>Apa yang ingin diingatkan?</label>
+
+        <input
+            type="text"
+            id="add-name"
+            class="form-control"
+            placeholder="Contoh: Minum air"
+        >
 
     </div>
 
@@ -1675,21 +1429,6 @@ input:checked + .toggle-slider:before {
         <input type="hidden" id="add-category" value="HEALTH">
 
     </div>
-
-
-    <div class="form-group">
-
-        <label>Apa yang ingin diingatkan?</label>
-
-        <input
-            type="text"
-            id="add-name"
-            class="form-control"
-            placeholder="Contoh: Minum air"
-        >
-
-    </div>
-
 
 
     <div class="form-group">
@@ -2096,10 +1835,10 @@ input:checked + .toggle-slider:before {
 <script>
 
 /* =========================================================
-   DATA
+   DATA & CONFIG
 ========================================================= */
-
-let defaultActivities=[
+const WHEEL_ROW = 52;
+let defaultActivities = [
     {id:1, name:"Bangun", time:"06:00", icon:"🌅", kind:"SLEEP", category:"SLEEP", repeat:"DAILY", days:[], message:"", done:false, enabled:true},
     {id:2, name:"Olahraga", time:"07:00", icon:"🏃", kind:"ACTIVITY", category:"SPORT", repeat:"DAILY", days:[], message:"", done:false, enabled:true}
 ];
@@ -2114,16 +1853,12 @@ let selectedRepeat = "DAILY";
 /* =========================================================
    INIT
 ========================================================= */
-
 document.addEventListener("DOMContentLoaded", () => {
     const nameInput = document.getElementById("input-name");
     if(nameInput) nameInput.value = userName;
     
     selectedTime = deviceTime();
-    const timeBtn = document.getElementById("add-time-button");
-    if(timeBtn) timeBtn.innerText = selectedTime;
-    const timeInp = document.getElementById("add-time");
-    if(timeInp) timeInp.value = selectedTime;
+    updateTime(selectedTime);
 
     initMonthDayGrid();
     initCategoryColors();
@@ -2135,19 +1870,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateUI();
-    
-    // Auto update every minute for countdowns and greeting
     setInterval(updateUI, 60000);
 });
 
 /* =========================================================
-   CORE LOGIC
+   CORE UI LOGIC
 ========================================================= */
-
 function updateUI(){
     updateDate();
     activities.sort((a,b) => a.time.localeCompare(b.time));
-    
     renderAlarmList();
     renderSchedule();
     renderStats();
@@ -2181,7 +1912,7 @@ function switchScreen(id, btn){
     }
     
     if(id === "add") {
-        const title = document.getElementById("screen-add").querySelector("span");
+        const title = document.getElementById("screen-add").querySelector("h1");
         if(title && !document.getElementById("add-name").dataset.editId) title.innerText = "Pengingat baru";
     }
     
@@ -2192,137 +1923,8 @@ function switchScreen(id, btn){
 }
 
 /* =========================================================
-   FORM ACTIONS
+   ALARM DASHBOARD (LIST MODEL)
 ========================================================= */
-function openAddScreen(){
-    resetAddForm();
-    switchScreen("add");
-}
-
-
-function addNewActivity(){
-    const nameField = document.getElementById("add-name");
-    const name = nameField.value.trim();
-    const time = document.getElementById("add-time").value;
-    const category = document.getElementById("add-category").value;
-    const repeat = document.getElementById("add-repeat").value;
-    const icon = document.getElementById("add-icon").value || "📌";
-    const message = document.getElementById("message-mode").value === "CUSTOM" ? document.getElementById("add-message").value.trim() : "";
-    
-    const days = Array.from(document.querySelectorAll(".day-option.selected")).map(x => Number(x.dataset.day));
-    const monthDayEl = document.querySelector(".month-day-option.selected");
-    const dayOfMonth = monthDayEl ? Number(monthDayEl.dataset.day) : null;
-
-    nameField.classList.remove("field-error");
-    if(!name){
-        nameField.classList.add("field-error");
-        nameField.scrollIntoView({behavior:"smooth", block:"center"});
-        setTimeout(() => nameField.focus({preventScroll:true}), 220);
-        return;
-    }
-
-    if(repeat === "MONTHLY" && !dayOfMonth){
-        alert("Pilih tanggal untuk pengingat bulanan.");
-        return;
-    }
-
-    const editId = Number(nameField.dataset.editId || 0);
-    const newAct = {
-        id: editId || Date.now(),
-        name: name,
-        time: time,
-        icon: icon,
-        kind: category === "SLEEP" ? "SLEEP" : "ACTIVITY",
-        category: category,
-        repeat: repeat,
-        days: days,
-        dayOfMonth: dayOfMonth,
-        message: message,
-        done: false,
-        enabled: true
-    };
-
-    if(editId){
-        activities = activities.map(a => a.id === editId ? newAct : a);
-    } else {
-        activities.push(newAct);
-    }
-
-    localStorage.setItem("maestro_activities", JSON.stringify(activities));
-    
-    if(window.AndroidBridge){
-        let daysStr = (repeat === "CUSTOM") ? days.join(",") : (repeat === "DAILY" ? "1,2,3,4,5,6,7" : (repeat === "WORKDAYS" ? "2,3,4,5,6" : ""));
-        AndroidBridge.scheduleActivity(newAct.id, newAct.name, newAct.time, newAct.icon, newAct.kind, daysStr, newAct.message, newAct.category);
-    }
-
-    resetAddForm();
-    switchScreen("home");
-}
-
-function resetAddForm(){
-    const nf = document.getElementById("add-name");
-    nf.value = ""; nf.dataset.editId = ""; nf.classList.remove("field-error");
-    
-    selectedTime = deviceTime();
-    document.getElementById("add-time").value = selectedTime;
-    document.getElementById("add-time-button").innerText = selectedTime;
-    document.getElementById("add-time-button").classList.remove("field-error");
-    
-    selectedCategory = "HEALTH";
-    document.getElementById("add-category").value = "HEALTH";
-    document.getElementById("add-icon").value = "💧";
-    document.querySelectorAll(".category-option").forEach(x => x.classList.toggle("selected", x.dataset.category === "HEALTH"));
-    
-    selectedRepeat = "DAILY";
-    document.getElementById("add-repeat").value = "DAILY";
-    document.querySelectorAll(".repeat-option").forEach(x => x.classList.toggle("selected", x.dataset.repeat === "DAILY"));
-    
-    document.querySelectorAll(".day-option, .month-day-option").forEach(x => x.classList.remove("selected"));
-    document.getElementById("custom-days").style.display = "none";
-    document.getElementById("custom-month-day").style.display = "none";
-    
-    document.getElementById("message-mode").value = "AUTO";
-    document.getElementById("add-message").value = "";
-    document.getElementById("custom-message-box").style.display = "none";
-}
-
-function openEditScreen(id){
-    const act = activities.find(a => a.id === id);
-    if(!act) return;
-    resetAddForm();
-    
-    const nf = document.getElementById("add-name");
-    nf.value = act.name; nf.dataset.editId = id;
-    
-    document.getElementById("add-time").value = act.time;
-    document.getElementById("add-time-button").innerText = act.time;
-    
-    const cat = document.querySelector(`.category-option[data-category="${act.category}"]`);
-    if(cat) selectCategory(cat);
-    
-    const rep = document.querySelector(`.repeat-option[data-repeat="${act.repeat}"]`);
-    if(rep) selectRepeat(rep);
-    
-    if(act.repeat === "CUSTOM" && act.days){
-        document.querySelectorAll(".day-option").forEach(o => {
-            if(act.days.includes(Number(o.dataset.day))) o.classList.add("selected");
-        });
-    }
-    
-    if(act.message){
-        document.getElementById("message-mode").value = "CUSTOM";
-        document.getElementById("add-message").value = act.message;
-        toggleCustomMessage();
-    }
-    
-    switchScreen("add");
-    document.getElementById("screen-add").querySelector("span").innerText = "Edit pengingat";
-}
-
-/* =========================================================
-   RENDERING
-========================================================= */
-
 function renderAlarmList(){
     const container = document.getElementById("alarm-list-container");
     if(!container) return;
@@ -2333,9 +1935,7 @@ function renderAlarmList(){
         return;
     }
 
-    const sorted = [...activities].sort((a,b) => a.time.localeCompare(b.time));
-
-    sorted.forEach(act => {
+    activities.forEach(act => {
         const isEnabled = act.enabled !== false;
         const countdown = isEnabled ? getRemainingTime(act.time) : "";
         
@@ -2360,12 +1960,206 @@ function renderAlarmList(){
     });
 }
 
+/* =========================================================
+   WHEEL PICKER (ORIGINAL SMOOTH)
+========================================================= */
+function buildWheel(column, count, value){
+    column.innerHTML = "";
+    const cycles = 5;
+    for(let cycle=0; cycle<cycles; cycle++){
+        for(let i=0; i<count; i++){
+            column.innerHTML += `<div class="wheel-option" data-value="${String(i).padStart(2,"0")}" data-index="${cycle*count+i}">${String(i).padStart(2,"0")}</div>`;
+        }
+    }
+    const center = 2*count + value;
+    requestAnimationFrame(() => {
+        column.scrollTop = center * WHEEL_ROW;
+        selectWheelValue(column, count);
+    });
+}
+
+function openTimePicker(){
+    const current = document.getElementById("add-time").value || deviceTime();
+    const parts = current.split(":");
+    buildWheel(document.getElementById("hour-wheel"), 24, Number(parts[0])||0);
+    buildWheel(document.getElementById("minute-wheel"), 60, Number(parts[1])||0);
+    document.getElementById("time-wheel").classList.add("active");
+}
+
+function closeTimePicker(){
+    document.getElementById("time-wheel").classList.remove("active");
+}
+
+function confirmTimePicker(){
+    const h = document.querySelector("#hour-wheel .selected");
+    const m = document.querySelector("#minute-wheel .selected");
+    if(!h || !m) return;
+    updateTime(`${h.dataset.value}:${m.dataset.value}`);
+    closeTimePicker();
+}
+
+function updateTime(val){
+    selectedTime = val;
+    const btn = document.getElementById("add-time-button");
+    if(btn) btn.innerText = val;
+    const inp = document.getElementById("add-time");
+    if(inp) inp.value = val;
+}
+
+function selectWheelValue(column, count){
+    const index = Math.round(column.scrollTop / WHEEL_ROW);
+    const value = ((index % count) + count) % count;
+    const selected = column.querySelector(`[data-index="${index}"]`);
+    const prevSelected = column.querySelector(".wheel-option.selected");
+    if(prevSelected === selected) return value;
+    if(prevSelected) prevSelected.classList.remove("selected");
+    if(selected) selected.classList.add("selected");
+    return value;
+}
+
+document.addEventListener("scroll", event => {
+    if(event.target.classList && event.target.classList.contains("wheel-column")){
+        const column = event.target;
+        if(column._wheelTicking) return;
+        column._wheelTicking = true;
+        requestAnimationFrame(() => {
+            selectWheelValue(column, column.id === "hour-wheel" ? 24 : 60);
+            column._wheelTicking = false;
+        });
+    }
+}, true);
+
+document.addEventListener("click", event => {
+    if(event.target.classList.contains("wheel-option")){
+        const col = event.target.parentElement;
+        col.scrollTo({ top: Number(event.target.dataset.index) * WHEEL_ROW, behavior: "smooth" });
+    }
+    if(event.target.classList.contains("day-option")){
+        event.target.classList.toggle("selected");
+    }
+});
+
+/* =========================================================
+   FORM ACTIONS
+========================================================= */
+function openAddScreen(){
+    resetAddForm();
+    switchScreen("add");
+}
+
+function addNewActivity(){
+    const nameField = document.getElementById("add-name");
+    const name = nameField.value.trim();
+    const time = document.getElementById("add-time").value;
+    const category = document.getElementById("add-category").value;
+    const repeat = document.getElementById("add-repeat").value;
+    const icon = document.getElementById("add-icon").value || "📌";
+    const message = document.getElementById("message-mode").value === "CUSTOM" ? document.getElementById("add-message").value.trim() : "";
+    
+    const days = Array.from(document.querySelectorAll(".day-option.selected")).map(x => Number(x.dataset.day));
+    const monthDayEl = document.querySelector(".month-day-option.selected");
+    const dayOfMonth = monthDayEl ? Number(monthDayEl.dataset.day) : null;
+
+    nameField.classList.remove("field-error");
+    if(!name){
+        nameField.classList.add("field-error");
+        nameField.scrollIntoView({behavior:"smooth", block:"center"});
+        setTimeout(() => nameField.focus({preventScroll:true}), 220);
+        return;
+    }
+
+    const editId = Number(nameField.dataset.editId || 0);
+    const newAct = {
+        id: editId || Date.now(),
+        name: name,
+        time: time,
+        icon: icon,
+        kind: category === "SLEEP" ? "SLEEP" : "ACTIVITY",
+        category: category,
+        repeat: repeat,
+        days: days,
+        dayOfMonth: dayOfMonth,
+        message: message,
+        done: false,
+        enabled: true
+    };
+
+    if(editId) activities = activities.map(a => a.id === editId ? newAct : a);
+    else activities.push(newAct);
+
+    localStorage.setItem("maestro_activities", JSON.stringify(activities));
+    if(window.AndroidBridge){
+        let daysStr = (repeat === "CUSTOM") ? days.join(",") : (repeat === "DAILY" ? "1,2,3,4,5,6,7" : (repeat === "WORKDAYS" ? "2,3,4,5,6" : ""));
+        AndroidBridge.scheduleActivity(newAct.id, newAct.name, newAct.time, newAct.icon, newAct.kind, daysStr, newAct.message, newAct.category);
+    }
+    resetAddForm();
+    switchScreen("home");
+}
+
+function openEditScreen(id){
+    const act = activities.find(a => a.id === id);
+    if(!act) return;
+    resetAddForm();
+    const nf = document.getElementById("add-name");
+    nf.value = act.name; nf.dataset.editId = id;
+    updateTime(act.time);
+    const cat = document.querySelector(`.category-option[data-category="${act.category}"]`);
+    if(cat) selectCategory(cat);
+    const rep = document.querySelector(`.repeat-option[data-repeat="${act.repeat}"]`);
+    if(rep) selectRepeat(rep);
+    if(act.repeat === "CUSTOM" && act.days) document.querySelectorAll(".day-option").forEach(o => { if(act.days.includes(Number(o.dataset.day))) o.classList.add("selected"); });
+    if(act.message){ document.getElementById("message-mode").value = "CUSTOM"; document.getElementById("add-message").value = act.message; toggleCustomMessage(); }
+    switchScreen("add");
+    document.getElementById("screen-add").querySelector("h1").innerText = "Edit pengingat";
+}
+
+function resetAddForm(){
+    const nf = document.getElementById("add-name");
+    nf.value = ""; nf.dataset.editId = ""; nf.classList.remove("field-error");
+    updateTime(deviceTime());
+    selectedCategory = "HEALTH";
+    document.getElementById("add-category").value = "HEALTH";
+    document.querySelectorAll(".category-option").forEach(x => x.classList.toggle("selected", x.dataset.category === "HEALTH"));
+    document.getElementById("add-icon").value = "💧";
+    selectedRepeat = "DAILY";
+    document.getElementById("add-repeat").value = "DAILY";
+    document.querySelectorAll(".repeat-option").forEach(x => x.classList.toggle("selected", x.dataset.repeat === "DAILY"));
+    document.querySelectorAll(".day-option, .month-day-option").forEach(x => x.classList.remove("selected"));
+    document.getElementById("custom-days").style.display = "none";
+    document.getElementById("custom-month-day").style.display = "none";
+    document.getElementById("message-mode").value = "AUTO";
+    document.getElementById("add-message").value = "";
+    document.getElementById("custom-message-box").style.display = "none";
+}
+
+/* =========================================================
+   HELPERS & OTHER
+========================================================= */
+function toggleAlarm(id, enabled){
+    activities = activities.map(a => a.id === id ? {...a, enabled: enabled} : a);
+    localStorage.setItem("maestro_activities", JSON.stringify(activities));
+    if(window.AndroidBridge) AndroidBridge.setActivityEnabled(id, enabled);
+    renderAlarmList();
+}
+function toggleDone(id){
+    activities = activities.map(a => a.id === id ? {...a, done: !a.done} : a);
+    localStorage.setItem("maestro_activities", JSON.stringify(activities));
+    updateUI();
+}
+function deleteActivity(id, e){
+    if(e) e.stopPropagation();
+    if(!confirm("Hapus pengingat ini?")) return;
+    activities = activities.filter(a => a.id !== id);
+    localStorage.setItem("maestro_activities", JSON.stringify(activities));
+    if(window.AndroidBridge) AndroidBridge.deleteActivity(id);
+    updateUI();
+}
 function renderSchedule(){
     const container = document.getElementById("schedule-list-container");
     if(!container) return;
     container.innerHTML = "";
     if(!activities.length){
-        container.innerHTML = `<div class="progress-card" style="grid-column:1/-1;text-align:center;padding:24px 16px;"><div style="font-size:28px;margin-bottom:8px;">🗓️</div><p style="font-size:13px;font-weight:700;margin-bottom:4px;">Belum ada pengingat</p><p style="font-size:11px;color:var(--text-muted);">Tekan tombol + di kanan bawah untuk mulai.</p></div>`;
+        container.innerHTML = `<div style="padding:24px;text-align:center;color:var(--text-muted);"><p style="font-size:13px;font-weight:700;">Belum ada pengingat</p></div>`;
         return;
     }
     activities.forEach(act => {
@@ -2389,33 +2183,6 @@ function renderSchedule(){
         `;
     });
 }
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function toggleAlarm(id, enabled){
-    activities = activities.map(a => a.id === id ? {...a, enabled: enabled} : a);
-    localStorage.setItem("maestro_activities", JSON.stringify(activities));
-    if(window.AndroidBridge) AndroidBridge.setActivityEnabled(id, enabled);
-    renderAlarmList();
-}
-
-function toggleDone(id){
-    activities = activities.map(a => a.id === id ? {...a, done: !a.done} : a);
-    localStorage.setItem("maestro_activities", JSON.stringify(activities));
-    updateUI();
-}
-
-function deleteActivity(id, e){
-    if(e) e.stopPropagation();
-    if(!confirm("Hapus pengingat ini?")) return;
-    activities = activities.filter(a => a.id !== id);
-    localStorage.setItem("maestro_activities", JSON.stringify(activities));
-    if(window.AndroidBridge) AndroidBridge.deleteActivity(id);
-    updateUI();
-}
-
 function getRemainingTime(timeStr){
     const now = new Date();
     const [h, m] = timeStr.split(":").map(Number);
@@ -2427,46 +2194,13 @@ function getRemainingTime(timeStr){
     const mm = Math.floor((diff % 3600000) / 60000);
     return (hh > 0 ? hh + "j " : "") + mm + "m lagi";
 }
-
-function deviceTime(){
-    const d = new Date();
-    return String(d.getHours()).padStart(2, '0') + ":" + String(d.getMinutes()).padStart(2, '0');
-}
-
-function escapeHTML(str){
-    const p = document.createElement("p");
-    p.textContent = str;
-    return p.innerHTML;
-}
-
+function deviceTime(){ const d = new Date(); return String(d.getHours()).padStart(2, '0') + ":" + String(d.getMinutes()).padStart(2, '0'); }
+function escapeHTML(str){ const p = document.createElement("p"); p.textContent = str; return p.innerHTML; }
 function categoryColor(cat){
-    const colors = {
-        HEALTH: {fg:"#6366f1", bg:"#e0e7ff"},
-        SPORT: {fg:"#10b981", bg:"#d1fae5"},
-        WORK: {fg:"#f59e0b", bg:"#fef3c7"},
-        MEDICINE: {fg:"#ef4444", bg:"#fee2e2"},
-        SLEEP: {fg:"#3b82f6", bg:"#dbeafe"},
-        STUDY: {fg:"#8b5cf6", bg:"#ede9fe"},
-        WORSHIP: {fg:"#06b6d4", bg:"#cffafe"},
-        MENGAJI: {fg:"#ec4899", bg:"#fce7f3"},
-        OTHER: {fg:"#64748b", bg:"#f1f5f9"}
-    };
+    const colors = { HEALTH: {fg:"#6366f1", bg:"#e0e7ff"}, SPORT: {fg:"#10b981", bg:"#d1fae5"}, WORK: {fg:"#f59e0b", bg:"#fef3c7"}, MEDICINE: {fg:"#ef4444", bg:"#fee2e2"}, SLEEP: {fg:"#3b82f6", bg:"#dbeafe"}, STUDY: {fg:"#8b5cf6", bg:"#ede9fe"}, WORSHIP: {fg:"#06b6d4", bg:"#cffafe"}, MENGAJI: {fg:"#ec4899", bg:"#fce7f3"}, OTHER: {fg:"#64748b", bg:"#f1f5f9"} };
     return colors[cat] || colors.OTHER;
 }
-
-function categoryName(cat){
-    const names = {HEALTH:"Kesehatan", SPORT:"Olahraga", WORK:"Kerja", MEDICINE:"Obat", SLEEP:"Tidur", STUDY:"Belajar", WORSHIP:"Ibadah", MENGAJI:"Mengaji", OTHER:"Lainnya"};
-    return names[cat] || "Lainnya";
-}
-
-function repeatLabel(act){
-    if(act.repeat === "DAILY") return "Setiap hari";
-    if(act.repeat === "WEEKDAYS") return "Senin–Jumat";
-    if(act.repeat === "ONCE") return "Sekali saja";
-    if(act.repeat === "CUSTOM") return "Kustom";
-    return "";
-}
-
+function categoryName(cat){ const names = {HEALTH:"Kesehatan", SPORT:"Olahraga", WORK:"Kerja", MEDICINE:"Obat", SLEEP:"Tidur", STUDY:"Belajar", WORSHIP:"Ibadah", MENGAJI:"Mengaji", OTHER:"Lainnya"}; return names[cat] || "Lainnya"; }
 function selectCategory(el){
     document.querySelectorAll(".category-option").forEach(x => x.classList.remove("selected"));
     el.classList.add("selected");
@@ -2475,7 +2209,6 @@ function selectCategory(el){
     const icons = {HEALTH:"💧", SPORT:"🏃", WORK:"💼", MEDICINE:"💊", SLEEP:"😴", STUDY:"📚", WORSHIP:"🕌", MENGAJI:"📖", OTHER:"📌"};
     document.getElementById("add-icon").value = icons[selectedCategory] || "📌";
 }
-
 function selectRepeat(el){
     document.querySelectorAll(".repeat-option").forEach(x => x.classList.remove("selected"));
     el.classList.add("selected");
@@ -2484,7 +2217,6 @@ function selectRepeat(el){
     document.getElementById("custom-days").style.display = selectedRepeat === "CUSTOM" ? "block" : "none";
     document.getElementById("custom-month-day").style.display = selectedRepeat === "MONTHLY" ? "block" : "none";
 }
-
 function toggleDoneSection(){
     const list = document.getElementById("done-list-container");
     const btn = document.getElementById("done-toggle");
@@ -2492,52 +2224,18 @@ function toggleDoneSection(){
     list.style.display = isHidden ? "grid" : "none";
     btn.classList.toggle("open", isHidden);
 }
-
-function selectDay(el){ el.classList.toggle("selected"); }
-function selectMonthDay(el){
-    document.querySelectorAll(".month-day-option").forEach(x => x.classList.remove("selected"));
-    el.classList.add("selected");
-}
+function selectMonthDay(el){ document.querySelectorAll(".month-day-option").forEach(x => x.classList.remove("selected")); el.classList.add("selected"); }
 function initMonthDayGrid(){
     const c = document.getElementById("month-day-grid");
     if(!c || c.childElementCount) return;
     for(let d=1; d<=31; d++) c.innerHTML += `<div class="month-day-option" data-day="${d}" onclick="selectMonthDay(this)">${d}</div>`;
 }
 function initCategoryColors(){
-    document.querySelectorAll(".category-option").forEach(el => {
-        const span = el.querySelector("span");
-        if(span) span.style.background = categoryColor(el.dataset.category).bg;
-    });
+    document.querySelectorAll(".category-option").forEach(el => { const span = el.querySelector("span"); if(span) span.style.background = categoryColor(el.dataset.category).bg; });
 }
-function toggleCustomMessage(){
-    document.getElementById("custom-message-box").style.display = document.getElementById("message-mode").value === "CUSTOM" ? "block" : "none";
-}
-function openTimePicker(){
-    if(window.AndroidBridge){
-        AndroidBridge.openTimePicker(selectedTime);
-    } else {
-        // Web Fallback: simple prompt for testing
-        const val = prompt("Masukkan jam (HH:mm):", selectedTime);
-        if(val && /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(val)){
-            updateTime(val);
-        }
-    }
-}
-
-function updateTime(val){
-    selectedTime = val;
-    const btn = document.getElementById("add-time-button");
-    if(btn) btn.innerText = val;
-    const inp = document.getElementById("add-time");
-    if(inp) inp.value = val;
-}
-function saveSettings(v){
-    userName = v.trim() || "Maestro";
-    localStorage.setItem("maestro_username", userName);
-    if(window.AndroidBridge) AndroidBridge.setUserName(userName);
-    updateUI();
-}
-function renderStats(){ /* Simplified for now */ }
+function toggleCustomMessage(){ document.getElementById("custom-message-box").style.display = document.getElementById("message-mode").value === "CUSTOM" ? "block" : "none"; }
+function saveSettings(v){ userName = v.trim() || "Maestro"; localStorage.setItem("maestro_username", userName); if(window.AndroidBridge) AndroidBridge.setUserName(userName); updateUI(); }
+function renderStats(){ /* Simplified */ }
 function renderDailyTip(){
     const el = document.getElementById("tip-text");
     if(!el) return;
@@ -2546,7 +2244,6 @@ function renderDailyTip(){
 }
 function refreshPermissionPanel(){ /* Placeholder */ }
 function openPermission(type){ if(window.AndroidBridge) AndroidBridge.openPermissionSettings(type); }
-function applySnooze(min){ if(window.AndroidBridge) AndroidBridge.snoozeAlarm(min); }
 
 </script>
 
