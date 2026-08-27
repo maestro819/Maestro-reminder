@@ -3,15 +3,14 @@ package com.maestro.reminder;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.media.AudioAttributes;
-import android.media.RingtoneManager;
 
 import androidx.core.app.NotificationCompat;
 
@@ -28,41 +27,56 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override public void onReceive(Context context, Intent intent) {
         String action = intent == null ? null : intent.getAction();
-        if (Intent.ACTION_BOOT_COMPLETED.equals(action) || Intent.ACTION_TIME_CHANGED.equals(action) || Intent.ACTION_TIMEZONE_CHANGED.equals(action) || android.app.AlarmManager.ACTION_SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED.equals(action)) {
+        if (Intent.ACTION_BOOT_COMPLETED.equals(action) || Intent.ACTION_TIME_CHANGED.equals(action) || Intent.ACTION_TIMEZONE_CHANGED.equals(action) || "android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED".equals(action)) {
             AlarmScheduler.rescheduleAll(context); return;
         }
         if (!AlarmScheduler.ACTION_FIRE.equals(action)) return;
         long id = intent.getLongExtra("REMINDER_ID", -1L);
         Reminder reminder = ReminderStore.find(context, id);
-        if (reminder == null || !reminder.enabled) return;
+        if (reminder == null || !reminder.enabled) {
+            AlarmScheduler.cancel(context, id); // Pastikan alarm sistem benar-benar mati jika data tidak ada
+            return;
+        }
 
         int notificationId = notificationId(id);
         activeReminderId = id;
         createChannel(context);
         String ownerName = context.getSharedPreferences("maestro_user", Context.MODE_PRIVATE).getString("name", "Maestro");
+        
         Intent screen = new Intent(context, AlarmScreenActivity.class)
                 .putExtra("ACTIVITY_NAME", reminder.title)
                 .putExtra("ACTIVITY_ICON", reminder.icon)
                 .putExtra("KIND", reminder.kind)
                 .putExtra("USER_NAME", ownerName)
-                .putExtra("NOTE", reminder.note)
                 .putExtra("CATEGORY", reminder.category)
                 .putExtra("ALARM_MESSAGE", alarmMessage(reminder, ownerName))
+                .putExtra("ALARM_TIME", reminder.time)
                 .putExtra("NOTIFICATION_ID", notificationId)
                 .putExtra("REMINDER_ID", id)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        
         PendingIntent screenPending = PendingIntent.getActivity(context, notificationId, screen, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(com.maestro.reminder.R.drawable.ic_alarm)
                 .setContentTitle(reminder.icon + "  " + reminder.title)
                 .setContentText(alarmMessage(reminder, ownerName))
-                .setPriority(NotificationCompat.PRIORITY_MAX).setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC).setFullScreenIntent(screenPending, true)
-                .setContentIntent(screenPending).setAutoCancel(true).setOngoing(true);
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setFullScreenIntent(screenPending, true) // Muncul full-screen meskipun HP aktif
+                .setContentIntent(screenPending)
+                .setAutoCancel(true)
+                .setOngoing(true);
+
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) manager.notify(notificationId, builder.build());
         activeNotificationManager = manager;
         activeNotificationId = notificationId;
+
+        // Coba buka activity langsung sebagai cadangan untuk Full-Screen Intent pada beberapa perangkat
+        try { context.startActivity(screen); } catch (Exception ignored) {}
+
         activeVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (activeVibrator != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) activeVibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 900, 500, 900}, 0));
@@ -80,7 +94,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         ReminderStore.save(context, items);
     }
 
-
     private String alarmMessage(Reminder reminder, String ownerName) {
         String period = period(reminder.triggerAt);
         if (Reminder.SLEEP.equals(reminder.kind)) return ownerName + ", bangun yuk. Selamat " + period + ".";
@@ -96,12 +109,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         else messages = new String[]{"{name}, ada pengingat untukmu.", "Jangan sampai jadwalmu terlewat."};
         return messages[(int)(Math.abs(reminder.id) % messages.length)].replace("{name}", ownerName);
     }
+
     private String period(long time) {
         Calendar c=Calendar.getInstance(); c.setTimeInMillis(time); int h=c.get(Calendar.HOUR_OF_DAY);
         if(h>=5&&h<11) return "pagi"; if(h>=11&&h<15) return "siang"; if(h>=15&&h<18) return "sore"; return "malam";
     }
-
-    private Reminder copy(Reminder r) { return r; }
 
     private long nextTrigger(Reminder reminder) {
         Calendar next = Calendar.getInstance();

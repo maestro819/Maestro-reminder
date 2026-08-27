@@ -17,7 +17,6 @@ import android.os.Vibrator;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -41,6 +40,8 @@ public class AlarmScreenActivity extends AppCompatActivity {
     private int notificationId = DEFAULT_NOTIFICATION_ID;
     private Vibrator vibrator;
     private Ringtone ringtone;
+    private AudioManager audioManager;
+    private int originalVolume;
     private final Handler soundHandler = new Handler(Looper.getMainLooper());
     private final Random random = new Random();
     private FrameLayout snoozeOverlay;
@@ -53,6 +54,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
     private final Runnable replaySound = new Runnable() {
         @Override public void run() {
             if (ringtone != null) {
+                forceMaxVolume();
                 if (!ringtone.isPlaying()) ringtone.play();
                 soundHandler.postDelayed(this, 2500L);
             }
@@ -72,6 +74,8 @@ public class AlarmScreenActivity extends AppCompatActivity {
 
         notificationId = getIntent().getIntExtra("NOTIFICATION_ID", DEFAULT_NOTIFICATION_ID);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        
         startAlarmSound();
         startAlarmVibration();
         bindAlarmContent();
@@ -110,7 +114,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
     private void bindSnoozeActions() {
         findViewById(R.id.btnSnoozeAlarm).setOnClickListener(v -> openSnoozeSheet());
         findViewById(R.id.snoozeOverlay).setOnClickListener(v -> closeSnoozeSheet());
-        findViewById(R.id.snoozeSheet).setOnClickListener(v -> { /* Jangan tutup saat menyentuh sheet. */ });
+        findViewById(R.id.snoozeSheet).setOnClickListener(v -> { });
         findViewById(R.id.btnSnooze5).setOnClickListener(v -> applySnooze(5));
         findViewById(R.id.btnSnooze10).setOnClickListener(v -> applySnooze(10));
         findViewById(R.id.btnSnooze15).setOnClickListener(v -> applySnooze(15));
@@ -143,7 +147,16 @@ public class AlarmScreenActivity extends AppCompatActivity {
 
     private void configureAlarmWindow() {
         Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            setShowWhenLocked(true);
+            setTurnScreenOn(true);
+        }
+
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
         WindowCompat.setDecorFitsSystemWindows(window, false);
@@ -155,6 +168,54 @@ public class AlarmScreenActivity extends AppCompatActivity {
             controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             controller.hide(WindowInsetsCompat.Type.systemBars());
         }
+    }
+
+    private void forceMaxVolume() {
+        try {
+            if (audioManager != null) {
+                int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, max, 0);
+                // Bypass headset: Android secara otomatis merutekan STREAM_ALARM ke speaker 
+                // jika disetel dengan AudioAttributes USAGE_ALARM.
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private void startAlarmSound() {
+        try {
+            originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+            forceMaxVolume();
+
+            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if (alarmUri == null) alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            ringtone = RingtoneManager.getRingtone(this, alarmUri);
+            
+            if (ringtone != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ringtone.setAudioAttributes(new AudioAttributes.Builder()
+                            .setUsage(AudioAttributes.USAGE_ALARM)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                            .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED) // Paksa bunyi meskipun silent
+                            .build());
+                } else {
+                    ringtone.setStreamType(AudioManager.STREAM_ALARM);
+                }
+                ringtone.play();
+                soundHandler.postDelayed(replaySound, 1800L);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    private void startAlarmVibration() {
+        try {
+            if (vibrator == null || !vibrator.hasVibrator()) return;
+            long[] pattern = {0, 500, 300, 500};
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(android.os.VibrationEffect.createWaveform(pattern, 0));
+            } else {
+                vibrator.vibrate(pattern, 0);
+            }
+        } catch (Exception ignored) {}
     }
 
     private void applyResponsiveInsets(@NonNull View root, @NonNull View body, @NonNull View sheet) {
@@ -237,36 +298,6 @@ public class AlarmScreenActivity extends AppCompatActivity {
         return value == null || value.trim().isEmpty() ? fallback : value.trim();
     }
 
-    private void startAlarmVibration() {
-        try {
-            if (vibrator == null || !vibrator.hasVibrator()) return;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(android.os.VibrationEffect.createWaveform(new long[]{0, 500, 300, 500}, 0));
-            } else {
-                vibrator.vibrate(new long[]{0, 500, 300, 500}, 0);
-            }
-        } catch (Exception ignored) {}
-    }
-
-    private void startAlarmSound() {
-        try {
-            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-            if (alarmUri == null) alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            ringtone = RingtoneManager.getRingtone(this, alarmUri);
-            if (ringtone != null) {
-                ringtone.setStreamType(AudioManager.STREAM_ALARM);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ringtone.setAudioAttributes(new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .build());
-                }
-                ringtone.play();
-                soundHandler.postDelayed(replaySound, 1800L);
-            }
-        } catch (Exception ignored) {}
-    }
-
     @Override protected void onDestroy() {
         stopAlarmSignal();
         super.onDestroy();
@@ -282,5 +313,8 @@ public class AlarmScreenActivity extends AppCompatActivity {
         AlarmReceiver.stopActiveAlarm(this);
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) manager.cancel(notificationId);
+        
+        // Kembalikan volume jika perlu, tapi untuk alarm biasanya dibiarkan max agar user sadar
+        // try { audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0); } catch (Exception ignored) {}
     }
 }
