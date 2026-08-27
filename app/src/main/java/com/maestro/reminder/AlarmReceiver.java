@@ -14,8 +14,11 @@ import android.os.Vibrator;
 
 import androidx.core.app.NotificationCompat;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AlarmReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "maestro_alarm_channel";
@@ -34,7 +37,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         long id = intent.getLongExtra("REMINDER_ID", -1L);
         Reminder reminder = ReminderStore.find(context, id);
         if (reminder == null || !reminder.enabled) {
-            AlarmScheduler.cancel(context, id); // Pastikan alarm sistem benar-benar mati jika data tidak ada
+            AlarmScheduler.cancel(context, id);
             return;
         }
 
@@ -43,6 +46,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         createChannel(context);
         String ownerName = context.getSharedPreferences("maestro_user", Context.MODE_PRIVATE).getString("name", "Maestro");
         
+        // Format waktu untuk dikirim ke activity
+        String formattedTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(reminder.triggerAt));
+        
         Intent screen = new Intent(context, AlarmScreenActivity.class)
                 .putExtra("ACTIVITY_NAME", reminder.title)
                 .putExtra("ACTIVITY_ICON", reminder.icon)
@@ -50,7 +56,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .putExtra("USER_NAME", ownerName)
                 .putExtra("CATEGORY", reminder.category)
                 .putExtra("ALARM_MESSAGE", alarmMessage(reminder, ownerName))
-                .putExtra("ALARM_TIME", reminder.time)
+                .putExtra("ALARM_TIME", formattedTime)
                 .putExtra("NOTIFICATION_ID", notificationId)
                 .putExtra("REMINDER_ID", id)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -64,7 +70,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setFullScreenIntent(screenPending, true) // Muncul full-screen meskipun HP aktif
+                .setFullScreenIntent(screenPending, true)
                 .setContentIntent(screenPending)
                 .setAutoCancel(true)
                 .setOngoing(true);
@@ -74,7 +80,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         activeNotificationManager = manager;
         activeNotificationId = notificationId;
 
-        // Coba buka activity langsung sebagai cadangan untuk Full-Screen Intent pada beberapa perangkat
         try { context.startActivity(screen); } catch (Exception ignored) {}
 
         activeVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
