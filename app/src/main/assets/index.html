@@ -1917,6 +1917,7 @@ let triggeredAlarms={};
 let selectedTime=deviceTime();
 
 let currentAlarmId=null;
+let currentScreen = "home";
 
 let selectedCategory="HEALTH";
 let selectedCategoryLabel="Kesehatan";
@@ -2047,6 +2048,13 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     }
 
+    // Update countdown every minute
+    setInterval(() => {
+        if (currentScreen === 'home') renderHome();
+        if (currentScreen === 'schedule') renderSchedule();
+    }, 60000);
+
+
 });
 
 
@@ -2055,6 +2063,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 ========================================================= */
 
 function switchScreen(screenId,btnElement){
+    currentScreen = screenId;
 
     document
         .querySelectorAll(".screen")
@@ -3488,19 +3497,6 @@ function getRemainingTime(timeStr) {
     if (target < now) {
         target.setDate(target.getDate() + 1);
     }
-    
-    const diff = target - now;
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
-    if (hours > 0) {
-        return `${hours}j ${mins}m lagi`;
-    }
-    return `${mins}m lagi`;
-}
-
-
-
     
     const diff = target - now;
     const hours = Math.floor(diff / (1000 * 60 * 60));
