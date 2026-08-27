@@ -1325,17 +1325,17 @@ textarea.form-control{
             </button>
         </div>
 
-        <div id="permission-fullscreen-row">
         <div id="permission-overlay-row">
             <button
                 class="btn-primary"
                 onclick="openPermission('overlay')"
-                style="background:#f59e0b;margin-top:7px;"
+                style="background:#f59e0b;margin-bottom:7px;"
             >
                 Izinkan Tampil di Atas Aplikasi Lain
             </button>
         </div>
 
+        <div id="permission-fullscreen-row">
             <button
                 class="btn-primary"
                 onclick="openPermission('fullscreen')"
@@ -2060,7 +2060,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
     // Update countdown every minute
     setInterval(() => {
-        if (currentScreen === 'home') renderHome();
+        if (currentScreen === 'home') renderHomeActivities();
         if (currentScreen === 'schedule') renderSchedule();
     }, 60000);
 
@@ -4217,32 +4217,19 @@ function refreshPermissionPanel(){
 
 
 function openPermission(type){
-
     if(!window.AndroidBridge){
-
-        alert(
-            "Pengaturan izin hanya tersedia di aplikasi Android."
-        );
-
+        alert("Pengaturan izin hanya tersedia di aplikasi Android.");
         return;
-
     }
-
 
     if(type==="notification")
         AndroidBridge.openNotificationSettings();
-
     else if(type==="alarm")
         AndroidBridge.openAlarmSettings();
-
-        else if(type==="overlay")
+    else if(type==="overlay")
         AndroidBridge.openOverlaySettings();
-
-    else
-
     else
         AndroidBridge.openFullScreenSettings();
-
 }
 
 
@@ -4260,6 +4247,7 @@ function escapeHTML(value){
         .replace(/'/g,"&#039;");
 
 }
+
 
 </script>
 
