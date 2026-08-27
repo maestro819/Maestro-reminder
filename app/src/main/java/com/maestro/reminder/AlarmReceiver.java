@@ -42,6 +42,20 @@ public class AlarmReceiver extends BroadcastReceiver {
             return;
         }
 
+        // VALIDASI HARI (PENTING: Mencegah alarm bunyi di hari yang tidak dijadwalkan)
+        Calendar now = Calendar.getInstance();
+        if (reminder.repeat != null && reminder.repeat.startsWith("WEEKLY:")) {
+            String days = reminder.repeat.substring("WEEKLY:".length());
+            int currentDay = now.get(Calendar.DAY_OF_WEEK);
+            if (!days.contains(String.valueOf(currentDay))) {
+                // Bukan harinya, jadwalkan ulang untuk besok dan abaikan
+                reminder.triggerAt = nextTrigger(reminder);
+                AlarmScheduler.schedule(context, reminder);
+                updateStore(context, reminder);
+                return;
+            }
+        }
+
         int notificationId = notificationId(id);
         activeReminderId = id;
         createChannel(context);
@@ -64,7 +78,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                         | Intent.FLAG_ACTIVITY_SINGLE_TOP
                         | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
         
-        // Gunakan FLAG_IMMUTABLE untuk keamanan, tapi pastikan sistem bisa membukanya
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             flags |= PendingIntent.FLAG_IMMUTABLE;
@@ -79,7 +92,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setFullScreenIntent(screenPending, true) // Kunci untuk full screen
+                .setFullScreenIntent(screenPending, true)
                 .setContentIntent(screenPending)
                 .setAutoCancel(false)
                 .setOngoing(true);
@@ -91,15 +104,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             activeNotificationId = notificationId;
         }
 
-        // Coba buka activity secara langsung
-        // Ini seringkali butuh izin "Display over other apps" pada Android 10+
         try {
             context.startActivity(screen);
-        } catch (Exception e) {
-            // Jika gagal, sistem akan tetap mencoba lewat FullScreenIntent notifikasi
-        }
+        } catch (Exception ignored) {}
 
-        // Vibrasi tetap dijalankan di sini sebagai backup jika activity belum terbuka
         activeVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (activeVibrator != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -116,6 +124,10 @@ public class AlarmReceiver extends BroadcastReceiver {
             reminder.triggerAt = nextTrigger(reminder);
             AlarmScheduler.schedule(context, reminder);
         }
+        updateStore(context, reminder);
+    }
+
+    private void updateStore(Context context, Reminder reminder) {
         List<Reminder> items = ReminderStore.load(context);
         for (int i = 0; i < items.size(); i++) if (items.get(i).id == reminder.id) items.set(i, reminder);
         ReminderStore.save(context, items);
@@ -146,15 +158,32 @@ public class AlarmReceiver extends BroadcastReceiver {
         Calendar next = Calendar.getInstance();
         Calendar anchor = Calendar.getInstance(); anchor.setTimeInMillis(reminder.anchorAt > 0 ? reminder.anchorAt : reminder.triggerAt);
         next.set(Calendar.HOUR_OF_DAY, anchor.get(Calendar.HOUR_OF_DAY)); next.set(Calendar.MINUTE, anchor.get(Calendar.MINUTE)); next.set(Calendar.SECOND, 0); next.set(Calendar.MILLISECOND, 0);
-        next.add(Calendar.DAY_OF_YEAR, 1);
+        
+        // Selalu mulai cek dari besok jika hari ini sudah lewat
+        if (next.getTimeInMillis() <= System.currentTimeMillis()) {
+            next.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
         if (reminder.repeat != null && reminder.repeat.startsWith("WEEKLY:")) {
             String days = reminder.repeat.substring("WEEKLY:".length());
-            while (next.getTimeInMillis() <= System.currentTimeMillis() || !days.contains(String.valueOf(next.get(Calendar.DAY_OF_WEEK)))) next.add(Calendar.DAY_OF_YEAR, 1);
+            // Cari hari berikutnya yang sesuai filter
+            while (!days.contains(String.valueOf(next.get(Calendar.DAY_OF_WEEK)))) {
+                next.add(Calendar.DAY_OF_YEAR, 1);
+            }
             return next.getTimeInMillis();
         }
+        
         if (Reminder.DAILY.equals(reminder.repeat)) return next.getTimeInMillis();
-        if (Reminder.WEEKLY.equals(reminder.repeat)) { next.add(Calendar.DAY_OF_YEAR, 6); return next.getTimeInMillis(); }
-        while (next.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || next.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) next.add(Calendar.DAY_OF_YEAR, 1);
+        if (Reminder.WEEKLY.equals(reminder.repeat)) { 
+            // Jika mingguan (tanpa filter hari spesifik), tambah 7 hari
+            next.add(Calendar.DAY_OF_YEAR, 6); 
+            return next.getTimeInMillis(); 
+        }
+        
+        // WORKDAYS
+        while (next.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || next.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+            next.add(Calendar.DAY_OF_YEAR, 1);
+        }
         return next.getTimeInMillis();
     }
 
@@ -187,15 +216,12 @@ public class AlarmReceiver extends BroadcastReceiver {
     private void createChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Maestro Reminder Alarm", NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("Notifikasi reminder Maestro Reminder");
-            channel.enableVibration(true);
             channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-            channel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            channel.enableVibration(true);
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build();
-            // Sound akan ditangani oleh Activity untuk bypass headset
             channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), audioAttributes);
             NotificationManager manager = context.getSystemService(NotificationManager.class); if (manager != null) manager.createNotificationChannel(channel);
         }

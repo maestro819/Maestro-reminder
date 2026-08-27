@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioAttributes;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -32,29 +33,24 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Random;
 
-public class AlarmScreenActivity extends AppCompatActivity {
+public class AlarmScreenActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
     private static final int DEFAULT_NOTIFICATION_ID = 1001;
 
     private int notificationId = DEFAULT_NOTIFICATION_ID;
     private Vibrator vibrator;
     private Ringtone ringtone;
     private AudioManager audioManager;
-    private int originalVolume;
     private final Handler soundHandler = new Handler(Looper.getMainLooper());
-    private final Random random = new Random();
     private FrameLayout snoozeOverlay;
-    private int baseBodyLeft;
-    private int baseBodyTop;
-    private int baseBodyRight;
-    private int baseBodyBottom;
-    private int baseSheetBottom;
+    private int baseBodyLeft, baseBodyTop, baseBodyRight, baseBodyBottom, baseSheetBottom;
     private boolean isAlarmActive = true;
+    private Object audioFocusRequest;
 
     private final Runnable replaySound = new Runnable() {
         @Override public void run() {
             if (isAlarmActive && ringtone != null) {
+                requestHighPriorityAudioFocus();
                 forceMaxVolume();
                 if (!ringtone.isPlaying()) {
                     ringtone.play();
@@ -66,10 +62,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // Hentikan vibrasi dan notifikasi dari Receiver segera setelah Activity terbuka
         AlarmReceiver.stopActiveAlarm(this);
-        
         configureAlarmWindow();
         setContentView(R.layout.activity_alarm_screen);
 
@@ -83,10 +76,38 @@ public class AlarmScreenActivity extends AppCompatActivity {
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         
+        requestHighPriorityAudioFocus();
         startAlarmSound();
         startAlarmVibration();
         bindAlarmContent();
         bindSnoozeActions();
+    }
+
+    private void requestHighPriorityAudioFocus() {
+        if (audioManager == null) return;
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                AudioAttributes playbackAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build();
+                audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                        .setAudioAttributes(playbackAttributes)
+                        .setAcceptsDelayedFocusGain(true)
+                        .setOnAudioFocusChangeListener(this)
+                        .build();
+                audioManager.requestAudioFocus((AudioFocusRequest) audioFocusRequest);
+            } else {
+                audioManager.requestAudioFocus(this, AudioManager.STREAM_ALARM, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+            }
+        } catch (Exception ignored) {}
+    }
+
+    @Override public void onAudioFocusChange(int focusChange) {
+        if (focusChange == AudioManager.AUDIOFOCUS_LOSS || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+            // Jika fokus hilang karena notifikasi lain, paksa ambil kembali dalam 500ms
+            if (isAlarmActive) soundHandler.postDelayed(this::requestHighPriorityAudioFocus, 500L);
+        }
     }
 
     private void bindAlarmContent() {
@@ -113,10 +134,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
 
     private void bindSnoozeActions() {
         findViewById(R.id.btnSnoozeAlarm).setOnClickListener(v -> openSnoozeSheet());
-        findViewById(R.id.btnDismissAlarm).setOnClickListener(v -> {
-            stopAlarmSignal();
-            finish();
-        });
+        findViewById(R.id.btnDismissAlarm).setOnClickListener(v -> { stopAlarmSignal(); finish(); });
         snoozeOverlay.setOnClickListener(v -> closeSnoozeSheet());
         findViewById(R.id.snoozeSheet).setOnClickListener(v -> {});
         findViewById(R.id.btnSnooze5).setOnClickListener(v -> applySnooze(5));
@@ -142,11 +160,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
     }
 
     @Override public void onBackPressed() {
-        if (snoozeOverlay != null && snoozeOverlay.getVisibility() == View.VISIBLE) {
-            closeSnoozeSheet();
-        } else {
-            // Jangan izinkan back untuk mematikan alarm tanpa aksi
-        }
+        if (snoozeOverlay != null && snoozeOverlay.getVisibility() == View.VISIBLE) closeSnoozeSheet();
     }
 
     private void configureAlarmWindow() {
@@ -186,9 +200,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
 
     private void startAlarmSound() {
         try {
-            originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
             forceMaxVolume();
-
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if (alarmUri == null) alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             ringtone = RingtoneManager.getRingtone(this, alarmUri);
@@ -224,10 +236,13 @@ public class AlarmScreenActivity extends AppCompatActivity {
         soundHandler.removeCallbacks(replaySound);
         if (ringtone != null && ringtone.isPlaying()) ringtone.stop();
         if (vibrator != null) vibrator.cancel();
-        
-        // Kembalikan volume jika diinginkan, tapi untuk alarm biasanya dibiarkan max
-        // audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
-        
+        if (audioManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
+                audioManager.abandonAudioFocusRequest((AudioFocusRequest) audioFocusRequest);
+            } else {
+                audioManager.abandonAudioFocus(this);
+            }
+        }
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) manager.cancel(notificationId);
     }
@@ -245,20 +260,9 @@ public class AlarmScreenActivity extends AppCompatActivity {
         baseSheetBottom = sheet.getPaddingBottom();
 
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
-                    | WindowInsetsCompat.Type.displayCutout());
-            body.setPadding(
-                    baseBodyLeft + bars.left,
-                    baseBodyTop + bars.top,
-                    baseBodyRight + bars.right,
-                    baseBodyBottom + bars.bottom
-            );
-            sheet.setPadding(
-                    sheet.getPaddingLeft(),
-                    sheet.getPaddingTop(),
-                    sheet.getPaddingRight(),
-                    baseSheetBottom + bars.bottom
-            );
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            body.setPadding(baseBodyLeft + bars.left, baseBodyTop + bars.top, baseBodyRight + bars.right, baseBodyBottom + bars.bottom);
+            sheet.setPadding(sheet.getPaddingLeft(), sheet.getPaddingTop(), sheet.getPaddingRight(), baseSheetBottom + bars.bottom);
             return insets;
         });
         ViewCompat.requestApplyInsets(root);
@@ -273,9 +277,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
         body.setBackground(background);
     }
 
-    private String currentTime() {
-        return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-    }
+    private String currentTime() { return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date()); }
 
     private String timePeriod(String time) {
         try {
@@ -287,7 +289,5 @@ public class AlarmScreenActivity extends AppCompatActivity {
         } catch (Exception e) { return "hari"; }
     }
 
-    private String valueOrDefault(String val, String def) {
-        return (val == null || val.trim().isEmpty()) ? def : val;
-    }
+    private String valueOrDefault(String val, String def) { return (val == null || val.trim().isEmpty()) ? def : val; }
 }
