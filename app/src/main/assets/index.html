@@ -1326,6 +1326,16 @@ textarea.form-control{
         </div>
 
         <div id="permission-fullscreen-row">
+        <div id="permission-overlay-row">
+            <button
+                class="btn-primary"
+                onclick="openPermission('overlay')"
+                style="background:#f59e0b;margin-top:7px;"
+            >
+                Izinkan Tampil di Atas Aplikasi Lain
+            </button>
+        </div>
+
             <button
                 class="btn-primary"
                 onclick="openPermission('fullscreen')"
@@ -4139,6 +4149,10 @@ function refreshPermissionPanel(){
                 "permission-alarm-row"
             );
 
+                const overlay=
+            document.getElementById(
+                "permission-overlay-row"
+            );
         const fullscreen=
             document.getElementById(
                 "permission-fullscreen-row"
@@ -4155,6 +4169,10 @@ function refreshPermissionPanel(){
             ?"none"
             :"block";
 
+                overlay.style.display=
+            status.overlay
+            ?"none"
+            :"block";
         fullscreen.style.display=
             status.fullScreen
             ?"none"
@@ -4164,7 +4182,8 @@ function refreshPermissionPanel(){
         const pending=[
             !status.notification,
             !status.exactAlarm,
-            !status.fullScreen
+            !status.fullScreen,
+            !status.overlay
         ].filter(Boolean).length;
 
 
@@ -4215,6 +4234,11 @@ function openPermission(type){
 
     else if(type==="alarm")
         AndroidBridge.openAlarmSettings();
+
+        else if(type==="overlay")
+        AndroidBridge.openOverlaySettings();
+
+    else
 
     else
         AndroidBridge.openFullScreenSettings();
