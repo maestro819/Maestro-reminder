@@ -1203,6 +1203,129 @@ input:checked + .toggle-slider:before {
     margin: 0 4px;
 }
 
+
+/* LIST STYLE DASHBOARD */
+.alarm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.alarm-item {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f1f5f9;
+    gap: 14px;
+    transition: background 0.2s;
+}
+
+.alarm-item:last-child {
+    border-bottom: 0;
+}
+
+.alarm-item.disabled {
+    opacity: 0.6;
+}
+
+.alarm-item-icon {
+    font-size: 20px;
+    width: 32px;
+    text-align: center;
+}
+
+.alarm-item-info {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.alarm-item-time {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--text-main);
+    min-width: 55px;
+}
+
+.alarm-item-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.alarm-item-meta {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.alarm-countdown {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--primary);
+    text-align: right;
+}
+
+/* TOGGLE SWITCH */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e2e8f0;
+    transition: .3s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--green);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+}
+
+.alarm-item-separator {
+    color: #cbd5e1;
+    margin: 0 4px;
+}
+
 </style>
 </head>
 
@@ -1226,29 +1349,8 @@ input:checked + .toggle-slider:before {
         <p id="current-date-text"></p>
     </div>
 
-    <div class="today-hero">
-        <div class="today-hero-top">
-            <div>
-                <small>PROGRESS HARI INI</small>
-                <h3 id="hero-progress">0%</h3>
-            </div>
-            <div class="hero-percent" id="hero-percent">0/0</div>
-        </div>
-    </div>
-
-    <div class="section-title">Berikutnya</div>
-    <div id="next-activity-container"></div>
-
-    <div class="section-title" id="today-activities-title">Aktivitas Hari Ini</div>
-    <div id="activity-list-container" class="activity-grid"></div>
-
-    <div id="done-section" style="display:none;">
-        <button class="done-toggle" id="done-toggle" onclick="toggleDoneSection()">
-            <span id="done-toggle-label">✓ 0 selesai</span>
-            <i class="fa-solid fa-chevron-down" id="done-toggle-icon"></i>
-        </button>
-        <div id="done-list-container" class="activity-grid" style="display:none;margin-top:10px;"></div>
-    </div>
+    <div class="section-title">ALARM HARI INI</div>
+    <div id="alarm-list-container" class="alarm-list"></div>
 
     <div class="tip-card" id="tip-card">
         <div class="tip-icon">💡</div>
@@ -2046,17 +2148,7 @@ function updateUI(){
     updateDate();
     activities.sort((a,b) => a.time.localeCompare(b.time));
     
-    const total = activities.length;
-    const completed = activities.filter(a => a.done).length;
-    const percent = total ? Math.round(completed/total*100) : 0;
-    
-    const hp = document.getElementById("hero-progress");
-    if(hp) hp.innerText = percent + "%";
-    const hpt = document.getElementById("hero-percent");
-    if(hpt) hpt.innerText = completed + "/" + total;
-    
-    renderNextActivity();
-    renderHomeActivities();
+    renderAlarmList();
     renderSchedule();
     renderStats();
     renderDailyTip();
@@ -2226,81 +2318,41 @@ function openEditScreen(id){
    RENDERING
 ========================================================= */
 
-function activityCard(act, home){
-    const c = categoryColor(act.category);
-    const isEnabled = act.enabled !== false;
-    
-    return `
-        <div class="activity-card" style="border-top-color:${c.fg}; ${!isEnabled ? 'opacity:0.6;' : ''}">
-            <div class="activity-top ${home ? 'no-delete' : ''}">
-                <div class="activity-icon" style="background:${c.bg};" onclick="openEditScreen(${act.id})">
-                    ${act.icon}
-                </div>
-                ${!home ? `<button class="delete-btn" onclick="deleteActivity(${act.id}, event)"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-            </div>
-            <div class="activity-name" onclick="openEditScreen(${act.id})">
-                ${escapeHTML(act.name)}
-            </div>
-            <div class="activity-category">
-                ${categoryName(act.category)}
-            </div>
-            <div class="activity-bottom">
-                <span class="activity-time">
-                    ${act.time}
-                    ${isEnabled && !act.done ? `<small style="display:block;font-size:9px;color:var(--primary);margin-top:2px;font-weight:600;">${getRemainingTime(act.time)}</small>` : ''}
-                </span>
-                <span class="status-dot ${act.done ? 'status-done' : 'status-pending'}" onclick="toggleDone(${act.id})">
-                    ${act.done ? '✓ Selesai' : (isEnabled ? '○ Aktif' : '✖ Mati')}
-                </span>
-            </div>
-        </div>
-    `;
-}
-
-function renderHomeActivities(){
-    const container = document.getElementById("activity-list-container");
+function renderAlarmList(){
+    const container = document.getElementById("alarm-list-container");
     if(!container) return;
     container.innerHTML = "";
     
-    const pending = activities.filter(a => !a.done);
-    if(!pending.length){
-        container.innerHTML = `<div class="progress-card" style="grid-column:1/-1;text-align:center;padding:20px;"><p style="font-size:12px;color:var(--text-muted);">Semua selesai atau belum ada jadwal.</p></div>`;
-    } else {
-        pending.forEach(a => container.innerHTML += activityCard(a, true));
-    }
-    
-    const done = activities.filter(a => a.done);
-    const ds = document.getElementById("done-section");
-    const dc = document.getElementById("done-list-container");
-    if(done.length){
-        ds.style.display = "block";
-        document.getElementById("done-toggle-label").innerText = `✓ ${done.length} selesai`;
-        dc.innerHTML = "";
-        done.forEach(a => dc.innerHTML += activityCard(a, true));
-    } else {
-        ds.style.display = "none";
-    }
-}
-
-function renderNextActivity(){
-    const container = document.getElementById("next-activity-container");
-    if(!container) return;
-    const next = activities.find(a => !a.done);
-    if(!next){
-        container.innerHTML = `<div class="next-card"><div class="next-icon">✨</div><div class="next-info"><small>MAESTRO</small><h3>Belum ada jadwal</h3><p>Tekan + untuk memulai.</p></div></div>`;
+    if(!activities.length){
+        container.innerHTML = `<div style="padding:30px;text-align:center;color:var(--text-muted);"><div style="font-size:30px;margin-bottom:10px;">⏰</div><p style="font-size:13px;font-weight:700;">Belum ada alarm</p><p style="font-size:11px;">Klik + untuk menambah jadwal.</p></div>`;
         return;
     }
-    container.innerHTML = `
-        <div class="next-card" onclick="openEditScreen(${next.id})">
-            <div class="next-icon" style="background:${categoryColor(next.category).bg};">${next.icon}</div>
-            <div class="next-info">
-                <small>BERIKUTNYA</small>
-                <h3>${escapeHTML(next.name)}</h3>
-                <p>${categoryName(next.category)} • ${repeatLabel(next)}</p>
+
+    const sorted = [...activities].sort((a,b) => a.time.localeCompare(b.time));
+
+    sorted.forEach(act => {
+        const isEnabled = act.enabled !== false;
+        const countdown = isEnabled ? getRemainingTime(act.time) : "";
+        
+        const item = document.createElement("div");
+        item.className = `alarm-item ${isEnabled ? '' : 'disabled'}`;
+        item.innerHTML = `
+            <div class="alarm-item-icon" onclick="openEditScreen(${act.id})" style="cursor:pointer;">${act.icon}</div>
+            <div class="alarm-item-info" onclick="openEditScreen(${act.id})">
+                <span class="alarm-item-time">${act.time}</span>
+                <span class="alarm-item-separator">—</span>
+                <span class="alarm-item-name">${escapeHTML(act.name)}</span>
             </div>
-            <div class="next-time">${next.time}</div>
-        </div>
-    `;
+            <div class="alarm-item-meta">
+                ${isEnabled ? `<div class="alarm-countdown">${countdown}</div>` : ''}
+                <label class="toggle-switch">
+                    <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAlarm(${act.id}, this.checked)">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        `;
+        container.appendChild(item);
+    });
 }
 
 function renderSchedule(){
@@ -2308,15 +2360,41 @@ function renderSchedule(){
     if(!container) return;
     container.innerHTML = "";
     if(!activities.length){
-        container.innerHTML = `<div class="progress-card" style="grid-column:1/-1;text-align:center;padding:20px;"><p style="font-size:12px;color:var(--text-muted);">Belum ada pengingat.</p></div>`;
+        container.innerHTML = `<div class="progress-card" style="grid-column:1/-1;text-align:center;padding:24px 16px;"><div style="font-size:28px;margin-bottom:8px;">🗓️</div><p style="font-size:13px;font-weight:700;margin-bottom:4px;">Belum ada pengingat</p><p style="font-size:11px;color:var(--text-muted);">Tekan tombol + di kanan bawah untuk mulai.</p></div>`;
         return;
     }
-    activities.forEach(a => container.innerHTML += activityCard(a, false));
+    activities.forEach(act => {
+        const c = categoryColor(act.category);
+        const isEnabled = act.enabled !== false;
+        container.innerHTML += `
+            <div class="activity-card" style="border-top-color:${c.fg}; ${!isEnabled ? 'opacity:0.6;' : ''}">
+                <div class="activity-top">
+                    <div class="activity-icon" style="background:${c.bg};" onclick="openEditScreen(${act.id})">${act.icon}</div>
+                    <button class="delete-btn" onclick="deleteActivity(${act.id}, event)"><i class="fa-solid fa-trash-can"></i></button>
+                </div>
+                <div class="activity-name" onclick="openEditScreen(${act.id})">${escapeHTML(act.name)}</div>
+                <div class="activity-category">${categoryName(act.category)}</div>
+                <div class="activity-bottom">
+                    <span class="activity-time">${act.time}</span>
+                    <span class="status-dot ${act.done ? 'status-done' : 'status-pending'}" onclick="toggleDone(${act.id})">
+                        ${act.done ? '✓ Selesai' : (isEnabled ? '○ Aktif' : '✖ Mati')}
+                    </span>
+                </div>
+            </div>
+        `;
+    });
 }
 
 /* =========================================================
    HELPERS
 ========================================================= */
+
+function toggleAlarm(id, enabled){
+    activities = activities.map(a => a.id === id ? {...a, enabled: enabled} : a);
+    localStorage.setItem("maestro_activities", JSON.stringify(activities));
+    if(window.AndroidBridge) AndroidBridge.setActivityEnabled(id, enabled);
+    renderAlarmList();
+}
 
 function toggleDone(id){
     activities = activities.map(a => a.id === id ? {...a, done: !a.done} : a);
@@ -2429,14 +2507,14 @@ function initCategoryColors(){
 function toggleCustomMessage(){
     document.getElementById("custom-message-box").style.display = document.getElementById("message-mode").value === "CUSTOM" ? "block" : "none";
 }
-function openTimePicker(){ /* Placeholder for Android TimePicker */ }
+function openTimePicker(){ /* Handled by Android Bridge if connected */ }
 function saveSettings(v){
     userName = v.trim() || "Maestro";
     localStorage.setItem("maestro_username", userName);
     if(window.AndroidBridge) AndroidBridge.setUserName(userName);
     updateUI();
 }
-function renderStats(){ /* Simplified Stats */ }
+function renderStats(){ /* Simplified for now */ }
 function renderDailyTip(){
     const el = document.getElementById("tip-text");
     if(!el) return;
@@ -2445,10 +2523,6 @@ function renderDailyTip(){
 }
 function refreshPermissionPanel(){ /* Placeholder */ }
 function openPermission(type){ if(window.AndroidBridge) AndroidBridge.openPermissionSettings(type); }
-
-/* =========================================================
-   SNOOZE SYSTEM
-========================================================= */
 function applySnooze(min){ if(window.AndroidBridge) AndroidBridge.snoozeAlarm(min); }
 
 </script>
