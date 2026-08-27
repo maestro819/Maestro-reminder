@@ -2194,6 +2194,11 @@ function switchScreen(id, btn){
 /* =========================================================
    FORM ACTIONS
 ========================================================= */
+function openAddScreen(){
+    resetAddForm();
+    switchScreen("add");
+}
+
 
 function addNewActivity(){
     const nameField = document.getElementById("add-name");
@@ -2507,7 +2512,25 @@ function initCategoryColors(){
 function toggleCustomMessage(){
     document.getElementById("custom-message-box").style.display = document.getElementById("message-mode").value === "CUSTOM" ? "block" : "none";
 }
-function openTimePicker(){ /* Handled by Android Bridge if connected */ }
+function openTimePicker(){
+    if(window.AndroidBridge){
+        AndroidBridge.openTimePicker(selectedTime);
+    } else {
+        // Web Fallback: simple prompt for testing
+        const val = prompt("Masukkan jam (HH:mm):", selectedTime);
+        if(val && /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(val)){
+            updateTime(val);
+        }
+    }
+}
+
+function updateTime(val){
+    selectedTime = val;
+    const btn = document.getElementById("add-time-button");
+    if(btn) btn.innerText = val;
+    const inp = document.getElementById("add-time");
+    if(inp) inp.value = val;
+}
 function saveSettings(v){
     userName = v.trim() || "Maestro";
     localStorage.setItem("maestro_username", userName);
