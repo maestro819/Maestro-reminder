@@ -202,7 +202,13 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if (alarmUri == null) alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             
+            
+            if (audioManager != null) {
+                audioManager.setMode(AudioManager.MODE_NORMAL);
+                audioManager.setSpeakerphoneOn(true);
+            }
             mediaPlayer = new MediaPlayer();
+
             mediaPlayer.setDataSource(this, alarmUri);
             
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
