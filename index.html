@@ -2164,6 +2164,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 function switchScreen(screenId,btnElement){
     currentScreen = screenId;
+    if(screenId === "add") document.getElementById("screen-add").querySelector("span").innerText = "Pengingat baru";
 
     document
         .querySelectorAll(".screen")
@@ -2590,13 +2591,23 @@ function addNewActivity(){
 
     if(window.AndroidBridge){
 
+        // Ensure days string is correct for Android side
+        let daysStr = "";
+        if(newAct.repeat === "CUSTOM") {
+            daysStr = newAct.days.join(",");
+        } else if(newAct.repeat === "DAILY") {
+            daysStr = "1,2,3,4,5,6,7"; // All days
+        } else if(newAct.repeat === "WORKDAYS") {
+            daysStr = "2,3,4,5,6"; // Mon-Fri
+        }
+
         AndroidBridge.scheduleActivity(
             newAct.id,
             newAct.name,
             newAct.time,
             newAct.icon,
             newAct.kind,
-            newAct.days.join(","),
+            daysStr,
             newAct.message || "",
             newAct.category || "OTHER"
         );
@@ -2618,68 +2629,46 @@ function addNewActivity(){
 ========================================================= */
 
 function resetAddForm(){
+    const nameField = document.getElementById("add-name");
+    nameField.value = "";
+    nameField.dataset.editId = "";
+    nameField.classList.remove("field-error");
 
-    document.getElementById("add-name").value="";
+    selectedTime = deviceTime();
+    document.getElementById("add-time").value = selectedTime;
+    document.getElementById("add-time-button").innerText = selectedTime;
+    document.getElementById("add-time-button").classList.remove("field-error");
 
-    document.getElementById("add-name")
-        .dataset.editId="";
+    // Reset Category
+    selectedCategory = "HEALTH";
+    document.getElementById("add-category").value = "HEALTH";
+    document.getElementById("add-icon").value = "💧";
+    
+    document.querySelectorAll(".category-option").forEach(x => {
+        x.classList.toggle("selected", x.dataset.category === "HEALTH");
+    });
 
-    selectedTime=deviceTime();
+    // Reset Repeat
+    selectedRepeat = "DAILY";
+    document.getElementById("add-repeat").value = "DAILY";
+    document.querySelectorAll(".repeat-option").forEach(x => {
+        x.classList.toggle("selected", x.dataset.repeat === "DAILY");
+    });
 
-    document.getElementById("add-time").value=
-        selectedTime;
+    // Reset Days
+    document.querySelectorAll(".day-option").forEach(x => x.classList.remove("selected"));
+    document.getElementById("custom-days").style.display = "none";
+    
+    // Reset Month Day
+    document.querySelectorAll(".month-day-option").forEach(x => x.classList.remove("selected"));
+    document.getElementById("custom-month-day").style.display = "none";
 
-    document.getElementById("add-time-button")
-        .innerText=selectedTime;
-
-    selectedCategory="HEALTH";
-
-    document.getElementById("add-category")
-        .value="HEALTH";
-
-    document.getElementById("add-icon")
-        .value="💧";
-
-    selectedRepeat="DAILY";
-
-    document.getElementById("add-repeat")
-        .value="DAILY";
-
-    document.querySelectorAll(".category-option")
-        .forEach(x=>x.classList.remove("selected"));
-
-    document.querySelector(
-        '.category-option[data-category="HEALTH"]'
-    ).classList.add("selected");
-
-    document.querySelectorAll(".repeat-option")
-        .forEach(x=>x.classList.remove("selected"));
-
-    document.querySelector(
-        '.repeat-option[data-repeat="DAILY"]'
-    ).classList.add("selected");
-
-    document.querySelectorAll(".day-option")
-        .forEach(x=>x.classList.remove("selected"));
-
-    document.getElementById("custom-days")
-        .style.display="none";
-
-    document.querySelectorAll(".month-day-option")
-        .forEach(x=>x.classList.remove("selected"));
-
-    document.getElementById("custom-month-day")
-        .style.display="none";
-
-    document.getElementById("message-mode")
-        .value="AUTO";
-
-    document.getElementById("custom-message-box")
-        .style.display="none";
-
-    document.getElementById("add-message")
-        .value="";
-
+    // Reset Message
+    document.getElementById("message-mode").value = "AUTO";
+    document.getElementById("add-message").value = "";
+    document.getElementById("custom-message-box").style.display = "none";
+    
+    document.getElementById("screen-add").querySelector("span").innerText = "Pengingat baru";
 }
 
 
@@ -3657,7 +3646,7 @@ function activityCard(act,home){
 
                 <div
                     class="activity-icon"
-                    onclick="toggleDone(${act.id})"
+                    onclick="openEditScreen(${act.id})"
                     style="cursor:pointer;background:${c.bg};"
                 >
                     ${act.icon}
@@ -3680,7 +3669,7 @@ function activityCard(act,home){
 
             <div
                 class="activity-name"
-                onclick="toggleDone(${act.id})"
+                onclick="openEditScreen(${act.id})"
                 style="cursor:pointer;
                 ${act.done?'text-decoration:line-through;color:#94a3b8;':''}"
             >
@@ -3704,7 +3693,7 @@ function activityCard(act,home){
                         ?"status-done"
                         :"status-pending"
                     }"
-                    onclick="toggleDone(${act.id})"
+                    onclick="openEditScreen(${act.id})"
                 >
 
                     ${
@@ -4340,6 +4329,48 @@ function escapeHTML(value){
 
 
 
+
+function openEditScreen(id){
+    const act = activities.find(a => a.id === id);
+    if(!act) return;
+    
+    resetAddForm();
+    
+    const nameField = document.getElementById("add-name");
+    nameField.value = act.name;
+    nameField.dataset.editId = id;
+    
+    document.getElementById("add-time").value = act.time;
+    document.getElementById("add-time-button").innerText = act.time;
+    
+    // Select category
+    const catOption = document.querySelector(`.category-option[data-category="${act.category}"]`);
+    if(catOption) selectCategory(catOption);
+    
+    // Select repeat
+    const repOption = document.querySelector(`.repeat-option[data-repeat="${act.repeat}"]`);
+    if(repOption) selectRepeat(repOption);
+    
+    // Custom days
+    if(act.repeat === "CUSTOM" && act.days){
+        document.querySelectorAll(".day-option").forEach(opt => {
+            if(act.days.includes(Number(opt.dataset.day))){
+                opt.classList.add("selected");
+            }
+        });
+    }
+    
+    // Custom message
+    if(act.message){
+        document.getElementById("message-mode").value = "CUSTOM";
+        document.getElementById("add-message").value = act.message;
+        toggleCustomMessage();
+    }
+    
+    switchScreen("add");
+    document.getElementById("screen-add").querySelector("span").innerText = "Edit pengingat";
+}
+
 function renderAlarmList(){
     const container = document.getElementById("alarm-list-container");
     if(!container) return;
@@ -4357,18 +4388,17 @@ function renderAlarmList(){
         return;
     }
 
-    // Sort by time
     const sorted = [...activities].sort((a,b) => a.time.localeCompare(b.time));
 
     sorted.forEach(act => {
         const isEnabled = act.enabled !== false;
-        const countdown = isEnabled ? getRemainingTime(act.actTime || act.time) : "";
+        const countdown = isEnabled ? getRemainingTime(act.time) : "";
         
         const item = document.createElement("div");
         item.className = `alarm-item ${isEnabled ? '' : 'disabled'}`;
         item.innerHTML = `
-            <div class="alarm-item-icon">${act.icon}</div>
-            <div class="alarm-item-info">
+            <div class="alarm-item-icon" onclick="openEditScreen(${act.id})" style="cursor:pointer;">${act.icon}</div>
+            <div class="alarm-item-info" onclick="openEditScreen(${act.id})" style="cursor:pointer;">
                 <span class="alarm-item-time">${act.time}</span>
                 <span class="alarm-item-separator">—</span>
                 <span class="alarm-item-name">${escapeHTML(act.name)}</span>
@@ -4401,6 +4431,7 @@ function toggleAlarm(id, enabled){
     
     renderAlarmList();
 }
+
 
 </script>
 
