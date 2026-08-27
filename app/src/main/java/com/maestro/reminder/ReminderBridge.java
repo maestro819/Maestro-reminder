@@ -56,12 +56,26 @@ public class ReminderBridge {
         boolean notification = true;
         boolean exactAlarm = true;
         boolean fullScreen = true;
+        boolean overlay = true;
+        
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && notificationManager != null) notification = notificationManager.areNotificationsEnabled();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) notification = notification && androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); exactAlarm = alarmManager != null && alarmManager.canScheduleExactAlarms(); }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && notificationManager != null) fullScreen = notificationManager.canUseFullScreenIntent();
-        return "{\"notification\":" + notification + ",\"exactAlarm\":" + exactAlarm + ",\"fullScreen\":" + fullScreen + "}";
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { 
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); 
+            exactAlarm = alarmManager != null && alarmManager.canScheduleExactAlarms(); 
+        }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && notificationManager != null) {
+            fullScreen = notificationManager.canUseFullScreenIntent();
+        }
+        
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            overlay = Settings.canDrawOverlays(context);
+        }
+        
+        return "{\"notification\":" + notification + ",\"exactAlarm\":" + exactAlarm + ",\"fullScreen\":" + fullScreen + ",\"overlay\":" + overlay + "}";
     }
 
     @JavascriptInterface public void openNotificationSettings() {
@@ -77,6 +91,13 @@ public class ReminderBridge {
     @JavascriptInterface public void openFullScreenSettings() {
         try { context.startActivity(new Intent("android.settings.MANAGE_APP_USE_FULL_SCREEN_INTENT").setData(Uri.parse("package:" + context.getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); }
         catch (Exception ignored) { openAppDetails(); }
+    }
+    
+    @JavascriptInterface public void openOverlaySettings() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        }
     }
 
     @JavascriptInterface public void openAppDetails() {

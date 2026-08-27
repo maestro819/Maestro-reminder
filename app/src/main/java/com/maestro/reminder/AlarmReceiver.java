@@ -11,6 +11,7 @@ import android.media.RingtoneManager;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.Settings;
 
 import androidx.core.app.NotificationCompat;
 
@@ -46,7 +47,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         createChannel(context);
         String ownerName = context.getSharedPreferences("maestro_user", Context.MODE_PRIVATE).getString("name", "Maestro");
         
-        // Format waktu untuk dikirim ke activity
         String formattedTime = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(reminder.triggerAt));
         
         Intent screen = new Intent(context, AlarmScreenActivity.class)
@@ -59,9 +59,18 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .putExtra("ALARM_TIME", formattedTime)
                 .putExtra("NOTIFICATION_ID", notificationId)
                 .putExtra("REMINDER_ID", id)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK 
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP 
+                        | Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        | Intent.FLAG_ACTIVITY_NO_USER_ACTION);
         
-        PendingIntent screenPending = PendingIntent.getActivity(context, notificationId, screen, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        // Gunakan FLAG_IMMUTABLE untuk keamanan, tapi pastikan sistem bisa membukanya
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+        
+        PendingIntent screenPending = PendingIntent.getActivity(context, notificationId, screen, flags);
         
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(com.maestro.reminder.R.drawable.ic_alarm)
@@ -70,24 +79,37 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setFullScreenIntent(screenPending, true)
+                .setFullScreenIntent(screenPending, true) // Kunci untuk full screen
                 .setContentIntent(screenPending)
-                .setAutoCancel(true)
+                .setAutoCancel(false)
                 .setOngoing(true);
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (manager != null) manager.notify(notificationId, builder.build());
-        activeNotificationManager = manager;
-        activeNotificationId = notificationId;
-
-        try { context.startActivity(screen); } catch (Exception ignored) {}
-
-        activeVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        if (activeVibrator != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) activeVibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 900, 500, 900}, 0));
-            else activeVibrator.vibrate(new long[]{0, 900, 500, 900}, 0);
+        if (manager != null) {
+            manager.notify(notificationId, builder.build());
+            activeNotificationManager = manager;
+            activeNotificationId = notificationId;
         }
 
+        // Coba buka activity secara langsung
+        // Ini seringkali butuh izin "Display over other apps" pada Android 10+
+        try {
+            context.startActivity(screen);
+        } catch (Exception e) {
+            // Jika gagal, sistem akan tetap mencoba lewat FullScreenIntent notifikasi
+        }
+
+        // Vibrasi tetap dijalankan di sini sebagai backup jika activity belum terbuka
+        activeVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (activeVibrator != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                activeVibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 1000, 500, 1000}, 0));
+            } else {
+                activeVibrator.vibrate(new long[]{0, 1000, 500, 1000}, 0);
+            }
+        }
+
+        // Reschedule
         if (Reminder.ONCE.equals(reminder.repeat)) {
             reminder.enabled = false;
         } else {
@@ -167,11 +189,13 @@ public class AlarmReceiver extends BroadcastReceiver {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Maestro Reminder Alarm", NotificationManager.IMPORTANCE_HIGH);
             channel.setDescription("Notifikasi reminder Maestro Reminder");
             channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{0, 900, 500, 900});
+            channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+            channel.setVibrationPattern(new long[]{0, 1000, 500, 1000});
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_ALARM)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .build();
+            // Sound akan ditangani oleh Activity untuk bypass headset
             channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), audioAttributes);
             NotificationManager manager = context.getSystemService(NotificationManager.class); if (manager != null) manager.createNotificationChannel(channel);
         }

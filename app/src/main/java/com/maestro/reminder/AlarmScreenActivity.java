@@ -50,12 +50,15 @@ public class AlarmScreenActivity extends AppCompatActivity {
     private int baseBodyRight;
     private int baseBodyBottom;
     private int baseSheetBottom;
+    private boolean isAlarmActive = true;
 
     private final Runnable replaySound = new Runnable() {
         @Override public void run() {
-            if (ringtone != null) {
+            if (isAlarmActive && ringtone != null) {
                 forceMaxVolume();
-                if (!ringtone.isPlaying()) ringtone.play();
+                if (!ringtone.isPlaying()) {
+                    ringtone.play();
+                }
                 soundHandler.postDelayed(this, 2500L);
             }
         }
@@ -63,6 +66,10 @@ public class AlarmScreenActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Hentikan vibrasi dan notifikasi dari Receiver segera setelah Activity terbuka
+        AlarmReceiver.stopActiveAlarm(this);
+        
         configureAlarmWindow();
         setContentView(R.layout.activity_alarm_screen);
 
@@ -97,24 +104,21 @@ public class AlarmScreenActivity extends AppCompatActivity {
 
         ((TextView) findViewById(R.id.txtAlarmTime)).setText(alarmTime);
         ((TextView) findViewById(R.id.txtAlarmActivity)).setText(icon + " " + activity.toUpperCase(Locale.getDefault()));
-        ((TextView) findViewById(R.id.txtAlarmGreeting)).setText(sleep
-                ? name + ", bangun yuk 🌅"
-                : name + ", selamat " + period + " " + periodEmoji(period));
-        ((TextView) findViewById(R.id.txtAlarmAction)).setText(sleep
-                ? "Waktunya memulai hari."
-                : "Waktunya " + activity.toLowerCase(Locale.getDefault()) + ".");
-        ((TextView) findViewById(R.id.txtAlarmMessage)).setText(resolveMessage(message, category, name));
-
-        findViewById(R.id.btnDismissAlarm).setOnClickListener(v -> {
-            stopAlarmSignal();
-            finish();
-        });
+        ((TextView) findViewById(R.id.txtAlarmGreeting)).setText(sleep 
+                ? name + ", bangun yuk. Selamat " + period + "." 
+                : name + ", selamat " + period + " \uD83C\uDF10");
+        ((TextView) findViewById(R.id.txtAlarmAction)).setText("Waktunya " + activity.toLowerCase(Locale.getDefault()) + ".");
+        ((TextView) findViewById(R.id.txtAlarmMessage)).setText(message);
     }
 
     private void bindSnoozeActions() {
         findViewById(R.id.btnSnoozeAlarm).setOnClickListener(v -> openSnoozeSheet());
-        findViewById(R.id.snoozeOverlay).setOnClickListener(v -> closeSnoozeSheet());
-        findViewById(R.id.snoozeSheet).setOnClickListener(v -> { });
+        findViewById(R.id.btnDismissAlarm).setOnClickListener(v -> {
+            stopAlarmSignal();
+            finish();
+        });
+        snoozeOverlay.setOnClickListener(v -> closeSnoozeSheet());
+        findViewById(R.id.snoozeSheet).setOnClickListener(v -> {});
         findViewById(R.id.btnSnooze5).setOnClickListener(v -> applySnooze(5));
         findViewById(R.id.btnSnooze10).setOnClickListener(v -> applySnooze(10));
         findViewById(R.id.btnSnooze15).setOnClickListener(v -> applySnooze(15));
@@ -141,7 +145,7 @@ public class AlarmScreenActivity extends AppCompatActivity {
         if (snoozeOverlay != null && snoozeOverlay.getVisibility() == View.VISIBLE) {
             closeSnoozeSheet();
         } else {
-            super.onBackPressed();
+            // Jangan izinkan back untuk mematikan alarm tanpa aksi
         }
     }
 
@@ -150,7 +154,8 @@ public class AlarmScreenActivity extends AppCompatActivity {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                 WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+                WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON);
         
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
@@ -175,8 +180,6 @@ public class AlarmScreenActivity extends AppCompatActivity {
             if (audioManager != null) {
                 int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
                 audioManager.setStreamVolume(AudioManager.STREAM_ALARM, max, 0);
-                // Bypass headset: Android secara otomatis merutekan STREAM_ALARM ke speaker 
-                // jika disetel dengan AudioAttributes USAGE_ALARM.
             }
         } catch (Exception ignored) {}
     }
@@ -195,13 +198,11 @@ public class AlarmScreenActivity extends AppCompatActivity {
                     ringtone.setAudioAttributes(new AudioAttributes.Builder()
                             .setUsage(AudioAttributes.USAGE_ALARM)
                             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED) // Paksa bunyi meskipun silent
+                            .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
                             .build());
-                } else {
-                    ringtone.setStreamType(AudioManager.STREAM_ALARM);
                 }
                 ringtone.play();
-                soundHandler.postDelayed(replaySound, 1800L);
+                soundHandler.postDelayed(replaySound, 2000L);
             }
         } catch (Exception ignored) {}
     }
@@ -209,13 +210,31 @@ public class AlarmScreenActivity extends AppCompatActivity {
     private void startAlarmVibration() {
         try {
             if (vibrator == null || !vibrator.hasVibrator()) return;
-            long[] pattern = {0, 500, 300, 500};
+            long[] pattern = {0, 1000, 500, 1000};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 vibrator.vibrate(android.os.VibrationEffect.createWaveform(pattern, 0));
             } else {
                 vibrator.vibrate(pattern, 0);
             }
         } catch (Exception ignored) {}
+    }
+
+    private void stopAlarmSignal() {
+        isAlarmActive = false;
+        soundHandler.removeCallbacks(replaySound);
+        if (ringtone != null && ringtone.isPlaying()) ringtone.stop();
+        if (vibrator != null) vibrator.cancel();
+        
+        // Kembalikan volume jika diinginkan, tapi untuk alarm biasanya dibiarkan max
+        // audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
+        
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager != null) manager.cancel(notificationId);
+    }
+
+    @Override protected void onDestroy() {
+        stopAlarmSignal();
+        super.onDestroy();
     }
 
     private void applyResponsiveInsets(@NonNull View root, @NonNull View body, @NonNull View sheet) {
@@ -258,63 +277,17 @@ public class AlarmScreenActivity extends AppCompatActivity {
         return new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
     }
 
-    private String timePeriod(String value) {
+    private String timePeriod(String time) {
         try {
-            int hour = Integer.parseInt(value.split(":")[0]);
+            int hour = Integer.parseInt(time.split(":")[0]);
             if (hour >= 5 && hour < 11) return "pagi";
             if (hour >= 11 && hour < 15) return "siang";
             if (hour >= 15 && hour < 18) return "sore";
-        } catch (Exception ignored) {}
-        return "malam";
+            return "malam";
+        } catch (Exception e) { return "hari"; }
     }
 
-    private String periodEmoji(String period) {
-        if ("pagi".equals(period)) return "☀️";
-        if ("siang".equals(period)) return "🌤️";
-        if ("sore".equals(period)) return "🌇";
-        return "🌙";
-    }
-
-    private String resolveMessage(String explicitMessage, String category, String name) {
-        if (explicitMessage != null && !explicitMessage.trim().isEmpty()) {
-            return explicitMessage.replace("{name}", name);
-        }
-        String[] messages;
-        if ("HEALTH".equalsIgnoreCase(category)) {
-            messages = new String[]{"Jangan lupa luangkan waktu untuk tubuhmu.", "Sedikit konsisten hari ini berdampak besar untuk kesehatanmu."};
-        } else if ("SPORT".equalsIgnoreCase(category)) {
-            messages = new String[]{"Tubuhmu akan berterima kasih untuk gerakan kecil hari ini.", "Tidak perlu sempurna, yang penting terus bergerak."};
-        } else if ("MEDICINE".equalsIgnoreCase(category)) {
-            messages = new String[]{"Jangan sampai jadwal obatmu terlewat.", "Tetap ikuti jadwal agar tubuhmu tetap terjaga."};
-        } else if ("STUDY".equalsIgnoreCase(category)) {
-            messages = new String[]{"Fokus sebentar hari ini akan membantumu melangkah lebih jauh.", "Yuk selesaikan hal kecil yang sudah kamu rencanakan."};
-        } else {
-            messages = new String[]{"Jangan lupa menyelesaikan aktivitasmu.", "Yuk selesaikan hal kecil yang sudah kamu rencanakan."};
-        }
-        return messages[random.nextInt(messages.length)].replace("{name}", name);
-    }
-
-    private String valueOrDefault(String value, String fallback) {
-        return value == null || value.trim().isEmpty() ? fallback : value.trim();
-    }
-
-    @Override protected void onDestroy() {
-        stopAlarmSignal();
-        super.onDestroy();
-    }
-
-    private void stopAlarmSignal() {
-        soundHandler.removeCallbacks(replaySound);
-        if (ringtone != null) {
-            if (ringtone.isPlaying()) ringtone.stop();
-            ringtone = null;
-        }
-        if (vibrator != null) vibrator.cancel();
-        AlarmReceiver.stopActiveAlarm(this);
-        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (manager != null) manager.cancel(notificationId);
-        
-        // Kembalikan volume jika perlu, tapi untuk alarm biasanya dibiarkan max agar user sadar
-        // try { audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0); } catch (Exception ignored) {}
+    private String valueOrDefault(String val, String def) {
+        return (val == null || val.trim().isEmpty()) ? def : val;
     }
 }
