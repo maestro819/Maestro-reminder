@@ -1094,6 +1094,16 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 .wheel-confirm { background: var(--primary); color: #fff; }
 .wheel-cancel { background: #f1f5f9; color: var(--text-muted); }
 
+/* PERMISSION PANEL */
+.permission-panel { background: #fff; border-radius: 24px; padding: 24px; border: 1px solid var(--border); margin-top: 20px; }
+.permission-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.permission-header i { color: #f59e0b; font-size: 18px; }
+.permission-header h3 { font-size: 16px; font-weight: 800; }
+.permission-panel p { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.permission-btn { width: 100%; padding: 14px; border: 0; border-radius: 14px; background: var(--primary); color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 8px; cursor: pointer; transition: .2s; }
+.permission-btn.granted { background: var(--green); }
+.permission-btn.overlay { background: #334155; }
+
 </style>
 </head>
 
@@ -1245,494 +1255,31 @@ input:checked + .toggle-slider:before { transform: translateX(20px); }
 <!-- SETTINGS -->
 
 <div id="screen-settings" class="screen">
-
     <div class="brand-header">
         <div class="brand-logo">
             <h1>MAESTRO</h1>
             <span>easy does it</span>
         </div>
-        <div class="user-badge">Pengaturan</div>
     </div>
-
+    <div class="greeting-section">
+        <h2>Pengaturan</h2>
+        <p>Sesuaikan profil dan izin perangkat.</p>
+    </div>
     <div class="form-group">
         <label>Nama Panggilan</label>
-        <input
-            type="text"
-            id="input-name"
-            class="form-control"
-            value="Anto"
-            oninput="saveSettings(this.value)"
-        >
+        <input type="text" id="input-name" class="form-control" onchange="saveSettings(this.value)">
     </div>
-
-    <div
-        class="progress-card"
-        id="permission-panel"
-    >
-        <h3 style="font-size:15px;margin-bottom:5px;">
-            🔔 Izin Alarm
-        </h3>
-
-        <p
-            id="permission-summary"
-            style="font-size:11px;color:var(--text-muted);margin-bottom:10px;"
-        >
-            Memeriksa izin perangkat...
-        </p>
-
-        <div id="permission-notification-row">
-            <button
-                class="btn-primary"
-                onclick="openPermission('notification')"
-                style="margin-bottom:7px;"
-            >
-                Izinkan Notifikasi
-            </button>
+    <div class="permission-panel" id="permission-panel">
+        <div class="permission-header">
+            <i class="fa-solid fa-bell"></i>
+            <h3>Izin Alarm</h3>
         </div>
-
-        <div id="permission-alarm-row">
-            <button
-                class="btn-primary"
-                onclick="openPermission('alarm')"
-                style="margin-bottom:7px;"
-            >
-                Izinkan Alarm Tepat Waktu
-            </button>
-        </div>
-
-        <div id="permission-fullscreen-row">
-            <button
-                class="btn-primary"
-                onclick="openPermission('fullscreen')"
-                style="background:#334155;"
-            >
-                Izinkan Layar Alarm Penuh
-            </button>
-        </div>
-
+        <p id="permission-status">Memeriksa izin perangkat...</p>
+        <button id="btn-perm-notif" class="permission-btn" onclick="openPermission('NOTIF')">Izinkan Notifikasi</button>
+        <button id="btn-perm-exact" class="permission-btn" onclick="openPermission('EXACT')">Izinkan Alarm Tepat Waktu</button>
+        <button id="btn-perm-overlay" class="permission-btn overlay" onclick="openPermission('OVERLAY')">Izinkan Layar Alarm Penuh</button>
     </div>
-
 </div>
-
-
-<!-- ADD -->
-
-<div id="screen-add" class="screen">
-
-    <div class="brand-header">
-
-        <div class="brand-logo">
-            <h1>MAESTRO</h1>
-            <span>Pengingat baru</span>
-        </div>
-
-        <button
-            onclick="switchScreen('home')"
-            style="background:none;border:0;font-size:18px;"
-        >
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>Kategori</label>
-
-        <div class="category-grid">
-
-            <div
-                class="category-option selected"
-                data-category="HEALTH"
-                onclick="selectCategory(this)"
-            >
-                <span>💧</span>
-                <small>Kesehatan</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="SPORT"
-                onclick="selectCategory(this)"
-            >
-                <span>🏃</span>
-                <small>Olahraga</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="WORK"
-                onclick="selectCategory(this)"
-            >
-                <span>💼</span>
-                <small>Kerja</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="MEDICINE"
-                onclick="selectCategory(this)"
-            >
-                <span>💊</span>
-                <small>Obat</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="SLEEP"
-                onclick="selectCategory(this)"
-            >
-                <span>😴</span>
-                <small>Tidur</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="STUDY"
-                onclick="selectCategory(this)"
-            >
-                <span>📚</span>
-                <small>Belajar</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="WORSHIP"
-                onclick="selectCategory(this)"
-            >
-                <span>🕌</span>
-                <small>Ibadah</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="MENGAJI"
-                onclick="selectCategory(this)"
-            >
-                <span>📖</span>
-                <small>Mengaji</small>
-            </div>
-
-            <div
-                class="category-option"
-                data-category="OTHER"
-                onclick="selectCategory(this)"
-            >
-                <span>📌</span>
-                <small>Lainnya</small>
-            </div>
-
-        </div>
-
-        <input type="hidden" id="add-category" value="HEALTH">
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>Jam alarm</label>
-
-        <button
-            type="button"
-            id="add-time-button"
-            class="form-control"
-            onclick="openTimePicker()"
-            style="text-align:left;"
-        >
-            08:00
-        </button>
-
-        <input
-            type="hidden"
-            id="add-time"
-            value="08:00"
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>Apa yang ingin diingatkan?</label>
-
-        <input
-            type="text"
-            id="add-name"
-            class="form-control"
-            placeholder="Contoh: Minum air"
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>Ikon</label>
-
-        <input
-            type="text"
-            id="add-icon"
-            class="form-control"
-            value="💧"
-        >
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>Pengulangan</label>
-
-        <div class="repeat-grid">
-
-            <div
-                class="repeat-option selected"
-                data-repeat="DAILY"
-                onclick="selectRepeat(this)"
-            >
-                Setiap hari
-            </div>
-
-            <div
-                class="repeat-option"
-                data-repeat="WEEKDAYS"
-                onclick="selectRepeat(this)"
-            >
-                Senin–Jumat
-            </div>
-
-            <div
-                class="repeat-option"
-                data-repeat="CUSTOM"
-                onclick="selectRepeat(this)"
-            >
-                Mingguan (pilih hari)
-            </div>
-
-            <div
-                class="repeat-option"
-                data-repeat="ONCE"
-                onclick="selectRepeat(this)"
-            >
-                Sekali saja
-            </div>
-
-            <div
-                class="repeat-option full-width"
-                data-repeat="MONTHLY"
-                onclick="selectRepeat(this)"
-            >
-                Bulanan (tanggal tertentu)
-            </div>
-
-        </div>
-
-        <input
-            type="hidden"
-            id="add-repeat"
-            value="DAILY"
-        >
-
-        <div
-            id="custom-days"
-            style="display:none;"
-        >
-
-            <div class="days-grid">
-
-                <div class="day-option" data-day="1">Min</div>
-                <div class="day-option" data-day="2">Sen</div>
-                <div class="day-option" data-day="3">Sel</div>
-                <div class="day-option" data-day="4">Rab</div>
-                <div class="day-option" data-day="5">Kam</div>
-                <div class="day-option" data-day="6">Jum</div>
-                <div class="day-option" data-day="7">Sab</div>
-
-            </div>
-
-        </div>
-
-        <div
-            id="custom-month-day"
-            style="display:none;"
-        >
-
-            <p style="font-size:11px;color:var(--text-muted);margin-top:9px;margin-bottom:6px;">
-                Pilih tanggal (1–31)
-            </p>
-
-            <div class="month-day-grid" id="month-day-grid"></div>
-
-        </div>
-
-    </div>
-
-
-    <div class="form-group">
-
-        <label>Pesan pengingat</label>
-
-        <select
-            id="message-mode"
-            class="form-control"
-            onchange="toggleCustomMessage()"
-        >
-
-            <option value="AUTO">
-                ✨ Otomatis sesuai kategori
-            </option>
-
-            <option value="CUSTOM">
-                ✏️ Tulis pesan sendiri
-            </option>
-
-        </select>
-
-    </div>
-
-
-    <div
-        id="custom-message-box"
-        class="form-group"
-        style="display:none;"
-    >
-
-        <textarea
-            id="add-message"
-            class="form-control"
-            rows="3"
-            placeholder="Contoh: Anto, jangan lupa minum air dulu 💧"
-        ></textarea>
-
-    </div>
-
-
-    <button
-        class="btn-primary"
-        onclick="addNewActivity()"
-    >
-        <i class="fa-solid fa-check"></i>
-        Simpan Pengingat
-    </button>
-
-</div>
-
-
-<!-- TIME PICKER -->
-
-<div
-    id="time-wheel"
-    class="wheel-overlay"
-    onclick="if(event.target===this)closeTimePicker()"
->
-
-    <div class="wheel-sheet">
-
-        <h3 style="text-align:center;font-size:16px;">
-            Pilih jam alarm
-        </h3>
-
-        <div class="wheel-row">
-
-            <div
-                id="hour-wheel"
-                class="wheel-column"
-            ></div>
-
-            <div style="font-size:28px;font-weight:800;align-self:center;">
-                :
-            </div>
-
-            <div
-                id="minute-wheel"
-                class="wheel-column"
-            ></div>
-
-        </div>
-
-        <div class="wheel-actions">
-
-            <button onclick="closeTimePicker()">
-                Batal
-            </button>
-
-            <button
-                class="wheel-confirm"
-                onclick="confirmTimePicker()"
-            >
-                Pilih Waktu
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- SNOOZE -->
-
-<div
-    id="snooze-sheet"
-    class="snooze-sheet"
-    onclick="if(event.target===this)closeSnooze()"
->
-
-    <div class="snooze-box">
-
-        <h3>⏰ Tunda pengingat</h3>
-
-        <div class="snooze-options">
-
-            <button
-                class="snooze-option"
-                onclick="applySnooze(5)"
-            >
-                5 menit
-            </button>
-
-            <button
-                class="snooze-option"
-                onclick="applySnooze(10)"
-            >
-                10 menit
-            </button>
-
-            <button
-                class="snooze-option"
-                onclick="applySnooze(15)"
-            >
-                15 menit
-            </button>
-
-            <button
-                class="snooze-option"
-                onclick="applySnooze(30)"
-            >
-                30 menit
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- FAB -->
-
-<button
-    class="fab-btn"
-    style="display:none;"
-    onclick="openAddScreen()"
->
-    <i class="fa-solid fa-plus"></i>
-</button>
-
-
-<!-- NAV -->
 
 <nav class="bottom-nav">
 
@@ -1964,10 +1511,13 @@ function buildWheel(column, count, value){
 }
 
 function openTimePicker(){
-    const current = document.getElementById("add-time").value || deviceTime();
-    const parts = current.split(":");
-    buildWheel(document.getElementById("hour-wheel"), 24, Number(parts[0])||0);
-    buildWheel(document.getElementById("minute-wheel"), 60, Number(parts[1])||0);
+    const now = new Date();
+    const curH = now.getHours();
+    const curM = now.getMinutes();
+    const timeStr = String(curH).padStart(2, '0') + ":" + String(curM).padStart(2, '0');
+    updateTime(timeStr);
+    buildWheel(document.getElementById("hour-wheel"), 24, curH);
+    buildWheel(document.getElementById("minute-wheel"), 60, curM);
     document.getElementById("time-wheel").classList.add("active");
 }
 
@@ -2194,11 +1744,39 @@ function renderDailyTip(){
     const tips = ["Konsisten kecil tiap hari lebih berarti daripada sempurna sesekali.", "Kalau kelewat satu hari, bukan berarti gagal — lanjut lagi besok.", "Pengingat ini cuma alat bantu. Kamu yang pegang kendali."];
     el.innerText = tips[Math.floor(Date.now()/86400000) % tips.length];
 }
-function refreshPermissionPanel(){ /* Placeholder */ }
+function refreshPermissionPanel(){
+    if(!window.AndroidBridge) return;
+    const status = document.getElementById("permission-status");
+    const bNotif = document.getElementById("btn-perm-notif");
+    const bExact = document.getElementById("btn-perm-exact");
+    const bOverlay = document.getElementById("btn-perm-overlay");
+    const pNotif = AndroidBridge.checkPermission("NOTIF");
+    const pExact = AndroidBridge.checkPermission("EXACT");
+    const pOverlay = AndroidBridge.checkPermission("OVERLAY");
+    if(status) status.innerText = (pNotif && pExact && pOverlay) ? "Semua izin aktif ✓" : "Beberapa izin belum aktif.";
+    if(bNotif){ bNotif.innerText = pNotif ? "Izin Notifikasi Aktif ✓" : "Izinkan Notifikasi"; bNotif.className = "permission-btn" + (pNotif ? " granted" : ""); }
+    if(bExact){ bExact.innerText = pExact ? "Izin Alarm Tepat Waktu Aktif ✓" : "Izinkan Alarm Tepat Waktu"; bExact.className = "permission-btn" + (pExact ? " granted" : ""); }
+    if(bOverlay){ bOverlay.innerText = pOverlay ? "Izin Layar Alarm Penuh Aktif ✓" : "Izinkan Layar Alarm Penuh"; bOverlay.className = "permission-btn" + (pOverlay ? " granted" : " overlay"); }
+}
 function openPermission(type){ if(window.AndroidBridge) AndroidBridge.openPermissionSettings(type); }
 function applySnooze(min){ if(window.AndroidBridge) AndroidBridge.snoozeAlarm(min); }
 
 </script>
+
+
+<div id="time-wheel" class="wheel-overlay">
+    <div class="wheel-sheet">
+        <h3 style="text-align:center;margin-bottom:5px;">Pilih Jam</h3>
+        <div class="wheel-row">
+            <div class="wheel-column" id="hour-wheel"></div>
+            <div class="wheel-column" id="minute-wheel"></div>
+        </div>
+        <div class="wheel-actions">
+            <button class="wheel-cancel" onclick="closeTimePicker()">Batal</button>
+            <button class="wheel-confirm" onclick="confirmTimePicker()">Pilih</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
