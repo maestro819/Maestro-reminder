@@ -7,7 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
-import android.media.Ringtone;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -39,26 +39,13 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
 
     private int notificationId = DEFAULT_NOTIFICATION_ID;
     private Vibrator vibrator;
-    private Ringtone ringtone;
+    private MediaPlayer mediaPlayer;
     private AudioManager audioManager;
-    private final Handler soundHandler = new Handler(Looper.getMainLooper());
+    private final Handler handler = new Handler(Looper.getMainLooper());
     private FrameLayout snoozeOverlay;
     private int baseBodyLeft, baseBodyTop, baseBodyRight, baseBodyBottom, baseSheetBottom;
     private boolean isAlarmActive = true;
     private Object audioFocusRequest;
-
-    private final Runnable replaySound = new Runnable() {
-        @Override public void run() {
-            if (isAlarmActive && ringtone != null) {
-                requestHighPriorityAudioFocus();
-                forceMaxVolume();
-                if (!ringtone.isPlaying()) {
-                    ringtone.play();
-                }
-                soundHandler.postDelayed(this, 2500L);
-            }
-        }
-    };
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +92,19 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
 
     @Override public void onAudioFocusChange(int focusChange) {
         if (focusChange == AudioManager.AUDIOFOCUS_LOSS || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-            // Jika fokus hilang karena notifikasi lain, paksa ambil kembali dalam 500ms
-            if (isAlarmActive) soundHandler.postDelayed(this::requestHighPriorityAudioFocus, 500L);
+            // Jika fokus hilang, tunggu sebentar lalu ambil kembali dan pastikan suara jalan
+            if (isAlarmActive) {
+                handler.postDelayed(() -> {
+                    requestHighPriorityAudioFocus();
+                    if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+                        mediaPlayer.start();
+                    }
+                }, 1000L);
+            }
+        } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+            if (isAlarmActive && mediaPlayer != null && !mediaPlayer.isPlaying()) {
+                mediaPlayer.start();
+            }
         }
     }
 
@@ -203,19 +201,36 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
             forceMaxVolume();
             Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if (alarmUri == null) alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            ringtone = RingtoneManager.getRingtone(this, alarmUri);
             
-            if (ringtone != null) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    ringtone.setAudioAttributes(new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_ALARM)
-                            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                            .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
-                            .build());
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setDataSource(this, alarmUri);
+            
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setFlags(AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
+                    .build();
+            
+            mediaPlayer.setAudioAttributes(audioAttributes);
+            mediaPlayer.setLooping(true);
+            mediaPlayer.setVolume(1.0f, 1.0f);
+            
+            mediaPlayer.setOnPreparedListener(mp -> {
+                if (isAlarmActive) mp.start();
+            });
+            
+            mediaPlayer.prepareAsync();
+            
+            // Re-enforce volume periodically
+            handler.postDelayed(new Runnable() {
+                @Override public void run() {
+                    if (isAlarmActive) {
+                        forceMaxVolume();
+                        handler.postDelayed(this, 3000L);
+                    }
                 }
-                ringtone.play();
-                soundHandler.postDelayed(replaySound, 2000L);
-            }
+            }, 3000L);
+            
         } catch (Exception ignored) {}
     }
 
@@ -233,8 +248,13 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
 
     private void stopAlarmSignal() {
         isAlarmActive = false;
-        soundHandler.removeCallbacks(replaySound);
-        if (ringtone != null && ringtone.isPlaying()) ringtone.stop();
+        if (mediaPlayer != null) {
+            try {
+                if (mediaPlayer.isPlaying()) mediaPlayer.stop();
+                mediaPlayer.release();
+            } catch (Exception ignored) {}
+            mediaPlayer = null;
+        }
         if (vibrator != null) vibrator.cancel();
         if (audioManager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && audioFocusRequest != null) {
