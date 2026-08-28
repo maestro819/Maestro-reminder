@@ -1326,6 +1326,134 @@ input:checked + .toggle-slider:before {
     margin: 0 4px;
 }
 
+
+/* =========================================================
+   MAESTRO REDESIGN v2 — UI ONLY / KEEP CORE ALARM BRIDGE
+   ========================================================= */
+:root{
+    --bg-main:#f6f7fb;
+    --card-bg:#ffffff;
+    --text-main:#111827;
+    --text-muted:#6b7280;
+    --primary:#5b5ce2;
+    --primary-light:#eef0ff;
+    --green:#16a37a;
+    --green-light:#e8f8f2;
+    --orange:#e99a17;
+    --orange-light:#fff5df;
+    --red:#e05252;
+    --red-light:#fff0f0;
+    --blue:#3d78d8;
+    --border:#e8eaf0;
+    --shadow:0 6px 22px rgba(17,24,39,.05);
+}
+body{background:#e5e7eb}
+.screen{padding:18px 18px 104px}
+.brand-header{margin-bottom:16px}
+.brand-logo h1{font-size:18px;letter-spacing:1px}
+.brand-logo span{font-size:9px;letter-spacing:.2px}
+.greeting-section{margin-bottom:14px}
+.greeting-section h2{font-size:20px;letter-spacing:-.3px}
+.greeting-section p{font-size:11px}
+.section-title{font-size:11px;margin:20px 2px 9px;letter-spacing:.9px}
+
+/* HOME */
+.home-next-card{
+    background:linear-gradient(135deg,#6062e8,#4f51d5);
+    color:#fff;border-radius:22px;padding:18px;margin:2px 0 20px;
+    box-shadow:0 10px 26px rgba(91,92,226,.22);position:relative;overflow:hidden;
+}
+.home-next-card:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.08);right:-65px;top:-65px}
+.next-eyebrow{font-size:10px;font-weight:800;letter-spacing:1px;opacity:.78;text-transform:uppercase;position:relative;z-index:1}
+.next-main{display:flex;align-items:center;gap:13px;margin-top:9px;position:relative;z-index:1}
+.next-clock{font-size:32px;line-height:1;font-weight:800;letter-spacing:-1px}
+.next-copy{min-width:0}
+.next-copy strong{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.next-copy span{display:block;font-size:10px;opacity:.78;margin-top:3px}
+.next-countdown{margin-top:13px;font-size:10px;font-weight:700;opacity:.86;position:relative;z-index:1}
+
+/* UNIFIED LIST */
+.alarm-list{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px}
+.alarm-item{padding:13px 14px;gap:11px;min-height:66px}
+.alarm-item-icon{width:34px;height:34px;border-radius:11px;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.alarm-item-info{gap:8px;min-width:0}
+.alarm-item-time{font-size:16px;min-width:48px;letter-spacing:-.3px}
+.alarm-item-name{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.alarm-item-meta{gap:10px}
+.alarm-countdown{font-size:9px;max-width:66px}
+.alarm-item-separator{display:none}
+.alarm-item.disabled{opacity:.48}
+
+/* ACTIVITY LIST ON HOME */
+.activity-today-list{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px}
+.activity-today-item{display:flex;align-items:center;gap:11px;padding:13px 14px;border-bottom:1px solid #f1f2f5;min-height:66px}
+.activity-today-item:last-child{border-bottom:0}
+.activity-today-icon{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.activity-today-main{flex:1;min-width:0}
+.activity-today-time{font-size:15px;font-weight:800;line-height:1.1}
+.activity-today-name{font-size:12px;font-weight:650;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.activity-today-meta{font-size:9px;color:var(--text-muted);margin-top:2px}
+.activity-done-btn{border:0;background:var(--green-light);color:var(--green);border-radius:20px;padding:7px 10px;font-size:9px;font-weight:800;white-space:nowrap}
+.activity-pending-btn{border:1px solid #f2dfb6;background:var(--orange-light);color:#a76a00;border-radius:20px;padding:7px 10px;font-size:9px;font-weight:800;white-space:nowrap}
+
+.empty-state{padding:28px 16px;text-align:center;color:var(--text-muted)}
+.empty-state .empty-icon{font-size:28px;margin-bottom:8px}
+.empty-state strong{display:block;color:var(--text-main);font-size:13px}
+.empty-state span{display:block;font-size:10px;margin-top:4px;line-height:1.5}
+
+/* SCHEDULE / PRO PLANNER */
+.schedule-toolbar{display:flex;gap:6px;background:#fff;border:1px solid var(--border);padding:4px;border-radius:14px;margin:4px 0 14px}
+.schedule-filter{flex:1;border:0;background:transparent;color:var(--text-muted);padding:9px 4px;border-radius:10px;font-size:10px;font-weight:800}
+.schedule-filter.active{background:var(--primary);color:#fff}
+.schedule-group-title{display:flex;justify-content:space-between;align-items:center;margin:18px 2px 8px}
+.schedule-group-title strong{font-size:11px;letter-spacing:.5px}
+.schedule-group-title span{font-size:9px;color:var(--text-muted)}
+.schedule-list-pro{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
+.schedule-row{display:flex;align-items:center;gap:11px;padding:13px 14px;border-bottom:1px solid #f1f2f5}
+.schedule-row:last-child{border-bottom:0}
+.schedule-icon{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.schedule-row-main{flex:1;min-width:0}
+.schedule-row-name{font-size:13px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.schedule-row-meta{font-size:9px;color:var(--text-muted);margin-top:3px}
+.schedule-row-time{text-align:right;min-width:48px}
+.schedule-row-time strong{display:block;font-size:15px}
+.schedule-row-time span{display:block;font-size:8px;color:var(--text-muted);margin-top:2px}
+.schedule-row-action{width:30px;height:30px;border:0;background:#f7f7fa;color:#9aa0ad;border-radius:9px}
+
+/* STATS */
+.stat-box{box-shadow:var(--shadow)}
+.progress-card{box-shadow:var(--shadow)}
+
+/* FORM */
+.form-group{margin-bottom:15px}
+.form-group label{font-size:11px;margin-bottom:6px}
+.form-control{border-radius:13px;padding:12px;font-size:12px}
+.category-grid{gap:7px}
+.category-option{border-radius:13px;padding:9px 4px}
+.category-option small{font-size:8px}
+.repeat-grid{gap:7px}
+.repeat-option{border-radius:11px;padding:10px 8px;font-size:10px}
+.btn-primary{border-radius:13px;padding:13px;font-size:13px}
+
+/* NAV */
+.bottom-nav{padding:8px 0 calc(8px + env(safe-area-inset-bottom));box-shadow:0 -5px 18px rgba(17,24,39,.04)}
+.nav-item{padding:6px 10px;min-width:64px}
+.nav-item i{font-size:16px}
+.nav-item span{font-size:8px}
+.nav-item.active{background:var(--primary-light)}
+.fab-btn{width:50px;height:50px;right:17px;bottom:73px}
+
+/* ALARM FULLSCREEN */
+.alarm-screen{background:radial-gradient(circle at 50% 5%,#3f397c,#090d21 70%);gap:44px}
+.alarm-time-big{font-size:72px;letter-spacing:-2px}
+.alarm-act-name{font-size:24px}
+.alarm-actions{gap:10px}
+.alarm-actions button{border-radius:15px;padding:15px 7px}
+
+/* Hide old unused visual hero if still referenced */
+.today-hero{display:none}
+.done-toggle{display:none}
+
 </style>
 </head>
 
@@ -1349,13 +1477,13 @@ input:checked + .toggle-slider:before {
         <p id="current-date-text"></p>
     </div>
 
-    <div class="section-title">ALARM HARI INI</div>
+    <div id="next-alarm-container"></div>
+
+    <div class="section-title">⏰ ALARM HARI INI</div>
     <div id="alarm-list-container" class="alarm-list"></div>
 
-    <div class="tip-card" id="tip-card">
-        <div class="tip-icon">💡</div>
-        <p id="tip-text"></p>
-    </div>
+    <div class="section-title">📋 KEGIATAN HARI INI</div>
+    <div id="activity-today-container" class="activity-today-list"></div>
 
 </div>
 
@@ -1372,11 +1500,17 @@ input:checked + .toggle-slider:before {
     </div>
 
     <div class="greeting-section">
-        <h2>Semua Pengingat</h2>
-        <p>Atur jadwal yang ingin MAESTRO ingatkan.</p>
+        <h2>Rencana Jadwal</h2>
+        <p>Lihat dan atur seluruh alarm & kegiatanmu.</p>
     </div>
 
-    <div id="schedule-list-container" class="activity-grid"></div>
+    <div class="schedule-toolbar">
+        <button class="schedule-filter active" data-schedule-filter="ALL" onclick="setScheduleFilter('ALL',this)">Semua</button>
+        <button class="schedule-filter" data-schedule-filter="ALARM" onclick="setScheduleFilter('ALARM',this)">⏰ Alarm</button>
+        <button class="schedule-filter" data-schedule-filter="ACTIVITY" onclick="setScheduleFilter('ACTIVITY',this)">📋 Kegiatan</button>
+    </div>
+
+    <div id="schedule-list-container" class="schedule-list-pro"></div>
 
 </div>
 
@@ -2148,10 +2282,11 @@ function updateUI(){
     updateDate();
     activities.sort((a,b) => a.time.localeCompare(b.time));
     
+    renderNextAlarm();
     renderAlarmList();
+    renderActivityToday();
     renderSchedule();
     renderStats();
-    renderDailyTip();
 }
 
 function updateDate(){
@@ -2323,70 +2458,117 @@ function openEditScreen(id){
    RENDERING
 ========================================================= */
 
+function renderNextAlarm(){
+    const el = document.getElementById("next-alarm-container");
+    if(!el) return;
+    const now = new Date();
+    const candidates = activities.filter(a => a.enabled !== false && a.kind === "SLEEP");
+    if(!candidates.length){
+        el.innerHTML = `<div class="home-next-card"><div class="next-eyebrow">Pengingat berikutnya</div><div class="next-main"><div class="next-clock">—</div><div class="next-copy"><strong>Belum ada alarm</strong><span>Tambahkan alarm dari tombol +</span></div></div></div>`;
+        return;
+    }
+    const ranked = candidates.map(a => {
+        const [h,m] = a.time.split(":").map(Number);
+        const t = new Date(now); t.setHours(h,m,0,0);
+        if(t <= now) t.setDate(t.getDate()+1);
+        return {...a, _target:t};
+    }).sort((a,b)=>a._target-b._target);
+    const a = ranked[0];
+    el.innerHTML = `<div class="home-next-card" onclick="openEditScreen(${a.id})" style="cursor:pointer">
+        <div class="next-eyebrow">Alarm berikutnya</div>
+        <div class="next-main"><div class="next-clock">${a.time}</div><div class="next-copy"><strong>${escapeHTML(a.name)}</strong><span>${repeatLabel(a) || "Pengingat"}</span></div></div>
+        <div class="next-countdown">${getRemainingTime(a.time)}</div>
+    </div>`;
+}
+
 function renderAlarmList(){
     const container = document.getElementById("alarm-list-container");
     if(!container) return;
     container.innerHTML = "";
-    
-    if(!activities.length){
-        container.innerHTML = `<div style="padding:30px;text-align:center;color:var(--text-muted);"><div style="font-size:30px;margin-bottom:10px;">⏰</div><p style="font-size:13px;font-weight:700;">Belum ada alarm</p><p style="font-size:11px;">Klik + untuk menambah jadwal.</p></div>`;
+    const alarms = [...activities].filter(a => a.kind === "SLEEP").sort((a,b)=>a.time.localeCompare(b.time));
+    if(!alarms.length){
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">⏰</div><strong>Belum ada alarm</strong><span>Gunakan tombol + untuk membuat alarm.</span></div>`;
         return;
     }
-
-    const sorted = [...activities].sort((a,b) => a.time.localeCompare(b.time));
-
-    sorted.forEach(act => {
+    alarms.forEach(act => {
         const isEnabled = act.enabled !== false;
         const countdown = isEnabled ? getRemainingTime(act.time) : "";
-        
         const item = document.createElement("div");
         item.className = `alarm-item ${isEnabled ? '' : 'disabled'}`;
         item.innerHTML = `
             <div class="alarm-item-icon" onclick="openEditScreen(${act.id})" style="cursor:pointer;">${act.icon}</div>
             <div class="alarm-item-info" onclick="openEditScreen(${act.id})">
                 <span class="alarm-item-time">${act.time}</span>
-                <span class="alarm-item-separator">—</span>
                 <span class="alarm-item-name">${escapeHTML(act.name)}</span>
             </div>
             <div class="alarm-item-meta">
                 ${isEnabled ? `<div class="alarm-countdown">${countdown}</div>` : ''}
-                <label class="toggle-switch">
-                    <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAlarm(${act.id}, this.checked)">
-                    <span class="toggle-slider"></span>
-                </label>
-            </div>
-        `;
+                <label class="toggle-switch"><input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAlarm(${act.id}, this.checked)"><span class="toggle-slider"></span></label>
+            </div>`;
         container.appendChild(item);
     });
+}
+
+function renderActivityToday(){
+    const container = document.getElementById("activity-today-container");
+    if(!container) return;
+    container.innerHTML = "";
+    const acts = [...activities].filter(a => a.kind !== "SLEEP").sort((a,b)=>a.time.localeCompare(b.time));
+    if(!acts.length){
+        container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><strong>Belum ada kegiatan</strong><span>Tambahkan kegiatan dari tombol + untuk mengisi rencana harian.</span></div>`;
+        return;
+    }
+    acts.forEach(act=>{
+        const c=categoryColor(act.category);
+        const done=!!act.done;
+        const item=document.createElement("div");
+        item.className="activity-today-item";
+        item.innerHTML=`
+            <div class="activity-today-icon" style="background:${c.bg}">${act.icon}</div>
+            <div class="activity-today-main" onclick="openEditScreen(${act.id})" style="cursor:pointer">
+                <div class="activity-today-time">${act.time}</div>
+                <div class="activity-today-name">${escapeHTML(act.name)}</div>
+                <div class="activity-today-meta">${categoryName(act.category)} · ${repeatLabel(act)}</div>
+            </div>
+            <button class="${done?'activity-done-btn':'activity-pending-btn'}" onclick="toggleDone(${act.id})">${done?'✓ Selesai':'○ Tandai'}</button>`;
+        container.appendChild(item);
+    });
+}
+
+let scheduleFilter = "ALL";
+function setScheduleFilter(filter, btn){
+    scheduleFilter = filter;
+    document.querySelectorAll(".schedule-filter").forEach(x=>x.classList.remove("active"));
+    if(btn) btn.classList.add("active");
+    renderSchedule();
 }
 
 function renderSchedule(){
     const container = document.getElementById("schedule-list-container");
     if(!container) return;
-    container.innerHTML = "";
-    if(!activities.length){
-        container.innerHTML = `<div class="progress-card" style="grid-column:1/-1;text-align:center;padding:24px 16px;"><div style="font-size:28px;margin-bottom:8px;">🗓️</div><p style="font-size:13px;font-weight:700;margin-bottom:4px;">Belum ada pengingat</p><p style="font-size:11px;color:var(--text-muted);">Tekan tombol + di kanan bawah untuk mulai.</p></div>`;
+    container.innerHTML="";
+    let list=[...activities].sort((a,b)=>a.time.localeCompare(b.time));
+    if(scheduleFilter === "ALARM") list=list.filter(a=>a.kind === "SLEEP");
+    if(scheduleFilter === "ACTIVITY") list=list.filter(a=>a.kind !== "SLEEP");
+    if(!list.length){
+        container.innerHTML=`<div class="empty-state"><div class="empty-icon">🗓️</div><strong>Belum ada jadwal</strong><span>Tekan tombol + untuk membuat alarm atau kegiatan.</span></div>`;
         return;
     }
-    activities.forEach(act => {
-        const c = categoryColor(act.category);
-        const isEnabled = act.enabled !== false;
-        container.innerHTML += `
-            <div class="activity-card" style="border-top-color:${c.fg}; ${!isEnabled ? 'opacity:0.6;' : ''}">
-                <div class="activity-top">
-                    <div class="activity-icon" style="background:${c.bg};" onclick="openEditScreen(${act.id})">${act.icon}</div>
-                    <button class="delete-btn" onclick="deleteActivity(${act.id}, event)"><i class="fa-solid fa-trash-can"></i></button>
-                </div>
-                <div class="activity-name" onclick="openEditScreen(${act.id})">${escapeHTML(act.name)}</div>
-                <div class="activity-category">${categoryName(act.category)}</div>
-                <div class="activity-bottom">
-                    <span class="activity-time">${act.time}</span>
-                    <span class="status-dot ${act.done ? 'status-done' : 'status-pending'}" onclick="toggleDone(${act.id})">
-                        ${act.done ? '✓ Selesai' : (isEnabled ? '○ Aktif' : '✖ Mati')}
-                    </span>
-                </div>
+    list.forEach(act=>{
+        const c=categoryColor(act.category), enabled=act.enabled!==false;
+        const type=act.kind === "SLEEP" ? "Alarm" : "Kegiatan";
+        const status=act.kind === "SLEEP" ? (enabled ? "Aktif" : "Mati") : (act.done ? "Selesai" : "Belum selesai");
+        const row=document.createElement("div");
+        row.className="schedule-row";
+        row.innerHTML=`
+            <div class="schedule-icon" style="background:${c.bg}">${act.icon}</div>
+            <div class="schedule-row-main" onclick="openEditScreen(${act.id})" style="cursor:pointer">
+                <div class="schedule-row-name">${escapeHTML(act.name)}</div>
+                <div class="schedule-row-meta">${type} · ${repeatLabel(act)} · ${status}</div>
             </div>
-        `;
+            <div class="schedule-row-time"><strong>${act.time}</strong><span>${categoryName(act.category)}</span></div>
+            <button class="schedule-row-action" onclick="openEditScreen(${act.id})" aria-label="Edit"><i class="fa-solid fa-chevron-right"></i></button>`;
+        container.appendChild(row);
     });
 }
 
