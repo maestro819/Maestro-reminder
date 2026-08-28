@@ -503,6 +503,63 @@ body{
     transform:scale(.95);
 }
 
+/* TYPE SELECTOR */
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.type-option{border:1px solid var(--border);background:#fff;border-radius:16px;padding:13px 10px;text-align:left;cursor:pointer;transition:.18s;display:flex;align-items:center;gap:10px}
+.type-option i{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;background:#f1f5f9;color:var(--text-muted)}
+.type-option strong{display:block;font-size:12px}
+.type-option small{display:block;font-size:9px;color:var(--text-muted);margin-top:2px}
+.type-option.selected{border:2px solid var(--primary);background:var(--primary-light)}
+.type-option.selected i{background:#fff;color:var(--primary)}
+.type-option:active{transform:scale(.97)}
+
+/* NEXT ALARM */
+.next-alarm-card{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;border-radius:22px;padding:18px 18px 16px;margin:2px 0 20px;box-shadow:0 10px 24px rgba(99,102,241,.24);position:relative;overflow:hidden}
+.next-alarm-card:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08);right:-35px;top:-40px}
+.next-alarm-label{font-size:10px;font-weight:800;letter-spacing:.7px;opacity:.85;position:relative;z-index:1}
+.next-alarm-main{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1;margin-top:7px}
+.next-alarm-time{font-size:38px;line-height:1;font-weight:800;letter-spacing:-1px}
+.next-alarm-info{text-align:right;min-width:0}
+.next-alarm-name{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.next-alarm-meta{font-size:10px;opacity:.82;margin-top:3px}
+.next-alarm-countdown{font-size:10px;font-weight:700;opacity:.9;margin-top:10px;position:relative;z-index:1}
+.empty-next{font-size:12px;opacity:.9;padding:5px 0}
+
+/* TYPE BADGE */
+.type-badge{font-size:9px;font-weight:800;padding:5px 8px;border-radius:9px;white-space:nowrap}
+.type-badge.alarm{background:#e0e7ff;color:#4338ca}
+.type-badge.activity{background:#d1fae5;color:#047857}
+
+/* WHEEL POLISH */
+.wheel-sheet{box-shadow:0 -10px 35px rgba(15,23,42,.12)}
+.wheel-column{height:216px;padding:72px 0;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+.wheel-option{height:48px;scroll-snap-align:center;scroll-snap-stop:always;font-size:28px;transition:opacity .12s,transform .12s,color .12s}
+.wheel-option:not(.selected){opacity:.5}
+.wheel-option.selected{opacity:1}
+.wheel-center-line{position:absolute;left:18px;right:18px;top:calc(50% - 24px);height:48px;border-top:1px solid #c7d2fe;border-bottom:1px solid #c7d2fe;border-radius:10px;pointer-events:none}
+.wheel-column-wrap{position:relative}
+
+/* HOME GROUP */
+.home-group-title{display:flex;align-items:center;justify-content:space-between;margin:20px 0 9px}
+.home-group-title .left{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;letter-spacing:.4px}
+.home-group-title .left i{font-size:12px;color:var(--primary)}
+.home-group-title button{border:0;background:none;color:var(--primary);font-size:10px;font-weight:800;padding:4px;cursor:pointer}
+.activity-list{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:18px}
+.activity-list .activity-row{display:flex;align-items:center;gap:11px;padding:13px 14px;border-bottom:1px solid #f1f5f9}
+.activity-list .activity-row:last-child{border-bottom:0}
+.activity-row .row-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.activity-row .row-info{flex:1;min-width:0}
+.activity-row .row-name{font-size:13px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.activity-row .row-meta{font-size:10px;color:var(--text-muted);margin-top:2px}
+.activity-row .row-time{font-size:15px;font-weight:800;white-space:nowrap}
+.activity-row .row-check{width:27px;height:27px;border-radius:50%;border:1px solid var(--border);background:#fff;color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
+.activity-row .row-check.done{background:var(--green-light);border-color:var(--green);color:var(--green)}
+
+/* ALARM SCREEN LIST */
+.alarm-filter{display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--border);border-radius:14px;padding:4px;margin-bottom:14px}
+.alarm-filter button{border:0;background:none;border-radius:10px;padding:9px;font-size:11px;font-weight:800;color:var(--text-muted)}
+.alarm-filter button.active{background:var(--primary);color:#fff}
+
 /* FORM */
 
 .form-group{
@@ -1462,16 +1519,10 @@ body{background:#e5e7eb}
 <div class="phone-frame">
 
 <!-- HOME -->
-
 <div id="screen-home" class="screen active">
-
     <div class="brand-header">
-        <div class="brand-logo">
-            <h1>MAESTRO</h1>
-            <span>easy does it</span>
-        </div>
+        <div class="brand-logo"><h1>MAESTRO</h1><span>easy does it</span></div>
     </div>
-
     <div class="greeting-section">
         <h2 id="greeting-title">Selamat datang 👋</h2>
         <p id="current-date-text"></p>
@@ -1479,14 +1530,31 @@ body{background:#e5e7eb}
 
     <div id="next-alarm-container"></div>
 
-    <div class="section-title">⏰ ALARM HARI INI</div>
+    <div class="home-group-title">
+        <div class="left"><i class="fa-solid fa-bell"></i><span>ALARM HARI INI</span></div>
+        <button onclick="switchScreen('alarm')">Lihat semua</button>
+    </div>
     <div id="alarm-list-container" class="alarm-list"></div>
 
-    <div class="section-title">📋 KEGIATAN HARI INI</div>
-    <div id="activity-today-container" class="activity-today-list"></div>
-
+    <div class="home-group-title">
+        <div class="left"><i class="fa-solid fa-list-check"></i><span>KEGIATAN HARI INI</span></div>
+        <button onclick="switchScreen('schedule')">Lihat jadwal</button>
+    </div>
+    <div id="activity-list-container" class="activity-list"></div>
 </div>
 
+<!-- ALARM -->
+<div id="screen-alarm" class="screen">
+    <div class="brand-header">
+        <div class="brand-logo"><h1>MAESTRO</h1><span>Alarm</span></div>
+    </div>
+    <div class="greeting-section"><h2>Alarm</h2><p>Kelola alarm yang benar-benar akan membunyikan perangkat.</p></div>
+    <div class="alarm-filter">
+        <button id="alarm-filter-active" class="active" onclick="setAlarmFilter('active')">Aktif</button>
+        <button id="alarm-filter-all" onclick="setAlarmFilter('all')">Semua</button>
+    </div>
+    <div id="alarm-screen-list" class="alarm-list"></div>
+</div>
 
 <!-- JADWAL -->
 
@@ -1718,6 +1786,19 @@ body{background:#e5e7eb}
 
 
     <div class="form-group">
+        <label>Jenis pengingat</label>
+        <div class="type-grid">
+            <div class="type-option" data-kind="SLEEP" onclick="selectKind(this)">
+                <i class="fa-solid fa-bell"></i><div><strong>Alarm</strong><small>Alarm utama</small></div>
+            </div>
+            <div class="type-option selected" data-kind="ACTIVITY" onclick="selectKind(this)">
+                <i class="fa-solid fa-list-check"></i><div><strong>Kegiatan</strong><small>Rencana aktivitas</small></div>
+            </div>
+        </div>
+        <input type="hidden" id="add-kind" value="ACTIVITY">
+    </div>
+
+    <div class="form-group">
 
         <label>Kategori</label>
 
@@ -1828,7 +1909,7 @@ body{background:#e5e7eb}
 
     <div class="form-group">
 
-        <label>Jam alarm</label>
+        <label>Waktu</label>
 
         <button
             type="button"
@@ -1996,7 +2077,7 @@ body{background:#e5e7eb}
         onclick="addNewActivity()"
     >
         <i class="fa-solid fa-check"></i>
-        Simpan Pengingat
+        Simpan
     </button>
 
 </div>
@@ -2013,24 +2094,18 @@ body{background:#e5e7eb}
     <div class="wheel-sheet">
 
         <h3 style="text-align:center;font-size:16px;">
-            Pilih jam alarm
+            Pilih waktu
         </h3>
 
         <div class="wheel-row">
 
-            <div
-                id="hour-wheel"
-                class="wheel-column"
-            ></div>
+            <div class="wheel-column-wrap"><div id="hour-wheel" class="wheel-column"></div><div class="wheel-center-line"></div></div>
 
             <div style="font-size:28px;font-weight:800;align-self:center;">
                 :
             </div>
 
-            <div
-                id="minute-wheel"
-                class="wheel-column"
-            ></div>
+            <div class="wheel-column-wrap"><div id="minute-wheel" class="wheel-column"></div><div class="wheel-center-line"></div></div>
 
         </div>
 
@@ -2124,6 +2199,14 @@ body{background:#e5e7eb}
     >
         <i class="fa-solid fa-house"></i>
         <span>Hari Ini</span>
+    </button>
+
+    <button
+        class="nav-item"
+        onclick="switchScreen('alarm',this)"
+    >
+        <i class="fa-solid fa-bell"></i>
+        <span>Alarm</span>
     </button>
 
     <button
@@ -2243,6 +2326,7 @@ let userName = localStorage.getItem("maestro_username") || "Anto";
 let currentScreen = "home";
 let selectedTime = "08:00";
 let selectedCategory = "HEALTH";
+let selectedKind = "ACTIVITY";
 let selectedRepeat = "DAILY";
 
 /* =========================================================
@@ -2367,7 +2451,7 @@ function addNewActivity(){
         name: name,
         time: time,
         icon: icon,
-        kind: category === "SLEEP" ? "SLEEP" : "ACTIVITY",
+        kind: selectedKind,
         category: category,
         repeat: repeat,
         days: days,
@@ -2403,6 +2487,10 @@ function resetAddForm(){
     document.getElementById("add-time-button").innerText = selectedTime;
     document.getElementById("add-time-button").classList.remove("field-error");
     
+    selectedKind = "ACTIVITY";
+    document.getElementById("add-kind").value = "ACTIVITY";
+    document.querySelectorAll(".type-option").forEach(x => x.classList.toggle("selected", x.dataset.kind === "ACTIVITY"));
+
     selectedCategory = "HEALTH";
     document.getElementById("add-category").value = "HEALTH";
     document.getElementById("add-icon").value = "💧";
@@ -2428,6 +2516,9 @@ function openEditScreen(id){
     
     const nf = document.getElementById("add-name");
     nf.value = act.name; nf.dataset.editId = id;
+
+    const kindEl = document.querySelector(`.type-option[data-kind="${act.kind || "ACTIVITY"}"]`);
+    if(kindEl) selectKind(kindEl);
     
     document.getElementById("add-time").value = act.time;
     document.getElementById("add-time-button").innerText = act.time;
@@ -2481,66 +2572,82 @@ function renderNextAlarm(){
     </div>`;
 }
 
+function isAlarmItem(act){ return act.kind === "SLEEP"; }
+
+function renderNextAlarm(){
+    const c = document.getElementById("next-alarm-container");
+    if(!c) return;
+    const alarms = activities.filter(a => isAlarmItem(a) && a.enabled !== false);
+    if(!alarms.length){
+        c.innerHTML = `<div class="next-alarm-card"><div class="next-alarm-label">ALARM BERIKUTNYA</div><div class="empty-next">Belum ada alarm aktif. Tambahkan alarm dari tombol +.</div></div>`;
+        return;
+    }
+    const now = new Date();
+    const next = alarms.map(a => {
+        const [h,m] = a.time.split(":").map(Number);
+        const d = new Date(now); d.setHours(h,m,0,0);
+        if(d <= now) d.setDate(d.getDate()+1);
+        return {a,d};
+    }).sort((x,y)=>x.d-y.d)[0];
+    c.innerHTML = `<div class="next-alarm-card">
+        <div class="next-alarm-label">ALARM BERIKUTNYA</div>
+        <div class="next-alarm-main">
+            <div class="next-alarm-time">${next.a.time}</div>
+            <div class="next-alarm-info"><div class="next-alarm-name">${next.a.icon} ${escapeHTML(next.a.name)}</div><div class="next-alarm-meta">${repeatLabel(next.a)}</div></div>
+        </div>
+        <div class="next-alarm-countdown">${getRemainingTime(next.a.time)}</div>
+    </div>`;
+}
+
+function alarmRowHTML(act){
+    const isEnabled = act.enabled !== false;
+    const countdown = isEnabled ? getRemainingTime(act.time) : "Mati";
+    return `<div class="alarm-item ${isEnabled ? '' : 'disabled'}">
+        <div class="alarm-item-icon" onclick="openEditScreen(${act.id})" style="cursor:pointer;">${act.icon}</div>
+        <div class="alarm-item-info" onclick="openEditScreen(${act.id})">
+            <span class="alarm-item-time">${act.time}</span><span class="alarm-item-separator">—</span><span class="alarm-item-name">${escapeHTML(act.name)}</span>
+        </div>
+        <div class="alarm-item-meta"><div class="alarm-countdown">${countdown}</div>
+            <label class="toggle-switch"><input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAlarm(${act.id}, this.checked)"><span class="toggle-slider"></span></label>
+        </div>
+    </div>`;
+}
+
 function renderAlarmList(){
     const container = document.getElementById("alarm-list-container");
-    if(!container) return;
-    container.innerHTML = "";
-    const alarms = [...activities].filter(a => a.kind === "SLEEP").sort((a,b)=>a.time.localeCompare(b.time));
-    if(!alarms.length){
-        container.innerHTML = `<div class="empty-state"><div class="empty-icon">⏰</div><strong>Belum ada alarm</strong><span>Gunakan tombol + untuk membuat alarm.</span></div>`;
-        return;
+    const full = document.getElementById("alarm-screen-list");
+    const alarms = [...activities].filter(isAlarmItem).sort((a,b)=>a.time.localeCompare(b.time));
+    const active = alarms.filter(a=>a.enabled !== false);
+    const homeAlarms = active.length ? active : alarms;
+    const empty = `<div style="padding:28px 18px;text-align:center;color:var(--text-muted);"><div style="font-size:28px;margin-bottom:8px;">🔔</div><p style="font-size:13px;font-weight:800;">Belum ada alarm</p><p style="font-size:11px;margin-top:4px;">Tekan + lalu pilih jenis <b>Alarm</b>.</p></div>`;
+    if(container) container.innerHTML = homeAlarms.length ? homeAlarms.map(alarmRowHTML).join("") : empty;
+    if(full){
+        const filter = window.alarmFilter || "active";
+        const list = filter === "active" ? active : alarms;
+        full.innerHTML = list.length ? list.map(alarmRowHTML).join("") : empty;
     }
-    alarms.forEach(act => {
-        const isEnabled = act.enabled !== false;
-        const countdown = isEnabled ? getRemainingTime(act.time) : "";
-        const item = document.createElement("div");
-        item.className = `alarm-item ${isEnabled ? '' : 'disabled'}`;
-        item.innerHTML = `
-            <div class="alarm-item-icon" onclick="openEditScreen(${act.id})" style="cursor:pointer;">${act.icon}</div>
-            <div class="alarm-item-info" onclick="openEditScreen(${act.id})">
-                <span class="alarm-item-time">${act.time}</span>
-                <span class="alarm-item-name">${escapeHTML(act.name)}</span>
-            </div>
-            <div class="alarm-item-meta">
-                ${isEnabled ? `<div class="alarm-countdown">${countdown}</div>` : ''}
-                <label class="toggle-switch"><input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAlarm(${act.id}, this.checked)"><span class="toggle-slider"></span></label>
-            </div>`;
-        container.appendChild(item);
-    });
 }
 
-function renderActivityToday(){
-    const container = document.getElementById("activity-today-container");
-    if(!container) return;
-    container.innerHTML = "";
-    const acts = [...activities].filter(a => a.kind !== "SLEEP").sort((a,b)=>a.time.localeCompare(b.time));
-    if(!acts.length){
-        container.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><strong>Belum ada kegiatan</strong><span>Tambahkan kegiatan dari tombol + untuk mengisi rencana harian.</span></div>`;
-        return;
-    }
-    acts.forEach(act=>{
-        const c=categoryColor(act.category);
-        const done=!!act.done;
-        const item=document.createElement("div");
-        item.className="activity-today-item";
-        item.innerHTML=`
-            <div class="activity-today-icon" style="background:${c.bg}">${act.icon}</div>
-            <div class="activity-today-main" onclick="openEditScreen(${act.id})" style="cursor:pointer">
-                <div class="activity-today-time">${act.time}</div>
-                <div class="activity-today-name">${escapeHTML(act.name)}</div>
-                <div class="activity-today-meta">${categoryName(act.category)} · ${repeatLabel(act)}</div>
-            </div>
-            <button class="${done?'activity-done-btn':'activity-pending-btn'}" onclick="toggleDone(${act.id})">${done?'✓ Selesai':'○ Tandai'}</button>`;
-        container.appendChild(item);
-    });
+function renderActivityList(){
+    const c=document.getElementById("activity-list-container"); if(!c) return;
+    const list=[...activities].filter(a=>!isAlarmItem(a)).sort((a,b)=>a.time.localeCompare(b.time));
+    if(!list.length){ c.innerHTML=`<div style="padding:28px 18px;text-align:center;color:var(--text-muted);"><div style="font-size:28px;margin-bottom:8px;">📋</div><p style="font-size:13px;font-weight:800;">Belum ada kegiatan</p><p style="font-size:11px;margin-top:4px;">Tambahkan pengingat dan pilih jenis Kegiatan.</p></div>`; return; }
+    c.innerHTML=list.map(act=>{
+        const col=categoryColor(act.category); const done=!!act.done;
+        return `<div class="activity-row">
+            <div class="row-icon" style="background:${col.bg};">${act.icon}</div>
+            <div class="row-info" onclick="openEditScreen(${act.id})"><div class="row-name">${escapeHTML(act.name)}</div><div class="row-meta">${categoryName(act.category)} • ${repeatLabel(act)}</div></div>
+            <div class="row-time">${act.time}</div>
+            <button class="row-check ${done?'done':''}" onclick="toggleDone(${act.id})">${done?'✓':'○'}</button>
+        </div>`;
+    }).join("");
 }
 
-let scheduleFilter = "ALL";
-function setScheduleFilter(filter, btn){
-    scheduleFilter = filter;
-    document.querySelectorAll(".schedule-filter").forEach(x=>x.classList.remove("active"));
-    if(btn) btn.classList.add("active");
-    renderSchedule();
+function setAlarmFilter(filter){
+    window.alarmFilter=filter;
+    document.getElementById("alarm-filter-active")?.classList.toggle("active",filter==="active");
+    document.getElementById("alarm-filter-all")?.classList.toggle("active",filter==="all");
+    renderAlarmList();
 }
 
 function renderSchedule(){
@@ -2649,6 +2756,13 @@ function repeatLabel(act){
     return "";
 }
 
+function selectKind(el){
+    document.querySelectorAll(".type-option").forEach(x=>x.classList.remove("selected"));
+    el.classList.add("selected");
+    selectedKind=el.dataset.kind || "ACTIVITY";
+    const hidden=document.getElementById("add-kind"); if(hidden) hidden.value=selectedKind;
+}
+
 function selectCategory(el){
     document.querySelectorAll(".category-option").forEach(x => x.classList.remove("selected"));
     el.classList.add("selected");
@@ -2694,25 +2808,82 @@ function initCategoryColors(){
 function toggleCustomMessage(){
     document.getElementById("custom-message-box").style.display = document.getElementById("message-mode").value === "CUSTOM" ? "block" : "none";
 }
+let wheelTimer=null;
+
 function openTimePicker(){
-    if(window.AndroidBridge){
-        AndroidBridge.openTimePicker(selectedTime);
-    } else {
-        // Web Fallback: simple prompt for testing
-        const val = prompt("Masukkan jam (HH:mm):", selectedTime);
-        if(val && /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(val)){
-            updateTime(val);
-        }
-    }
+    const current=selectedTime || deviceTime();
+    const [h,m]=current.split(":").map(Number);
+    const overlay=document.getElementById("time-wheel");
+    if(!overlay) return;
+    buildTimeWheel("hour-wheel",24,h);
+    buildTimeWheel("minute-wheel",60,m);
+    overlay.classList.add("active");
+    requestAnimationFrame(()=>{
+        scrollWheelTo("hour-wheel",h,false);
+        scrollWheelTo("minute-wheel",m,false);
+        updateWheelSelection("hour-wheel"); updateWheelSelection("minute-wheel");
+    });
+}
+
+function buildTimeWheel(id,count,value){
+    const el=document.getElementById(id); if(!el) return;
+    let html="";
+    for(let i=0;i<2;i++) html+='<div class="wheel-option" aria-hidden="true"></div>';
+    for(let i=0;i<count;i++) html+=`<div class="wheel-option" data-value="${i}">${String(i).padStart(2,'0')}</div>`;
+    for(let i=0;i<2;i++) html+='<div class="wheel-option" aria-hidden="true"></div>';
+    el.innerHTML=html;
+    el.onscroll=()=>{
+        clearTimeout(wheelTimer);
+        updateWheelSelection(id);
+        wheelTimer=setTimeout(()=>snapWheel(id),90);
+    };
+    el.ontouchend=()=>setTimeout(()=>snapWheel(id),60);
+}
+
+function scrollWheelTo(id,value,smooth=true){
+    const el=document.getElementById(id); if(!el) return;
+    const item=el.querySelector(`[data-value="${value}"]`); if(!item) return;
+    const top=item.offsetTop - (el.clientHeight/2) + (item.offsetHeight/2);
+    el.scrollTo({top,behavior:smooth?'smooth':'auto'});
+}
+
+function getWheelValue(id){
+    const el=document.getElementById(id); if(!el) return 0;
+    const center=el.scrollTop + el.clientHeight/2;
+    let best=null,dist=Infinity;
+    el.querySelectorAll('[data-value]').forEach(item=>{const d=Math.abs((item.offsetTop+item.offsetHeight/2)-center);if(d<dist){dist=d;best=item;}});
+    return best ? Number(best.dataset.value) : 0;
+}
+
+function updateWheelSelection(id){
+    const el=document.getElementById(id); if(!el) return;
+    const v=getWheelValue(id);
+    el.querySelectorAll('[data-value]').forEach(x=>x.classList.toggle('selected',Number(x.dataset.value)===v));
+}
+
+function snapWheel(id){
+    const v=getWheelValue(id);
+    scrollWheelTo(id,v,true);
+    updateWheelSelection(id);
+}
+
+function confirmTimePicker(){
+    const h=getWheelValue("hour-wheel");
+    const m=getWheelValue("minute-wheel");
+    updateTime(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+    closeTimePicker();
+}
+
+function closeTimePicker(){
+    document.getElementById("time-wheel")?.classList.remove("active");
 }
 
 function updateTime(val){
-    selectedTime = val;
-    const btn = document.getElementById("add-time-button");
-    if(btn) btn.innerText = val;
-    const inp = document.getElementById("add-time");
-    if(inp) inp.value = val;
+    selectedTime=val;
+    const btn=document.getElementById("add-time-button"); if(btn) btn.innerText=val;
+    const inp=document.getElementById("add-time"); if(inp) inp.value=val;
 }
+
 function saveSettings(v){
     userName = v.trim() || "Maestro";
     localStorage.setItem("maestro_username", userName);
