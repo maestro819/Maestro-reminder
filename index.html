@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>MAESTRO Reminder - easy does it</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
 :root{
     --bg-main:#f7f8fc;
@@ -30,8 +27,10 @@
     box-sizing:border-box;
     margin:0;
     padding:0;
-    font-family:'Plus Jakarta Sans',sans-serif;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
 }
+
+i svg{width:1em;height:1em;fill:currentColor;display:block}
 
 body{
     background:#e5e7eb;
@@ -546,7 +545,7 @@ body{
 .home-group-title button{border:0;background:none;color:var(--primary);font-size:10px;font-weight:800;padding:4px;cursor:pointer}
 .activity-list{background:#fff;border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:18px}
 .activity-list .activity-row{display:flex;align-items:center;gap:11px;padding:13px 14px;border-bottom:1px solid #f1f5f9}
-.activity-list .activity-row:last-child{border-bottom:0}
+.activity-list .swipe-wrap:last-child .activity-row{border-bottom:0}
 .activity-row .row-icon{width:36px;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .activity-row .row-info{flex:1;min-width:0}
 .activity-row .row-name{font-size:13px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1139,6 +1138,12 @@ textarea.form-control{
     color:#fff;
 }
 
+/* SWIPE TO DELETE */
+.swipe-wrap{position:relative;overflow:hidden}
+.swipe-wrap .swipe-delete-bg{position:absolute;top:0;right:0;bottom:0;width:76px;background:#ef4444;color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;border:0;cursor:pointer}
+.swipe-wrap .swipe-body{position:relative;background:#fff;transform:translateX(0);transition:transform .28s cubic-bezier(.22,.61,.36,1);touch-action:pan-y;will-change:transform}
+.swipe-wrap .swipe-body.swiping{transition:none}
+
 /* LIST STYLE DASHBOARD */
 .alarm-list {
     display: flex;
@@ -1160,7 +1165,7 @@ textarea.form-control{
     transition: background 0.2s;
 }
 
-.alarm-item:last-child {
+.alarm-list .swipe-wrap:last-child .alarm-item {
     border-bottom: 0;
 }
 
@@ -1282,7 +1287,7 @@ input:checked + .toggle-slider:before {
     transition: background 0.2s;
 }
 
-.alarm-item:last-child {
+.alarm-list .swipe-wrap:last-child .alarm-item {
     border-bottom: 0;
 }
 
@@ -1467,7 +1472,7 @@ body{background:#e5e7eb}
 .schedule-group-title span{font-size:9px;color:var(--text-muted)}
 .schedule-list-pro{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
 .schedule-row{display:flex;align-items:center;gap:11px;padding:13px 14px;border-bottom:1px solid #f1f2f5}
-.schedule-row:last-child{border-bottom:0}
+#schedule-list-container .swipe-wrap:last-child .schedule-row{border-bottom:0}
 .schedule-icon{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .schedule-row-main{flex:1;min-width:0}
 .schedule-row-name{font-size:13px;font-weight:750;display:flex;align-items:center;gap:6px;min-width:0}
@@ -1533,13 +1538,13 @@ body{background:#e5e7eb}
     <div id="next-alarm-container"></div>
 
     <div class="home-group-title">
-        <div class="left"><i class="fa-solid fa-bell"></i><span>ALARM HARI INI</span></div>
+        <div class="left"><i class="fa-solid fa-bell"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1 1 0 0 1 1 1v1.07A7.002 7.002 0 0 1 19 11v4.29l1.7 2.55a1 1 0 0 1-.83 1.56H4.13a1 1 0 0 1-.83-1.56L5 15.29V11a7.002 7.002 0 0 1 6-6.93V3a1 1 0 0 1 1-1zm0 20a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22z"/></svg></i><span>ALARM HARI INI</span></div>
         <button onclick="openScheduleFilter('ALARM')">Lihat semua</button>
     </div>
     <div id="alarm-list-container" class="alarm-list"></div>
 
     <div class="home-group-title">
-        <div class="left"><i class="fa-solid fa-list-check"></i><span>KEGIATAN HARI INI</span></div>
+        <div class="left"><i class="fa-solid fa-list-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6h11M9.5 12h11M9.5 18h11"/><path d="M3 6.2l1.2 1.2L6.5 5"/><path d="M3 12.2l1.2 1.2L6.5 11"/><path d="M3 18.2l1.2 1.2L6.5 17"/></svg></i><span>KEGIATAN HARI INI</span></div>
         <button onclick="switchScreen('schedule')">Lihat jadwal</button>
     </div>
     <div id="activity-list-container" class="activity-list"></div>
@@ -1768,7 +1773,7 @@ body{background:#e5e7eb}
             onclick="switchScreen('home')"
             style="background:none;border:0;font-size:18px;"
         >
-            <i class="fa-solid fa-xmark"></i>
+            <i class="fa-solid fa-xmark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></i>
         </button>
 
     </div>
@@ -1778,10 +1783,10 @@ body{background:#e5e7eb}
         <label>Jenis pengingat</label>
         <div class="type-grid">
             <div class="type-option" data-kind="SLEEP" onclick="selectKind(this)">
-                <i class="fa-solid fa-bell"></i><div><strong>Alarm</strong><small>Alarm utama</small></div>
+                <i class="fa-solid fa-bell"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a1 1 0 0 1 1 1v1.07A7.002 7.002 0 0 1 19 11v4.29l1.7 2.55a1 1 0 0 1-.83 1.56H4.13a1 1 0 0 1-.83-1.56L5 15.29V11a7.002 7.002 0 0 1 6-6.93V3a1 1 0 0 1 1-1zm0 20a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22z"/></svg></i><div><strong>Alarm</strong><small>Alarm utama</small></div>
             </div>
             <div class="type-option selected" data-kind="ACTIVITY" onclick="selectKind(this)">
-                <i class="fa-solid fa-list-check"></i><div><strong>Kegiatan</strong><small>Rencana aktivitas</small></div>
+                <i class="fa-solid fa-list-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 6h11M9.5 12h11M9.5 18h11"/><path d="M3 6.2l1.2 1.2L6.5 5"/><path d="M3 12.2l1.2 1.2L6.5 11"/><path d="M3 18.2l1.2 1.2L6.5 17"/></svg></i><div><strong>Kegiatan</strong><small>Rencana aktivitas</small></div>
             </div>
         </div>
         <input type="hidden" id="add-kind" value="ACTIVITY">
@@ -2065,7 +2070,7 @@ body{background:#e5e7eb}
         class="btn-primary"
         onclick="addNewActivity()"
     >
-        <i class="fa-solid fa-check"></i>
+        <i class="fa-solid fa-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></i>
         Simpan
     </button>
 
@@ -2174,7 +2179,7 @@ body{background:#e5e7eb}
     style="display:none;"
     onclick="openAddScreen()"
 >
-    <i class="fa-solid fa-plus"></i>
+    <i class="fa-solid fa-plus"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 4a1 1 0 1 1 2 0v7h7a1 1 0 1 1 0 2h-7v7a1 1 0 1 1-2 0v-7H4a1 1 0 1 1 0-2h7V4z"/></svg></i>
 </button>
 
 
@@ -2186,7 +2191,7 @@ body{background:#e5e7eb}
         class="nav-item active"
         onclick="switchScreen('home',this)"
     >
-        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-house"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.7 2.5 10.4a1 1 0 0 0 .63 1.78H4V20a1 1 0 0 0 1 1h4.5a1 1 0 0 0 1-1v-5.5h3V20a1 1 0 0 0 1 1H19a1 1 0 0 0 1-1v-7.82h.87a1 1 0 0 0 .63-1.78L12 2.7z"/></svg></i>
         <span>Hari Ini</span>
     </button>
 
@@ -2195,7 +2200,7 @@ body{background:#e5e7eb}
         class="nav-item"
         onclick="switchScreen('schedule',this)"
     >
-        <i class="fa-solid fa-calendar-days"></i>
+        <i class="fa-solid fa-calendar-days"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 1a1 1 0 0 1 1 1v1h6V2a1 1 0 1 1 2 0v1h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h1V2a1 1 0 0 1 1-1zM4 10v9a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-9H4z"/><circle cx="8" cy="14.2" r="1.1"/><circle cx="12" cy="14.2" r="1.1"/><circle cx="16" cy="14.2" r="1.1"/></svg></i>
         <span>Jadwal</span>
     </button>
 
@@ -2203,7 +2208,7 @@ body{background:#e5e7eb}
         class="nav-item"
         onclick="switchScreen('stats',this)"
     >
-        <i class="fa-solid fa-chart-simple"></i>
+        <i class="fa-solid fa-chart-simple"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="12" width="5" height="9" rx="1.2"/><rect x="9.5" y="6" width="5" height="15" rx="1.2"/><rect x="16" y="2" width="5" height="19" rx="1.2"/></svg></i>
         <span>Progress</span>
     </button>
 
@@ -2211,7 +2216,7 @@ body{background:#e5e7eb}
         class="nav-item"
         onclick="switchScreen('settings',this)"
     >
-        <i class="fa-solid fa-gear"></i>
+        <i class="fa-solid fa-gear"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="5.5"/><rect x="10.6" y="0.5" width="2.8" height="4" rx="1"/><rect x="10.6" y="19.5" width="2.8" height="4" rx="1"/><rect x="10.6" y="0.5" width="2.8" height="4" rx="1" transform="rotate(45 12 12)"/><rect x="10.6" y="19.5" width="2.8" height="4" rx="1" transform="rotate(45 12 12)"/><rect x="10.6" y="0.5" width="2.8" height="4" rx="1" transform="rotate(90 12 12)"/><rect x="10.6" y="19.5" width="2.8" height="4" rx="1" transform="rotate(90 12 12)"/><rect x="10.6" y="0.5" width="2.8" height="4" rx="1" transform="rotate(135 12 12)"/><rect x="10.6" y="19.5" width="2.8" height="4" rx="1" transform="rotate(135 12 12)"/></svg></i>
         <span>Pengaturan</span>
     </button>
 
@@ -2583,16 +2588,92 @@ function renderNextAlarm(){
     </div>`;
 }
 
+function initSwipeDelete(containerId){
+    const container = document.getElementById(containerId);
+    if(!container || container.dataset.swipeBound) return;
+    container.dataset.swipeBound = "1";
+    const REVEAL = 76;
+    let activeBody = null, startX = 0, startY = 0, dragging = false, movedHorizontally = false, baseOffset = 0;
+
+    function closeOthers(except){
+        container.querySelectorAll(".swipe-body.open").forEach(b => {
+            if(b !== except){ b.classList.remove("open"); b.style.transform = "translateX(0)"; }
+        });
+    }
+
+    container.addEventListener("pointerdown", (e) => {
+        if(e.target.closest(".swipe-delete-bg")) return;
+        const body = e.target.closest(".swipe-body");
+        if(!body) return;
+        activeBody = body;
+        startX = e.clientX; startY = e.clientY;
+        dragging = true; movedHorizontally = false;
+        baseOffset = body.classList.contains("open") ? -REVEAL : 0;
+    });
+
+    container.addEventListener("pointermove", (e) => {
+        if(!dragging || !activeBody) return;
+        const dx = e.clientX - startX, dy = e.clientY - startY;
+        if(!movedHorizontally){
+            if(Math.abs(dy) > Math.abs(dx) + 4){ dragging = false; return; }
+            if(Math.abs(dx) > 4){ movedHorizontally = true; closeOthers(activeBody); activeBody.classList.add("swiping"); }
+        }
+        if(!movedHorizontally) return;
+        let translate = Math.max(-REVEAL - 14, Math.min(0, baseOffset + dx));
+        activeBody.style.transform = `translateX(${translate}px)`;
+    });
+
+    function endDrag(e){
+        if(!dragging || !activeBody) return;
+        dragging = false;
+        activeBody.classList.remove("swiping");
+        if(movedHorizontally){
+            const dx = (e.clientX || 0) - startX;
+            const finalPos = baseOffset + dx;
+            if(finalPos < -REVEAL / 2){
+                activeBody.style.transform = `translateX(-${REVEAL}px)`;
+                activeBody.classList.add("open");
+            } else {
+                activeBody.style.transform = "translateX(0)";
+                activeBody.classList.remove("open");
+            }
+        }
+        activeBody = null; movedHorizontally = false;
+    }
+    container.addEventListener("pointerup", endDrag);
+    container.addEventListener("pointercancel", endDrag);
+
+    container.addEventListener("click", (e) => {
+        const delBtn = e.target.closest(".swipe-delete-bg");
+        if(!delBtn) return;
+        const wrap = delBtn.closest(".swipe-wrap");
+        if(!wrap) return;
+        const id = Number(wrap.dataset.id);
+        const existedBefore = activities.some(a => a.id === id);
+        deleteActivity(id);
+        const stillExists = activities.some(a => a.id === id);
+        if(existedBefore && stillExists){
+            const body = wrap.querySelector(".swipe-body");
+            if(body){ body.style.transform = "translateX(0)"; body.classList.remove("open"); }
+        }
+    });
+}
+
 function alarmRowHTML(act){
     const isEnabled = act.enabled !== false;
     const countdown = isEnabled ? getRemainingTime(act.time) : "Mati";
-    return `<div class="alarm-item ${isEnabled ? '' : 'disabled'}">
+    return `<div class="swipe-wrap" data-id="${act.id}">
+        <button class="swipe-delete-bg" aria-label="Hapus"><i class="fa-solid fa-trash"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2a1 1 0 0 0-1 1v1H4.75a1 1 0 1 0 0 2H5v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h.25a1 1 0 1 0 0-2H16V3a1 1 0 0 0-1-1H9zM8.5 8a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm7 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm-3.5 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1z"/></svg></i></button>
+        <div class="swipe-body">
+        <div class="alarm-item ${isEnabled ? '' : 'disabled'}">
         <div class="alarm-item-icon" onclick="openEditScreen(${act.id})" style="cursor:pointer;">${act.icon}</div>
         <div class="alarm-item-info" onclick="openEditScreen(${act.id})">
             <span class="alarm-item-time">${act.time}</span><span class="alarm-item-separator">—</span><span class="alarm-item-name">${escapeHTML(act.name)}</span>
         </div>
         <div class="alarm-item-meta"><div class="alarm-countdown">${countdown}</div>
             <label class="toggle-switch"><input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAlarm(${act.id}, this.checked)"><span class="toggle-slider"></span></label>
+        </div>
+    </div>
         </div>
     </div>`;
 }
@@ -2610,6 +2691,7 @@ function renderAlarmList(){
         const list = filter === "active" ? active : alarms;
         full.innerHTML = list.length ? list.map(alarmRowHTML).join("") : empty;
     }
+    initSwipeDelete("alarm-list-container");
 }
 
 function renderActivityList(){
@@ -2618,13 +2700,19 @@ function renderActivityList(){
     if(!list.length){ c.innerHTML=`<div style="padding:28px 18px;text-align:center;color:var(--text-muted);"><div style="font-size:28px;margin-bottom:8px;">📋</div><p style="font-size:13px;font-weight:800;">Belum ada kegiatan</p><p style="font-size:11px;margin-top:4px;">Tambahkan pengingat dan pilih jenis Kegiatan.</p></div>`; return; }
     c.innerHTML=list.map(act=>{
         const col=categoryColor(act.category); const done=!!act.done;
-        return `<div class="activity-row">
+        return `<div class="swipe-wrap" data-id="${act.id}">
+            <button class="swipe-delete-bg" aria-label="Hapus"><i class="fa-solid fa-trash"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2a1 1 0 0 0-1 1v1H4.75a1 1 0 1 0 0 2H5v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h.25a1 1 0 1 0 0-2H16V3a1 1 0 0 0-1-1H9zM8.5 8a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm7 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm-3.5 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1z"/></svg></i></button>
+            <div class="swipe-body">
+            <div class="activity-row">
             <div class="row-icon" style="background:${col.bg};">${act.icon}</div>
             <div class="row-info" onclick="openEditScreen(${act.id})"><div class="row-name">${escapeHTML(act.name)}</div><div class="row-meta">${categoryName(act.category)} • ${repeatLabel(act)}</div></div>
             <div class="row-time">${act.time}</div>
             <button class="row-check ${done?'done':''}" onclick="toggleDone(${act.id})">${done?'✓':'○'}</button>
+        </div>
+            </div>
         </div>`;
     }).join("");
+    initSwipeDelete("activity-list-container");
 }
 
 function setAlarmFilter(filter){
@@ -2666,18 +2754,25 @@ function renderSchedule(){
         const c=categoryColor(act.category), enabled=act.enabled!==false;
         const type=act.kind === "SLEEP" ? "Alarm" : "Kegiatan";
         const status=act.kind === "SLEEP" ? (enabled ? "Aktif" : "Mati") : (act.done ? "Selesai" : "Belum selesai");
-        const row=document.createElement("div");
-        row.className="schedule-row";
-        row.innerHTML=`
+        const wrap=document.createElement("div");
+        wrap.className="swipe-wrap";
+        wrap.dataset.id=act.id;
+        wrap.innerHTML=`
+            <button class="swipe-delete-bg" aria-label="Hapus"><i class="fa-solid fa-trash"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2a1 1 0 0 0-1 1v1H4.75a1 1 0 1 0 0 2H5v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h.25a1 1 0 1 0 0-2H16V3a1 1 0 0 0-1-1H9zM8.5 8a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm7 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm-3.5 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1z"/></svg></i></button>
+            <div class="swipe-body">
+            <div class="schedule-row">
             <div class="schedule-icon" style="background:${c.bg}">${act.icon}</div>
             <div class="schedule-row-main" onclick="openEditScreen(${act.id})" style="cursor:pointer">
                 <div class="schedule-row-name"><span class="schedule-row-name-text">${escapeHTML(act.name)}</span><span class="type-badge ${act.kind === "SLEEP" ? "alarm" : "activity"}">${type}</span></div>
                 <div class="schedule-row-meta">${repeatLabel(act)} · ${status}</div>
             </div>
             <div class="schedule-row-time"><strong>${act.time}</strong><span>${categoryName(act.category)}</span></div>
-            <button class="schedule-row-action" onclick="openEditScreen(${act.id})" aria-label="Edit"><i class="fa-solid fa-chevron-right"></i></button>`;
-        container.appendChild(row);
+            <button class="schedule-row-action" onclick="openEditScreen(${act.id})" aria-label="Edit"><i class="fa-solid fa-chevron-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></i></button>
+        </div>
+            </div>`;
+        container.appendChild(wrap);
     });
+    initSwipeDelete("schedule-list-container");
 }
 
 /* =========================================================
