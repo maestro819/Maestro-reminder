@@ -1532,7 +1532,7 @@ body{background:#e5e7eb}
 
     <div class="home-group-title">
         <div class="left"><i class="fa-solid fa-bell"></i><span>ALARM HARI INI</span></div>
-        <button onclick="switchScreen('alarm')">Lihat semua</button>
+        <button onclick="openScheduleFilter('ALARM')">Lihat semua</button>
     </div>
     <div id="alarm-list-container" class="alarm-list"></div>
 
@@ -1541,19 +1541,6 @@ body{background:#e5e7eb}
         <button onclick="switchScreen('schedule')">Lihat jadwal</button>
     </div>
     <div id="activity-list-container" class="activity-list"></div>
-</div>
-
-<!-- ALARM -->
-<div id="screen-alarm" class="screen">
-    <div class="brand-header">
-        <div class="brand-logo"><h1>MAESTRO</h1><span>Alarm</span></div>
-    </div>
-    <div class="greeting-section"><h2>Alarm</h2><p>Kelola alarm yang benar-benar akan membunyikan perangkat.</p></div>
-    <div class="alarm-filter">
-        <button id="alarm-filter-active" class="active" onclick="setAlarmFilter('active')">Aktif</button>
-        <button id="alarm-filter-all" onclick="setAlarmFilter('all')">Semua</button>
-    </div>
-    <div id="alarm-screen-list" class="alarm-list"></div>
 </div>
 
 <!-- JADWAL -->
@@ -2202,14 +2189,7 @@ body{background:#e5e7eb}
     </button>
 
     <button
-        class="nav-item"
-        onclick="switchScreen('alarm',this)"
-    >
-        <i class="fa-solid fa-bell"></i>
-        <span>Alarm</span>
-    </button>
-
-    <button
+        id="nav-jadwal"
         class="nav-item"
         onclick="switchScreen('schedule',this)"
     >
@@ -2327,6 +2307,7 @@ let currentScreen = "home";
 let selectedTime = "08:00";
 let selectedCategory = "HEALTH";
 let selectedKind = "ACTIVITY";
+let scheduleFilter = "ALL";
 let selectedRepeat = "DAILY";
 
 /* =========================================================
@@ -2368,7 +2349,7 @@ function updateUI(){
     
     renderNextAlarm();
     renderAlarmList();
-    renderActivityToday();
+    renderActivityList();
     renderSchedule();
     renderStats();
 }
@@ -2650,6 +2631,23 @@ function setAlarmFilter(filter){
     renderAlarmList();
 }
 
+function setScheduleFilter(filter, btn){
+    scheduleFilter = filter;
+    document.querySelectorAll(".schedule-filter").forEach(b => b.classList.toggle("active", b === btn));
+    if(!btn){
+        document.querySelectorAll(".schedule-filter").forEach(b => {
+            if(b.dataset.scheduleFilter === filter) b.classList.add("active");
+        });
+    }
+    renderSchedule();
+}
+
+function openScheduleFilter(filter){
+    switchScreen("schedule", document.getElementById("nav-jadwal"));
+    const btn = document.querySelector(`.schedule-filter[data-schedule-filter="${filter}"]`);
+    setScheduleFilter(filter, btn);
+}
+
 function renderSchedule(){
     const container = document.getElementById("schedule-list-container");
     if(!container) return;
@@ -2809,6 +2807,7 @@ function toggleCustomMessage(){
     document.getElementById("custom-message-box").style.display = document.getElementById("message-mode").value === "CUSTOM" ? "block" : "none";
 }
 let wheelTimer=null;
+const WHEEL_REPEAT=9;
 
 function openTimePicker(){
     const current=selectedTime || deviceTime();
@@ -2827,43 +2826,69 @@ function openTimePicker(){
 
 function buildTimeWheel(id,count,value){
     const el=document.getElementById(id); if(!el) return;
+    el.dataset.count=count;
     let html="";
-    for(let i=0;i<2;i++) html+='<div class="wheel-option" aria-hidden="true"></div>';
-    for(let i=0;i<count;i++) html+=`<div class="wheel-option" data-value="${i}">${String(i).padStart(2,'0')}</div>`;
-    for(let i=0;i<2;i++) html+='<div class="wheel-option" aria-hidden="true"></div>';
+    for(let r=0;r<WHEEL_REPEAT;r++){
+        for(let i=0;i<count;i++) html+=`<div class="wheel-option" data-value="${i}">${String(i).padStart(2,'0')}</div>`;
+    }
     el.innerHTML=html;
     el.onscroll=()=>{
         clearTimeout(wheelTimer);
+        recenterWheel(id);
         updateWheelSelection(id);
         wheelTimer=setTimeout(()=>snapWheel(id),90);
     };
     el.ontouchend=()=>setTimeout(()=>snapWheel(id),60);
 }
 
+function getNearestWheelItem(id){
+    const el=document.getElementById(id); if(!el) return null;
+    const center=el.scrollTop + el.clientHeight/2;
+    let best=null,dist=Infinity;
+    el.querySelectorAll('[data-value]').forEach(item=>{const d=Math.abs((item.offsetTop+item.offsetHeight/2)-center);if(d<dist){dist=d;best=item;}});
+    return best;
+}
+
+function recenterWheel(id){
+    const el=document.getElementById(id); if(!el) return;
+    const count=Number(el.dataset.count); if(!count) return;
+    const first=el.querySelector('[data-value]'); if(!first) return;
+    const itemH=first.offsetHeight; if(!itemH) return;
+    const copyH=itemH*count;
+    const copyIndex=Math.floor(el.scrollTop/copyH);
+    const targetCopy=Math.floor(WHEEL_REPEAT/2);
+    if(copyIndex<1 || copyIndex>WHEEL_REPEAT-2){
+        const offsetWithinCopy=el.scrollTop-(copyIndex*copyH);
+        el.scrollTop=(targetCopy*copyH)+offsetWithinCopy;
+    }
+}
+
 function scrollWheelTo(id,value,smooth=true){
     const el=document.getElementById(id); if(!el) return;
-    const item=el.querySelector(`[data-value="${value}"]`); if(!item) return;
+    const count=Number(el.dataset.count); if(!count) return;
+    const items=el.querySelectorAll('[data-value]'); if(!items.length) return;
+    const targetCopy=Math.floor(WHEEL_REPEAT/2);
+    const item=items[(targetCopy*count)+value]; if(!item) return;
     const top=item.offsetTop - (el.clientHeight/2) + (item.offsetHeight/2);
     el.scrollTo({top,behavior:smooth?'smooth':'auto'});
 }
 
 function getWheelValue(id){
-    const el=document.getElementById(id); if(!el) return 0;
-    const center=el.scrollTop + el.clientHeight/2;
-    let best=null,dist=Infinity;
-    el.querySelectorAll('[data-value]').forEach(item=>{const d=Math.abs((item.offsetTop+item.offsetHeight/2)-center);if(d<dist){dist=d;best=item;}});
-    return best ? Number(best.dataset.value) : 0;
+    const item=getNearestWheelItem(id);
+    return item ? Number(item.dataset.value) : 0;
 }
 
 function updateWheelSelection(id){
     const el=document.getElementById(id); if(!el) return;
-    const v=getWheelValue(id);
-    el.querySelectorAll('[data-value]').forEach(x=>x.classList.toggle('selected',Number(x.dataset.value)===v));
+    const best=getNearestWheelItem(id);
+    el.querySelectorAll('[data-value]').forEach(x=>x.classList.toggle('selected',x===best));
 }
 
 function snapWheel(id){
-    const v=getWheelValue(id);
-    scrollWheelTo(id,v,true);
+    const el=document.getElementById(id); if(!el) return;
+    const item=getNearestWheelItem(id); if(!item) return;
+    const top=item.offsetTop - (el.clientHeight/2) + (item.offsetHeight/2);
+    el.scrollTo({top,behavior:'smooth'});
     updateWheelSelection(id);
 }
 
