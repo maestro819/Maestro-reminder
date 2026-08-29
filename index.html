@@ -2951,8 +2951,33 @@ function renderDailyTip(){
     const tips = ["Konsisten kecil tiap hari lebih berarti daripada sempurna sesekali.", "Kalau kelewat satu hari, bukan berarti gagal — lanjut lagi besok.", "Pengingat ini cuma alat bantu. Kamu yang pegang kendali."];
     el.innerText = tips[Math.floor(Date.now()/86400000) % tips.length];
 }
-function refreshPermissionPanel(){ /* Placeholder */ }
-function openPermission(type){ if(window.AndroidBridge) AndroidBridge.openPermissionSettings(type); }
+function refreshPermissionPanel(){
+    if(!window.AndroidBridge || typeof AndroidBridge.getPermissionStatus !== "function") return;
+    let status;
+    try{ status = JSON.parse(AndroidBridge.getPermissionStatus()); } catch(e){ return; }
+    const rows = {
+        notification: document.getElementById("permission-notification-row"),
+        alarm: document.getElementById("permission-alarm-row"),
+        overlay: document.getElementById("permission-overlay-row"),
+        fullscreen: document.getElementById("permission-fullscreen-row")
+    };
+    const granted = { notification: status.notification, alarm: status.exactAlarm, overlay: status.overlay, fullscreen: status.fullScreen };
+    let allGranted = true;
+    Object.keys(rows).forEach(key => {
+        if(!rows[key]) return;
+        if(granted[key]) rows[key].style.display = "none";
+        else { rows[key].style.display = "block"; allGranted = false; }
+    });
+    const summary = document.getElementById("permission-summary");
+    if(summary) summary.innerText = allGranted ? "✓ Semua izin aktif. Alarm siap berbunyi tepat waktu." : "Aktifkan izin di bawah ini agar alarm bisa berbunyi tepat waktu.";
+}
+function openPermission(type){
+    if(!window.AndroidBridge) return;
+    if(type === "notification" && AndroidBridge.openNotificationSettings) AndroidBridge.openNotificationSettings();
+    else if(type === "alarm" && AndroidBridge.openAlarmSettings) AndroidBridge.openAlarmSettings();
+    else if(type === "overlay" && AndroidBridge.openOverlaySettings) AndroidBridge.openOverlaySettings();
+    else if(type === "fullscreen" && AndroidBridge.openFullScreenSettings) AndroidBridge.openFullScreenSettings();
+}
 function stopAlarm(){
     if(window.AndroidBridge) AndroidBridge.stopAlarm();
     document.getElementById("alarm-screen")?.classList.remove("active");
