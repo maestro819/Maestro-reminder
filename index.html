@@ -1994,13 +1994,13 @@ body{background:#e5e7eb}
 
             <div class="days-grid">
 
-                <div class="day-option" data-day="1">Min</div>
-                <div class="day-option" data-day="2">Sen</div>
-                <div class="day-option" data-day="3">Sel</div>
-                <div class="day-option" data-day="4">Rab</div>
-                <div class="day-option" data-day="5">Kam</div>
-                <div class="day-option" data-day="6">Jum</div>
-                <div class="day-option" data-day="7">Sab</div>
+                <div class="day-option" data-day="1" onclick="selectDay(this)">Min</div>
+                <div class="day-option" data-day="2" onclick="selectDay(this)">Sen</div>
+                <div class="day-option" data-day="3" onclick="selectDay(this)">Sel</div>
+                <div class="day-option" data-day="4" onclick="selectDay(this)">Rab</div>
+                <div class="day-option" data-day="5" onclick="selectDay(this)">Kam</div>
+                <div class="day-option" data-day="6" onclick="selectDay(this)">Jum</div>
+                <div class="day-option" data-day="7" onclick="selectDay(this)">Sab</div>
 
             </div>
 
@@ -2311,6 +2311,7 @@ let selectedCategory = "HEALTH";
 let selectedKind = "ACTIVITY";
 let scheduleFilter = "ALL";
 let selectedRepeat = "DAILY";
+let snoozeLog = JSON.parse(localStorage.getItem("maestro_snooze_log")) || {};
 
 /* =========================================================
    INIT
@@ -2749,10 +2750,15 @@ function categoryName(cat){
 }
 
 function repeatLabel(act){
-    if(act.repeat === "DAILY") return "Setiap hari";
-    if(act.repeat === "WEEKDAYS") return "Senin–Jumat";
-    if(act.repeat === "ONCE") return "Sekali saja";
-    if(act.repeat === "CUSTOM") return "Kustom";
+    const dayNames = {1:"Min",2:"Sen",3:"Sel",4:"Rab",5:"Kam",6:"Jum",7:"Sab"};
+    if(act.repeat === "DAILY") return "🔁 Setiap hari";
+    if(act.repeat === "WEEKDAYS") return "🔁 Senin–Jumat";
+    if(act.repeat === "ONCE") return "📌 Sekali saja";
+    if(act.repeat === "CUSTOM"){
+        const names = (act.days||[]).map(d => dayNames[d]).filter(Boolean);
+        return names.length ? `🗓️ ${names.join(", ")}` : "🗓️ Mingguan";
+    }
+    if(act.repeat === "MONTHLY") return act.dayOfMonth ? `📅 Tgl ${act.dayOfMonth}` : "📅 Bulanan";
     return "";
 }
 
@@ -2917,7 +2923,28 @@ function saveSettings(v){
     if(window.AndroidBridge) AndroidBridge.setUserName(userName);
     updateUI();
 }
-function renderStats(){ /* Simplified for now */ }
+function switchStatTab(tab){
+    document.querySelectorAll(".stat-tab").forEach(b => b.classList.toggle("active", b.dataset.statTab === tab));
+    document.querySelectorAll(".stat-panel").forEach(p => p.classList.toggle("active", p.id === `stat-panel-${tab}`));
+    renderStats();
+}
+
+function renderStats(){
+    const list = activities.filter(a => a.kind !== "SLEEP");
+    const completed = list.filter(a => a.done).length;
+    const now = new Date();
+    const nowMinutes = now.getHours()*60 + now.getMinutes();
+    const missed = list.filter(a => {
+        if(a.done) return false;
+        const [h,m] = (a.time||"00:00").split(":").map(Number);
+        return (h*60+m) < nowMinutes;
+    }).length;
+    const todayKey = now.toISOString().slice(0,10);
+    const snoozed = snoozeLog[todayKey] || 0;
+    const elC = document.getElementById("stat-completed"); if(elC) elC.innerText = completed;
+    const elM = document.getElementById("stat-missed"); if(elM) elM.innerText = missed;
+    const elS = document.getElementById("stat-snoozed"); if(elS) elS.innerText = snoozed;
+}
 function renderDailyTip(){
     const el = document.getElementById("tip-text");
     if(!el) return;
@@ -2926,7 +2953,26 @@ function renderDailyTip(){
 }
 function refreshPermissionPanel(){ /* Placeholder */ }
 function openPermission(type){ if(window.AndroidBridge) AndroidBridge.openPermissionSettings(type); }
-function applySnooze(min){ if(window.AndroidBridge) AndroidBridge.snoozeAlarm(min); }
+function stopAlarm(){
+    if(window.AndroidBridge) AndroidBridge.stopAlarm();
+    document.getElementById("alarm-screen")?.classList.remove("active");
+    document.getElementById("snooze-sheet")?.classList.remove("active");
+}
+function openSnooze(){
+    document.getElementById("snooze-sheet")?.classList.add("active");
+}
+function closeSnooze(){
+    document.getElementById("snooze-sheet")?.classList.remove("active");
+}
+function applySnooze(min){
+    if(window.AndroidBridge) AndroidBridge.snoozeAlarm(min);
+    const todayKey = new Date().toISOString().slice(0,10);
+    snoozeLog[todayKey] = (snoozeLog[todayKey]||0) + 1;
+    localStorage.setItem("maestro_snooze_log", JSON.stringify(snoozeLog));
+    document.getElementById("snooze-sheet")?.classList.remove("active");
+    document.getElementById("alarm-screen")?.classList.remove("active");
+    renderStats();
+}
 
 </script>
 
