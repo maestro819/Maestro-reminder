@@ -6,6 +6,8 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +17,8 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.view.Window;
 import android.view.WindowManager;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Window window = getWindow();
         WindowCompat.setDecorFitsSystemWindows(window, false);
+        window.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#f8f9fc")));
         window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
         window.setNavigationBarColor(android.graphics.Color.TRANSPARENT);
         WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
@@ -51,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
         
         webView.setWebViewClient(new WebViewClient()); 
         webView.addJavascriptInterface(new ReminderBridge(this), "AndroidBridge"); 
+        webView.setBackgroundColor(Color.parseColor("#f8f9fc"));
+
+        ViewCompat.setOnApplyWindowInsetsListener(webView, (v, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout());
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return insets;
+        });
+        ViewCompat.requestApplyInsets(webView);
+
         webView.loadUrl("file:///android_asset/index.html");
         
         webView.postDelayed(this::requestPermissionsAndExplain, 1000L);
