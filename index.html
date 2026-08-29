@@ -532,8 +532,8 @@ body{
 
 /* WHEEL POLISH */
 .wheel-sheet{box-shadow:0 -10px 35px rgba(15,23,42,.12)}
-.wheel-column{height:216px;padding:72px 0;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
-.wheel-option{height:48px;scroll-snap-align:center;scroll-snap-stop:always;font-size:28px;transition:opacity .12s,transform .12s,color .12s}
+.wheel-column{height:216px;padding:72px 0;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scroll-snap-type:y proximity}
+.wheel-option{height:48px;scroll-snap-align:center;font-size:28px;transition:opacity .12s,transform .12s,color .12s}
 .wheel-option:not(.selected){opacity:.5}
 .wheel-option.selected{opacity:1}
 .wheel-center-line{position:absolute;left:18px;right:18px;top:calc(50% - 24px);height:48px;border-top:1px solid #c7d2fe;border-bottom:1px solid #c7d2fe;border-radius:10px;pointer-events:none}
@@ -1094,7 +1094,7 @@ textarea.form-control{
     height:190px;
     width:100px;
     overflow-y:scroll;
-    scroll-snap-type:y mandatory;
+    scroll-snap-type:y proximity;
     padding:69px 0;
     background:linear-gradient(#f8fafc,#e0e7ff 46%,#e0e7ff 54%,#f8fafc);
     border-radius:14px;
@@ -1470,7 +1470,9 @@ body{background:#e5e7eb}
 .schedule-row:last-child{border-bottom:0}
 .schedule-icon{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .schedule-row-main{flex:1;min-width:0}
-.schedule-row-name{font-size:13px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.schedule-row-name{font-size:13px;font-weight:750;display:flex;align-items:center;gap:6px;min-width:0}
+.schedule-row-name-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.schedule-row-name .type-badge{flex-shrink:0}
 .schedule-row-meta{font-size:9px;color:var(--text-muted);margin-top:3px}
 .schedule-row-time{text-align:right;min-width:48px}
 .schedule-row-time strong{display:block;font-size:15px}
@@ -2668,8 +2670,8 @@ function renderSchedule(){
         row.innerHTML=`
             <div class="schedule-icon" style="background:${c.bg}">${act.icon}</div>
             <div class="schedule-row-main" onclick="openEditScreen(${act.id})" style="cursor:pointer">
-                <div class="schedule-row-name">${escapeHTML(act.name)}</div>
-                <div class="schedule-row-meta">${type} · ${repeatLabel(act)} · ${status}</div>
+                <div class="schedule-row-name"><span class="schedule-row-name-text">${escapeHTML(act.name)}</span><span class="type-badge ${act.kind === "SLEEP" ? "alarm" : "activity"}">${type}</span></div>
+                <div class="schedule-row-meta">${repeatLabel(act)} · ${status}</div>
             </div>
             <div class="schedule-row-time"><strong>${act.time}</strong><span>${categoryName(act.category)}</span></div>
             <button class="schedule-row-action" onclick="openEditScreen(${act.id})" aria-label="Edit"><i class="fa-solid fa-chevron-right"></i></button>`;
