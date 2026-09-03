@@ -1753,6 +1753,16 @@ body{background:#e5e7eb}
             </button>
         </div>
 
+        <div id="permission-battery-row">
+            <button
+                class="btn-primary"
+                onclick="openPermission('battery')"
+                style="background:#059669;margin-top:7px;"
+            >
+                Bebaskan dari Optimisasi Baterai
+            </button>
+        </div>
+
     </div>
 
 </div>
@@ -2188,6 +2198,7 @@ body{background:#e5e7eb}
 <nav class="bottom-nav">
 
     <button
+        id="nav-home"
         class="nav-item active"
         onclick="switchScreen('home',this)"
     >
@@ -2205,6 +2216,7 @@ body{background:#e5e7eb}
     </button>
 
     <button
+        id="nav-stats"
         class="nav-item"
         onclick="switchScreen('stats',this)"
     >
@@ -2213,6 +2225,7 @@ body{background:#e5e7eb}
     </button>
 
     <button
+        id="nav-settings"
         class="nav-item"
         onclick="switchScreen('settings',this)"
     >
@@ -2382,10 +2395,12 @@ function switchScreen(id, btn){
     document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
     const target = document.getElementById("screen-" + id);
     if(target) target.classList.add("active");
-    
-    if(btn){
+
+    const navMap = { home: "nav-home", schedule: "nav-jadwal", stats: "nav-stats", settings: "nav-settings" };
+    if(navMap[id]){
         document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
-        btn.classList.add("active");
+        const navBtn = (btn && btn.classList && btn.classList.contains("nav-item")) ? btn : document.getElementById(navMap[id]);
+        if(navBtn) navBtn.classList.add("active");
     }
     
     if(id === "add") {
@@ -2683,7 +2698,7 @@ function renderAlarmList(){
     const full = document.getElementById("alarm-screen-list");
     const alarms = [...activities].filter(isAlarmItem).sort((a,b)=>a.time.localeCompare(b.time));
     const active = alarms.filter(a=>a.enabled !== false);
-    const homeAlarms = active.length ? active : alarms;
+    const homeAlarms = alarms;
     const empty = `<div style="padding:28px 18px;text-align:center;color:var(--text-muted);"><div style="font-size:28px;margin-bottom:8px;">🔔</div><p style="font-size:13px;font-weight:800;">Belum ada alarm</p><p style="font-size:11px;margin-top:4px;">Tekan + lalu pilih jenis <b>Alarm</b>.</p></div>`;
     if(container) container.innerHTML = homeAlarms.length ? homeAlarms.map(alarmRowHTML).join("") : empty;
     if(full){
@@ -3054,9 +3069,10 @@ function refreshPermissionPanel(){
         notification: document.getElementById("permission-notification-row"),
         alarm: document.getElementById("permission-alarm-row"),
         overlay: document.getElementById("permission-overlay-row"),
-        fullscreen: document.getElementById("permission-fullscreen-row")
+        fullscreen: document.getElementById("permission-fullscreen-row"),
+        battery: document.getElementById("permission-battery-row")
     };
-    const granted = { notification: status.notification, alarm: status.exactAlarm, overlay: status.overlay, fullscreen: status.fullScreen };
+    const granted = { notification: status.notification, alarm: status.exactAlarm, overlay: status.overlay, fullscreen: status.fullScreen, battery: status.battery };
     let allGranted = true;
     Object.keys(rows).forEach(key => {
         if(!rows[key]) return;
@@ -3072,6 +3088,7 @@ function openPermission(type){
     else if(type === "alarm" && AndroidBridge.openAlarmSettings) AndroidBridge.openAlarmSettings();
     else if(type === "overlay" && AndroidBridge.openOverlaySettings) AndroidBridge.openOverlaySettings();
     else if(type === "fullscreen" && AndroidBridge.openFullScreenSettings) AndroidBridge.openFullScreenSettings();
+    else if(type === "battery" && AndroidBridge.openBatteryOptimizationSettings) AndroidBridge.openBatteryOptimizationSettings();
 }
 function stopAlarm(){
     if(window.AndroidBridge) AndroidBridge.stopAlarm();
