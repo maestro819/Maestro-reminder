@@ -49,7 +49,6 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AlarmReceiver.stopActiveAlarm(this);
         configureAlarmWindow();
         setContentView(R.layout.activity_alarm_screen);
 
