@@ -12,9 +12,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.JsResult;
 import android.view.Window;
 import android.view.WindowManager;
 import androidx.core.graphics.Insets;
@@ -30,6 +32,7 @@ import androidx.core.content.ContextCompat;
 public class MainActivity extends AppCompatActivity {
     private static final int NOTIFICATION_PERMISSION_REQUEST = 100;
     private static final int OVERLAY_PERMISSION_REQUEST = 101;
+    private static final int BATTERY_PERMISSION_REQUEST = 102;
     private WebView webView;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,18 @@ public class MainActivity extends AppCompatActivity {
         settings.setAllowContentAccess(true);
         
         webView.setWebViewClient(new WebViewClient()); 
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onJsConfirm(WebView view, String url, String message, final JsResult result) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(message)
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> result.confirm())
+                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> result.cancel())
+                        .setOnCancelListener(dialog -> result.cancel())
+                        .show();
+                return true;
+            }
+        });
         webView.addJavascriptInterface(new ReminderBridge(this), "AndroidBridge"); 
         webView.setBackgroundColor(Color.parseColor("#f8f9fc"));
 
@@ -88,6 +103,46 @@ public class MainActivity extends AppCompatActivity {
                 showOverlayAccessDialog();
             }
         }
+
+        // 4. Full Screen Intent (wajib diizinkan manual mulai Android 14)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            if (nm != null && !nm.canUseFullScreenIntent()) showFullScreenIntentDialog();
+        }
+
+        // 5. Bebas dari optimisasi baterai (supaya alarm tetap jalan walau app ditutup/di-swipe)
+        android.os.PowerManager powerManager = (android.os.PowerManager) getSystemService(POWER_SERVICE);
+        if (powerManager != null && !powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
+            showBatteryOptimizationDialog();
+        }
+    }
+
+    private void showFullScreenIntentDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("Izin Notifikasi Layar Penuh")
+            .setMessage("Mulai Android 14, izin ini harus diaktifkan manual agar alarm langsung membuka layar penuh, bukan cuma notifikasi biasa.")
+            .setPositiveButton("Buka Pengaturan", (d, w) -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                    try { startActivity(new Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT, Uri.parse("package:" + getPackageName()))); }
+                    catch (Exception ignored) {}
+                }
+            })
+            .setNegativeButton("Nanti", null)
+            .show();
+    }
+
+    private void showBatteryOptimizationDialog() {
+        new AlertDialog.Builder(this)
+            .setTitle("Nonaktifkan Optimisasi Baterai")
+            .setMessage("Agar alarm tetap berbunyi tepat waktu walau aplikasi ditutup atau HP idle lama, izinkan Maestro berjalan bebas dari optimisasi baterai.")
+            .setPositiveButton("Buka Pengaturan", (d, w) -> {
+                try { startActivityForResult(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + getPackageName())), BATTERY_PERMISSION_REQUEST); }
+                catch (Exception ignored) {
+                    try { startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)); } catch (Exception ignored2) {}
+                }
+            })
+            .setNegativeButton("Nanti", null)
+            .show();
     }
 
     private void showAlarmAccessDialog() {
@@ -128,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == OVERLAY_PERMISSION_REQUEST) {
+        if (requestCode == OVERLAY_PERMISSION_REQUEST || requestCode == BATTERY_PERMISSION_REQUEST) {
             if (webView != null) {
                 webView.reload(); // Refresh UI to update permission status
             }

@@ -75,7 +75,20 @@ public class ReminderBridge {
             overlay = Settings.canDrawOverlays(context);
         }
         
-        return "{\"notification\":" + notification + ",\"exactAlarm\":" + exactAlarm + ",\"fullScreen\":" + fullScreen + ",\"overlay\":" + overlay + "}";
+        boolean battery = true;
+        android.os.PowerManager powerManager = (android.os.PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (powerManager != null) battery = powerManager.isIgnoringBatteryOptimizations(context.getPackageName());
+        
+        return "{\"notification\":" + notification + ",\"exactAlarm\":" + exactAlarm + ",\"fullScreen\":" + fullScreen + ",\"overlay\":" + overlay + ",\"battery\":" + battery + "}";
+    }
+
+    @JavascriptInterface public void openBatteryOptimizationSettings() {
+        try {
+            context.startActivity(new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, Uri.parse("package:" + context.getPackageName())).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (Exception ignored) {
+            try { context.startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)); }
+            catch (Exception ignored2) { openAppDetails(); }
+        }
     }
 
     @JavascriptInterface public void openNotificationSettings() {
