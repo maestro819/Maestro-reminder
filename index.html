@@ -2587,19 +2587,14 @@ function renderNextAlarm(){
         return;
     }
     const now = new Date();
-    const next = alarms.map(a => {
-        const [h,m] = a.time.split(":").map(Number);
-        const d = new Date(now); d.setHours(h,m,0,0);
-        if(d <= now) d.setDate(d.getDate()+1);
-        return {a,d};
-    }).sort((x,y)=>x.d-y.d)[0];
+    const next = alarms.map(a => ({a, d: getNextOccurrenceDate(a)})).sort((x,y)=>x.d-y.d)[0];
     c.innerHTML = `<div class="next-alarm-card">
         <div class="next-alarm-label">ALARM BERIKUTNYA</div>
         <div class="next-alarm-main">
             <div class="next-alarm-time">${next.a.time}</div>
             <div class="next-alarm-info"><div class="next-alarm-name">${next.a.icon} ${escapeHTML(next.a.name)}</div><div class="next-alarm-meta">${repeatLabel(next.a)}</div></div>
         </div>
-        <div class="next-alarm-countdown">${getRemainingTime(next.a.time)}</div>
+        <div class="next-alarm-countdown">${getRemainingTime(next.d)}</div>
     </div>`;
 }
 
@@ -2676,7 +2671,7 @@ function initSwipeDelete(containerId){
 
 function alarmRowHTML(act){
     const isEnabled = act.enabled !== false;
-    const countdown = isEnabled ? getRemainingTime(act.time) : "Mati";
+    const countdown = isEnabled ? getRemainingTime(getNextOccurrenceDate(act)) : "Mati";
     return `<div class="swipe-wrap" data-id="${act.id}">
         <button class="swipe-delete-bg" aria-label="Hapus"><i class="fa-solid fa-trash"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2a1 1 0 0 0-1 1v1H4.75a1 1 0 1 0 0 2H5v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h.25a1 1 0 1 0 0-2H16V3a1 1 0 0 0-1-1H9zM8.5 8a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm7 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1zm-3.5 0a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V9a1 1 0 0 1 1-1z"/></svg></i></button>
         <div class="swipe-body">
@@ -2816,15 +2811,56 @@ function deleteActivity(id, e){
     updateUI();
 }
 
-function getRemainingTime(timeStr){
+function getNextOccurrenceDate(act){
     const now = new Date();
-    const [h, m] = timeStr.split(":").map(Number);
-    let target = new Date();
-    target.setHours(h, m, 0, 0);
+    const [h, m] = act.time.split(":").map(Number);
+    const repeat = act.repeat;
+
+    function atTime(baseDate){
+        const d = new Date(baseDate);
+        d.setHours(h, m, 0, 0);
+        return d;
+    }
+
+    if(repeat === "WEEKDAYS"){
+        for(let i = 0; i < 8; i++){
+            const d = new Date(now); d.setDate(now.getDate() + i);
+            const candidate = atTime(d);
+            const dow = candidate.getDay();
+            if(dow >= 1 && dow <= 5 && candidate > now) return candidate;
+        }
+        return atTime(now);
+    }
+    if(repeat === "CUSTOM" && act.days && act.days.length){
+        for(let i = 0; i < 8; i++){
+            const d = new Date(now); d.setDate(now.getDate() + i);
+            const candidate = atTime(d);
+            const ourDay = candidate.getDay() + 1;
+            if(act.days.includes(ourDay) && candidate > now) return candidate;
+        }
+        return atTime(now);
+    }
+    if(repeat === "MONTHLY" && act.dayOfMonth){
+        for(let i = 0; i < 3; i++){
+            const candidate = new Date(now.getFullYear(), now.getMonth() + i, act.dayOfMonth, h, m, 0, 0);
+            if(candidate > now) return candidate;
+        }
+        return atTime(now);
+    }
+    let target = atTime(now);
     if(target <= now) target.setDate(target.getDate() + 1);
+    return target;
+}
+
+function getRemainingTime(target){
+    const now = new Date();
     const diff = target - now;
-    const hh = Math.floor(diff / 3600000);
-    const mm = Math.floor((diff % 3600000) / 60000);
+    if(diff <= 0) return "Sebentar lagi";
+    const totalMinutes = Math.floor(diff / 60000);
+    const days = Math.floor(totalMinutes / 1440);
+    const hh = Math.floor((totalMinutes % 1440) / 60);
+    const mm = totalMinutes % 60;
+    if(days > 0) return `${days}h ${hh}j lagi`;
     return (hh > 0 ? hh + "j " : "") + mm + "m lagi";
 }
 
