@@ -221,7 +221,12 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
             mediaPlayer.setVolume(1.0f, 1.0f);
             
             mediaPlayer.setOnPreparedListener(mp -> {
-                if (isAlarmActive) mp.start();
+                if (isAlarmActive) {
+                    mp.start();
+                    // Layar alarm sudah bunyi sendiri: hentikan suara loop dari
+                    // notifikasi agar tidak terdengar dobel.
+                    AlarmReceiver.stopReceiverPlayerOnly();
+                }
             });
             
             mediaPlayer.prepareAsync();
@@ -253,6 +258,9 @@ public class AlarmScreenActivity extends AppCompatActivity implements AudioManag
 
     private void stopAlarmSignal() {
         isAlarmActive = false;
+        // Hentikan juga suara notifikasi, pengingat getar, dan batas waktu bunyi
+        // yang dijalankan di sisi receiver agar tidak ada suara/getar yang perting.
+        AlarmReceiver.stopActiveAlarm(this);
         if (mediaPlayer != null) {
             try {
                 if (mediaPlayer.isPlaying()) mediaPlayer.stop();

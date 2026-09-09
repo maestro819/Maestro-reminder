@@ -12,6 +12,9 @@ import java.util.List;
 public final class AlarmScheduler {
     public static final String ACTION_FIRE = "com.maestro.reminder.ACTION_FIRE";
     public static final int BASE_REQUEST_CODE = 7000;
+    // Alarm sekali (ONCE) yang terlewat karena HP mati/reboot tetap dibunyikan
+    // telat selama masih dalam jendela waktu ini, alih-alih diam-diam mati.
+    public static final long CATCH_UP_WINDOW_MS = 60L * 60L * 1000L;
     private AlarmScheduler() {}
 
     public static void schedule(Context context, Reminder reminder) {
@@ -22,12 +25,19 @@ public final class AlarmScheduler {
                 .setAction(ACTION_FIRE)
                 .putExtra("REMINDER_ID", reminder.id);
         PendingIntent pending = pendingIntent(context, reminder.id, intent);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !manager.canScheduleExactAlarms()) {
-            manager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pending);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        // Bersihkan sisa alarm dari pemetaan request code versi lama (id % 100000)
+        // supaya tidak ada alarm ganda setelah aplikasi diperbarui.
+        Intent legacy = new Intent(context, AlarmReceiver.class)
+                .setAction(ACTION_FIRE)
+                .putExtra("REMINDER_ID", reminder.id);
+        manager.cancel(PendingIntent.getBroadcast(context, BASE_REQUEST_CODE + (int) (reminder.id % 100000L), legacy,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE));
+        try {
+            // Prioritaskan alarm TEPAT WAKTU; bila izin exact alarm belum aktif
+            // (Android 12+), lanjut ke jalur non-exact agar alarm tetap terpasang.
             manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pending);
-        } else {
-            manager.setExact(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pending);
+        } catch (SecurityException e) {
+            manager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminder.triggerAt, pending);
         }
     }
 
@@ -41,13 +51,20 @@ public final class AlarmScheduler {
 
     public static void rescheduleAll(Context context) {
         List<Reminder> reminders = ReminderStore.load(context);
+        long now = System.currentTimeMillis();
         for (Reminder reminder : reminders) {
-            if (reminder.enabled) {
-                if (reminder.triggerAt <= System.currentTimeMillis() && Reminder.ONCE.equals(reminder.repeat)) {
-                    reminder.enabled = false;
-                } else {
+            if (!reminder.enabled) continue;
+            if (reminder.triggerAt <= now && Reminder.ONCE.equals(reminder.repeat)) {
+                // Alarm ONCE yang terlewat (HP mati/reboot): selama belum terlalu
+                // lama, bunyikan telat alih-alih mematikannya diam-diam.
+                if (now - reminder.triggerAt <= CATCH_UP_WINDOW_MS) {
+                    reminder.triggerAt = now + 30000L;
                     schedule(context, reminder);
+                } else {
+                    reminder.enabled = false;
                 }
+            } else {
+                schedule(context, reminder);
             }
         }
         ReminderStore.save(context, reminders);
@@ -69,6 +86,18 @@ public final class AlarmScheduler {
     }
 
     public static int requestCode(long id) {
-        return BASE_REQUEST_CODE + (int) (id % 100000);
+        // ID dari WebView berukuran 13 digit (Date.now()). Pemetaan lama
+        // id % 100000 membuat dua pengingat yang dibuat berdekatan saling
+        // menimpa alarmnya (alarm hilang/berpindah waktu). Gunakan sebaran
+        // hash 64-bit yang stabil agar tiap ID mendapat kode uniknya sendiri.
+        long h = id ^ (id >>> 32);
+        h = (h * 0x9E3779B97F4A7C15L) >>> 33;
+        return BASE_REQUEST_CODE + (int) (h % 1000000000L);
+    }
+
+    public static int notificationId(long id) {
+        // Konsisten dengan requestCode: tiap pengingat harus punya ID notifikasi
+        // unik agar tidak saling menimpa dan dismiss salah pengingat.
+        return AlarmReceiver.BASE_NOTIFICATION_ID + (requestCode(id) - BASE_REQUEST_CODE);
     }
 }

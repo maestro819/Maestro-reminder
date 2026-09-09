@@ -7,8 +7,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.PowerManager;
+import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.Settings;
@@ -28,6 +34,14 @@ public class AlarmReceiver extends BroadcastReceiver {
     private static NotificationManager activeNotificationManager;
     private static int activeNotificationId = -1;
     private static long activeReminderId = -1L;
+    // Pemutar suara alarm agar notifikasi tetap BERBUNYI terus (bukan sekali
+    // saja) selama layar alarm belum terbuka, termasuk saat layar sedang nyala.
+    private static MediaPlayer receiverPlayer;
+    private static final Handler receiverHandler = new Handler(Looper.getMainLooper());
+    private static Runnable ringWatchdog;
+    private static long ringStartElapsed;
+    private static final long RING_TIMEOUT_MS = 5L * 60L * 1000L;
+    private static final long[] VIBRATION_PATTERN = {0, 1000, 500, 1000};
 
     @Override public void onReceive(Context context, Intent intent) {
         String action = intent == null ? null : intent.getAction();
@@ -55,6 +69,16 @@ public class AlarmReceiver extends BroadcastReceiver {
                 return;
             }
         }
+
+        // Kunci CPU sebentar agar proses pembukaan layar alarm dan penyiapan
+        // suara tidak tertunda oleh deep sleep (salah satu penyebab alarm telat).
+        try {
+            PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            if (powerManager != null) {
+                PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "MaestroReminder:AlarmFire");
+                wakeLock.acquire(60000L);
+            }
+        } catch (Exception ignored) {}
 
         int notificationId = notificationId(id);
         activeReminderId = id;
@@ -104,18 +128,26 @@ public class AlarmReceiver extends BroadcastReceiver {
             activeNotificationId = notificationId;
         }
 
+        // Buka layar alarm sesegera mungkin
         try {
             context.startActivity(screen);
         } catch (Exception ignored) {}
 
+        // Suara alarm berbunyi TERUS-MENERUS dari sisi notifikasi, sehingga
+        // tetap terdengar jelas walau layar nyala dan layar alarm belum terbuka.
+        startReceiverSound(context);
+
         activeVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         if (activeVibrator != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                activeVibrator.vibrate(VibrationEffect.createWaveform(new long[]{0, 1000, 500, 1000}, 0));
+                activeVibrator.vibrate(VibrationEffect.createWaveform(VIBRATION_PATTERN, 0));
             } else {
-                activeVibrator.vibrate(new long[]{0, 1000, 500, 1000}, 0);
+                activeVibrator.vibrate(VIBRATION_PATTERN, 0);
             }
         }
+
+        // Jaga agar suara & getar tetap lanjut sampai pengguna menindaklanjuti
+        startRingingLoop(context);
 
         // Reschedule
         if (Reminder.ONCE.equals(reminder.repeat)) {
@@ -125,6 +157,91 @@ public class AlarmReceiver extends BroadcastReceiver {
             AlarmScheduler.schedule(context, reminder);
         }
         updateStore(context, reminder);
+    }
+
+    private void startReceiverSound(Context context) {
+        try {
+            stopReceiverSound();
+            Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+            if (alarmUri == null) alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            if (alarmUri == null) return;
+            MediaPlayer player = new MediaPlayer();
+            player.setDataSource(context, alarmUri);
+            AudioAttributes attrs = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            player.setAudioAttributes(attrs);
+            player.setLooping(true);
+            player.setOnErrorListener((mp, what, extra) -> { stopReceiverSound(); return true; });
+            player.prepare();
+            player.start();
+            receiverPlayer = player;
+        } catch (Exception e) {
+            stopReceiverSound();
+        }
+    }
+
+    public static void stopReceiverSound() {
+        MediaPlayer player = receiverPlayer;
+        receiverPlayer = null;
+        stopRingingLoop();
+        if (player != null) {
+            try { if (player.isPlaying()) player.stop(); } catch (Exception ignored) {}
+            try { player.release(); } catch (Exception ignored) {}
+        }
+    }
+
+    /**
+     * Dipanggil layar alarm saat suaranya sendiri sudah mulai berbunyi:
+     * menghentikan HANYA suara loop dari notifikasi (tanpa mematikan getaran,
+     * notifikasi, atau pengingat agar tetap berbunyi) supaya tidak dobel.
+     */
+    public static void stopReceiverPlayerOnly() {
+        MediaPlayer player = receiverPlayer;
+        receiverPlayer = null;
+        if (player != null) {
+            try { if (player.isPlaying()) player.stop(); } catch (Exception ignored) {}
+            try { player.release(); } catch (Exception ignored) {}
+        }
+    }
+
+    private void startRingingLoop(final Context context) {
+        stopRingingLoop();
+        ringStartElapsed = SystemClock.elapsedRealtime();
+        ringWatchdog = new Runnable() {
+            @Override public void run() {
+                boolean stillRinging = receiverPlayer != null || activeVibrator != null;
+                if (!stillRinging) return;
+                if (SystemClock.elapsedRealtime() - ringStartElapsed >= RING_TIMEOUT_MS) {
+                    stopActiveAlarm(context);
+                    return;
+                }
+                // Pola getar bisa diputus oleh getar aplikasi lain; nyalakan
+                // kembali agar getaran tidak berhenti setelah beberapa detik.
+                if (activeVibrator != null) {
+                    try {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            activeVibrator.vibrate(VibrationEffect.createWaveform(VIBRATION_PATTERN, 0));
+                        } else {
+                            activeVibrator.vibrate(VIBRATION_PATTERN, 0);
+                        }
+                    } catch (Exception ignored) {}
+                }
+                if (receiverPlayer != null) {
+                    try { if (!receiverPlayer.isPlaying()) receiverPlayer.start(); } catch (Exception ignored) {}
+                }
+                receiverHandler.postDelayed(this, 4000L);
+            }
+        };
+        receiverHandler.postDelayed(ringWatchdog, 4000L);
+    }
+
+    private static void stopRingingLoop() {
+        if (ringWatchdog != null) {
+            receiverHandler.removeCallbacks(ringWatchdog);
+            ringWatchdog = null;
+        }
     }
 
     private void updateStore(Context context, Reminder reminder) {
@@ -188,6 +305,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public static void stopActiveAlarm(Context context) {
+        stopReceiverSound();
         if (activeVibrator != null) { activeVibrator.cancel(); activeVibrator = null; }
         NotificationManager manager = activeNotificationManager;
         if (manager == null) manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -211,7 +329,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         stopActiveAlarm(context);
     }
 
-    private int notificationId(long id) { return BASE_NOTIFICATION_ID + (int) (id % 100000); }
+    private int notificationId(long id) { return AlarmScheduler.notificationId(id); }
 
     private void createChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
