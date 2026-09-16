@@ -52,6 +52,46 @@ public class ReminderBridge {
     @JavascriptInterface public void deleteActivity(long id) { AlarmScheduler.cancel(context, id); ReminderStore.delete(context, id); }
     @JavascriptInterface public void stopAlarm() { AlarmReceiver.stopActiveAlarm(context); }
 
+    /** Matikan alarm HANYA untuk hari ini; besok otomatis nyala lagi. */
+    @JavascriptInterface public void skipActivityToday(long id) {
+        Reminder r = ReminderStore.find(context, id);
+        if (r == null) return;
+        r.skipDate = todayKey();
+        // enabled tetap true (tidak dimatikan permanen) supaya besok otomatis aktif lagi.
+        List<Reminder> items = ReminderStore.load(context);
+        for (int i = 0; i < items.size(); i++) if (items.get(i).id == id) items.set(i, r);
+        ReminderStore.save(context, items);
+        AlarmScheduler.cancel(context, id);
+    }
+
+    /** Bersihkan skipDate jika hari sudah berganti (dipanggil saat boot / ganti zona waktu). */
+    public static void clearExpiredSkip(Context context) {
+        String today = todayKeyLong();
+        List<Reminder> items = ReminderStore.load(context);
+        boolean changed = false;
+        for (int i = 0; i < items.size(); i++) {
+            Reminder r = items.get(i);
+            if (r.skipDate != null && !r.skipDate.isEmpty()) {
+                try {
+                    long sk = Long.parseLong(r.skipDate);
+                    if (sk < today) {
+                        r.skipDate = "";
+                        items.set(i, r);
+                        changed = true;
+                    }
+                } catch (Exception ignored) {}
+            }
+        }
+        if (changed) {
+            ReminderStore.save(context, items);
+            // Jadwalkan ulang semua yang enabled agar kembali aktif.
+            AlarmScheduler.rescheduleAll(context);
+        }
+    }
+
+    private static String todayKey() { return String.valueOf(System.currentTimeMillis() / 86400000L); }
+    private static String todayKeyLong() { return String.valueOf(System.currentTimeMillis() / 86400000L); }
+
     @JavascriptInterface public String getPermissionStatus() {
         boolean notification = true;
         boolean exactAlarm = true;

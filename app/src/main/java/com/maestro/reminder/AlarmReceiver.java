@@ -46,6 +46,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override public void onReceive(Context context, Intent intent) {
         String action = intent == null ? null : intent.getAction();
         if (Intent.ACTION_BOOT_COMPLETED.equals(action) || Intent.ACTION_TIME_CHANGED.equals(action) || Intent.ACTION_TIMEZONE_CHANGED.equals(action) || "android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED".equals(action)) {
+            // Bersihkan skipDate yang kadaluwarsa (hari sudah berganti) supaya
+            // alarm yang tadi dimatikan "hari ini saja" otomatis aktif lagi.
+            com.maestro.reminder.ReminderBridge.clearExpiredSkip(context);
             AlarmScheduler.rescheduleAll(context); return;
         }
         if (!AlarmScheduler.ACTION_FIRE.equals(action)) return;
@@ -336,12 +339,42 @@ public class AlarmReceiver extends BroadcastReceiver {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "Maestro Reminder Alarm", NotificationManager.IMPORTANCE_HIGH);
             channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
             channel.enableVibration(true);
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-            channel.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM), audioAttributes);
+            // Suara alarm dibunyikan sendiri oleh MediaPlayer di receiver
+            // (agar tetap terdengar saat layar nyala). TIDAK memasang suara
+            // di channel supaya tidak terdengar double/echo dari sistem.
             NotificationManager manager = context.getSystemService(NotificationManager.class); if (manager != null) manager.createNotificationChannel(channel);
         }
+    }
+
+    /**
+     * Dipakai UI di JavaScript untuk menyusun label hari berulang dari
+     * string days (mis. "2") atau "1,2,3" menjadi label Bahasa Indonesia
+     * seperti "Setiap Senin saja" atau "Setiap Senin, Rabu saja".
+     */
+    @JavascriptInterface
+    public static String repeatLabelFromBridge(String days) {
+        if (days == null || days.trim().isEmpty()) return "🔁 Setiap hari";
+        String[] parts = days.split(",");
+        java.util.LinkedHashSet<Integer> nums = new java.util.LinkedHashSet<>();
+        for (String p : parts) {
+            try {
+                int n = Integer.parseInt(p.trim());
+                if (n >= 1 && n <= 7) nums.add(n);
+            } catch (Exception ignored) {}
+        }
+        if (nums.isEmpty()) return "🔁 Setiap hari";
+        // Java Calendar: SUNDAY=1, MONDAY=2 ... SATURDAY=7
+        String[] names = {"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"};
+        if (nums.size() == 7) return "🔁 Setiap hari";
+        java.util.ArrayList<String> out = new java.util.ArrayList<>();
+        for (int n : nums) out.add(names[n - 1]);
+        if (out.size() == 1) return "🗓️ Hanya " + out.get(0) + " saja";
+        StringBuilder sb = new StringBuilder("🗓️ Setiap ");
+        for (int i = 0; i < out.size(); i++) {
+            if (i > 0) sb.append(i == out.size() - 1 ? " dan " : ", ");
+            sb.append(out.get(i));
+        }
+        sb.append(" saja");
+        return sb.toString();
     }
 }

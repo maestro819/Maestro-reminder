@@ -13,6 +13,10 @@ public class Reminder {
 
     public long id; public String title; public String note; public String icon; public String kind;
     public String category; public String message; public long triggerAt; public long anchorAt; public String repeat; public boolean enabled;
+    // Cap tanggal (hari ke berapa, epoch days) saat alarm sengaja dimatikan
+    // oleh pengguna untuk hari itu saja. Dipakai oleh 'skipActivityToday'
+    // sehingga besok alarm otomatis aktif lagi tanpa harus di-toggle.
+    public String skipDate;
 
     public Reminder(long id, String title, String note, long triggerAt, String repeat, boolean enabled) {
         this(id, title, note, "⏰", ACTIVITY, "OTHER", "", triggerAt, repeat, enabled);
@@ -24,13 +28,16 @@ public class Reminder {
         this.id=id; this.title=title; this.note=note==null?"":note; this.icon=icon==null||icon.isEmpty()?"⏰":icon;
         this.kind=SLEEP.equals(kind)?SLEEP:ACTIVITY; this.category=category==null||category.isEmpty()?"OTHER":category; this.message=message==null?"":message;
         this.triggerAt=triggerAt; this.anchorAt=triggerAt; this.repeat=repeat; this.enabled=enabled;
+        this.skipDate="";
     }
     public JSONObject toJson() throws JSONException {
         JSONObject json=new JSONObject(); json.put("id",id); json.put("title",title); json.put("note",note); json.put("icon",icon); json.put("kind",kind);
-        json.put("category",category); json.put("message",message); json.put("triggerAt",triggerAt); json.put("anchorAt",anchorAt); json.put("repeat",repeat); json.put("enabled",enabled); return json;
+        json.put("category",category); json.put("message",message); json.put("triggerAt",triggerAt); json.put("anchorAt",anchorAt); json.put("repeat",repeat); json.put("enabled",enabled);
+        json.put("skipDate",skipDate==null?"":skipDate); return json;
     }
     public static Reminder fromJson(JSONObject json) throws JSONException {
         Reminder r=new Reminder(json.getLong("id"),json.optString("title","Pengingat"),json.optString("note",""),json.optString("icon","⏰"),json.optString("kind",ACTIVITY),json.optString("category","OTHER"),json.optString("message",""),json.getLong("triggerAt"),json.optString("repeat",ONCE),json.optBoolean("enabled",true));
-        r.anchorAt=json.optLong("anchorAt",r.triggerAt); return r;
+        r.anchorAt=json.optLong("anchorAt",r.triggerAt);
+        r.skipDate=json.optString("skipDate",""); return r;
     }
 }
